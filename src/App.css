@@ -1,0 +1,104 @@
+.lds-heart {
+	display: inline-block;
+	position: relative;
+	width: 200px;
+	height: 200px;
+	transform: rotate(45deg);
+	transform-origin: 40px 40px;
+}
+.lds-heart div {
+	top: 0px;
+	left: 75px;
+	position: absolute;
+	width: 64px;
+	height: 64px;
+	background: #f8dfd4;
+	animation: lds-heart 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.lds-heart div:after,
+.lds-heart div:before {
+	content: " ";
+	position: absolute;
+	display: block;
+	width: 64px;
+	height: 64px;
+	background: #f8dfd4;
+}
+.lds-heart div:before {
+	left: -34px;
+	border-radius: 50% 0 0 50%;
+}
+.lds-heart div:after {
+	top: -34px;
+	border-radius: 50% 50% 0 0;
+}
+@keyframes lds-heart {
+	0% {
+		transform: scale(0.95);
+	}
+	5% {
+		transform: scale(1.1);
+	}
+	39% {
+		transform: scale(0.85);
+	}
+	45% {
+		transform: scale(1);
+	}
+	60% {
+		transform: scale(0.95);
+	}
+	100% {
+		transform: scale(0.9);
+	}
+}
+
+body {
+	/* background-color: #ccfff3; */
+	background-color: #f9e6e1;
+	/* background-image: url(./images/leaves.png); */
+}
+
+.rounded {
+	border: 1px solid white;
+	border-radius: 5px;
+}
+
+/* .App { */
+/* text-align: center; */
+/* } */
+
+.App-logo {
+	height: 40vmin;
+	pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.App-logo {
+		animation: App-logo-spin infinite 20s linear;
+	}
+}
+
+.App-header {
+	background-color: #282c34;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(10px + 2vmin);
+	color: white;
+}
+
+.App-link {
+	color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
