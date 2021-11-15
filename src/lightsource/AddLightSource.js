@@ -2,7 +2,7 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import AddLightSourceForm from '../forms/AddLightSourceForm';
+import AddLightSourceForm from './AddLightSourceForm';
 
 const AddLightSource = ({ close, handleAdd, roomId, current }) => {
     return(

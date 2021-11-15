@@ -2,9 +2,10 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import AddCollectionForm from '../forms/AddCollectionForm';
+import AddCollectionForm from './AddCollectionForm';
 
-const AddCollection = ({ close, handleAdd, handleRequest }) => {
+const AddCollection = ({ close, handleRequest }) => {
+
     return(
         <Container maxWidth="md">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 2 } }}>
@@ -13,7 +14,7 @@ const AddCollection = ({ close, handleAdd, handleRequest }) => {
                         Add Collection
                     </Typography>
                     <p>All fields required.</p>
-                   <AddCollectionForm close={close} handleAdd={handleAdd} handleRequest={handleRequest} />
+                   <AddCollectionForm close={close} handleRequest={handleRequest} />
                 </Paper>
             </Box>
         </Container>

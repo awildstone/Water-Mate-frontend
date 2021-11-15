@@ -2,7 +2,7 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import EditPlantForm from '../forms/EditPlantForm';
+import EditPlantForm from './EditPlantForm';
 
 const EditPlant = ({close, handleEdit, lightsources, plant}) => {
     return(

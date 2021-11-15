@@ -4,7 +4,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import WarningIcon from '@mui/icons-material/Warning';
 import { red } from '@mui/material/colors';
-import EditLocationForm from '../forms/EditLocationForm';
+import EditLocationForm from './EditLocationForm';
 
 const EditLocation = ({close, handleEdit, user}) => {
     return(

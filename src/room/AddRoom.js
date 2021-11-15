@@ -2,9 +2,9 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import AddRoomForm from '../forms/AddRoomForm';
+import AddRoomForm from './AddRoomForm';
 
-const AddRoom = ({ close, collectionId, handleAdd }) => {
+const AddRoom = ({ close, collectionId, handleRequest }) => {
     return(
         <Container maxWidth="md">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 2 } }}>
@@ -13,7 +13,7 @@ const AddRoom = ({ close, collectionId, handleAdd }) => {
                         Add Room
                     </Typography>
                     <p>All fields required.</p>
-                   <AddRoomForm close={close} collectionId={collectionId} handleAdd={handleAdd} />
+                   <AddRoomForm close={close} collectionId={collectionId} handleRequest={handleRequest} />
                 </Paper>
             </Box>
         </Container>

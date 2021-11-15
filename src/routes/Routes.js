@@ -7,14 +7,14 @@ import Login from '../pages/Login';
 import Profile from '../profile/Profile';
 import WaterManager from '../pages/WaterManager';
 import PlantDetails from '../plant/PlantDetails';
-import Dashboard from '../dashboard/Dashboard';
+import Dashboard from '../pages/Dashboard';
 import ProtectedRoute from './ProtectedRoute';
 
 
 const Routes = ({
+    collections,
     handleRequest,
     plantTypes,
-    collections,
     userCollectionCount,
     userPlantCount, 
     getCollections, 
@@ -29,6 +29,7 @@ const Routes = ({
     handleDelete,
     handleUpdateSchedule,
     getHistory}) => {
+
     return (
         <Switch>
             <Route exact path='/'>
@@ -53,6 +54,7 @@ const Routes = ({
 
             <ProtectedRoute exact path='/dashboard'>
                 <Dashboard
+                    collections={collections}
                     handleRequest={handleRequest}
                     userCollectionCount={userCollectionCount}
                     getCollections={getCollections} 
@@ -71,6 +73,7 @@ const Routes = ({
                     getPlantsToWater={getPlantsToWater} 
                     getPlants={getPlants}
                     handleUpdateSchedule={handleUpdateSchedule}
+                    handleRequest={handleRequest}
                 />
             </ProtectedRoute>
 
@@ -79,6 +82,7 @@ const Routes = ({
                     collections={collections}
                     handleEdit={handleEdit}
                     handleDelete={handleDelete} 
+                    handleRequest={handleRequest}
                 />
             </ProtectedRoute>
             
@@ -90,6 +94,7 @@ const Routes = ({
                     handleEdit={handleEdit} 
                     handleDelete={handleDelete} 
                     getHistory={getHistory}
+                    handleRequest={handleRequest}
                 />
             </ProtectedRoute>
 

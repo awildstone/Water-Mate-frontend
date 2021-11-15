@@ -2,7 +2,7 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import EditRoomForm from '../forms/EditRoomForm';
+import EditRoomForm from './EditRoomForm';
 
 const EditRoom = ({ close, handleEdit, room }) => {
     return(

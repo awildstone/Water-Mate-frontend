@@ -1,19 +1,24 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { TextField, Button, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
-
+import UserContext from '../context/UserContext';
+import { addCollection } from '../requests';
 
 const validationSchema = yup.object({
     name: yup.string()
         .min(1, 'Too Short!')
         .max(50, 'Too Long!')
-        .required('You must enter a name for your room.'),
+        .required('You must enter a name for your collection.'),
 });
 
-const AddRoomForm = ({ close, handleAdd, collectionId }) => {
+const AddCollectionForm = ({ close, handleRequest }) => {
     const [ error, setError ] = useState(null);
+    const { token } = useContext(UserContext);
+
+    //const { result, error } = useCollection();
+    //use collection will
 
     const formik = useFormik({
         initialValues: {
@@ -22,12 +27,12 @@ const AddRoomForm = ({ close, handleAdd, collectionId }) => {
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             console.log(values);
-            let result = await handleAdd('room', {...values, collectionId});
-            if(result.success) {
-                close('add-room');
+            let result = await handleRequest(addCollection(token, values));
+            if (result.success) {
+                close('add-collection');
             } else {
                 setError(result.message);
-            } 
+            }  
         },
     });
     
@@ -39,7 +44,7 @@ const AddRoomForm = ({ close, handleAdd, collectionId }) => {
                         margin="normal"
                         id="name"
                         name="name"
-                        label="Room Name"
+                        label="Collection Name"
                         value={formik.values.name}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -54,12 +59,12 @@ const AddRoomForm = ({ close, handleAdd, collectionId }) => {
                 <Button color="success" sx={{ color: '#fff'}} variant="contained" size="large" type="submit">
                     Submit
                 </Button>
-                <Button onClick={() => close('add-room')} color="info" sx={{ color: '#fff'}} variant="contained" size="large">
+                <Button onClick={() => close('add-collection')} color="info" sx={{ color: '#fff'}} variant="contained" size="large">
                     Cancel
                 </Button>
                 </Stack>
-        </form>
+    </form>
     );
 }
 
-export default AddRoomForm;
+export default AddCollectionForm;

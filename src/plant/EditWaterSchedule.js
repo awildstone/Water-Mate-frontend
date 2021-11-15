@@ -2,7 +2,7 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import EditWaterScheduleForm from '../forms/EditWaterScheduleForm';
+import EditWaterScheduleForm from './EditWaterScheduleForm';
 import { red } from '@mui/material/colors';
 import WarningIcon from '@mui/icons-material/Warning';
 

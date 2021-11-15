@@ -2,7 +2,7 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import EditCollectionForm from '../forms/EditCollectionForm';
+import EditCollectionForm from './EditCollectionForm';
 
 const EditCollection = ({ close, handleEdit, collection }) => {
     return(

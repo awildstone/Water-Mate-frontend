@@ -6,6 +6,8 @@ import Alert from '@mui/material/Alert';
 import PlantContext from '../context/PlantContext';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
+import UserContext from '../context/UserContext';
+import { addPlant } from '../requests';
 
 const SUPPORTED_FORMATS =  [ "image/jpg", "image/jpeg", "image/gif", "image/png" ];
 const FILE_SIZE = 3145728;
@@ -25,10 +27,11 @@ const validationSchema = yup.object({
         .required('You must select a light source.'),
 });
 
-const AddPlantForm = ({ close, handleAdd, roomId, lightSources }) => {
+const AddPlantForm = ({ close, handleRequest, roomId, lightSources }) => {
     const [ error, setError ] = useState(null);
     const [ isLoading, setIsLoading ] = useState(false);
     const { plantTypes } = useContext(PlantContext);
+    const { token } = useContext(UserContext);
 
     const formik = useFormik({
         initialValues: {
@@ -54,7 +57,7 @@ const AddPlantForm = ({ close, handleAdd, roomId, lightSources }) => {
             data.append('roomId', roomId);
 
             setIsLoading(true);
-            const result = await handleAdd('plant', data, 'multipart/form-data');
+            const result = await handleRequest(addPlant(token, data));
         
             if(result.success) {
                 close('add-plant');

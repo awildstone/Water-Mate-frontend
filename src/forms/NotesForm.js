@@ -9,7 +9,7 @@ const validationSchema = yup.object({
         .max(200, 'Notes must be less than 200 characters in length.')
 });
 
-const AddNotesForm = ({ getNotes, notes, setShowForm, showForm }) => {
+const NotesForm = ({ getNotes, notes, setShowForm, showForm }) => {
     const formik = useFormik({
         initialValues: {
           notes: '',
@@ -62,4 +62,4 @@ const AddNotesForm = ({ getNotes, notes, setShowForm, showForm }) => {
     );
 }
 
-export default AddNotesForm;
+export default NotesForm;

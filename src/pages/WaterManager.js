@@ -162,9 +162,9 @@ const WaterManager = ({ userPlantCount, getPlants, getPlantsToWater, handleUpdat
             const split = action.split(' ');
             const len = split.length;
             const room_id = split[len-1].toString();
-            getPlants(room_id);
+            handleGetPlantsToWater(room_id);
         } else {
-            getPlants();
+            handleGetPlantsToWater();
         }
     };
 

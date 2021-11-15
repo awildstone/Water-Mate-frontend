@@ -23,7 +23,7 @@ import AddLightSource from '../lightsource/AddLightSource';
 import AddPlant from '../plant/AddPlant';
 import WarningModal from '../alerts/WarningModal';
 
-const Room = ({ collection, loadRoomsData, color, room, getPlants, handleAdd, handleEdit, handleDelete }) => {
+const Room = ({ collection, getRoomsData, color, room, getPlants, handleAdd, handleEdit, handleDelete, handleRequest }) => {
     const [currentCollection, setCurrentCollection] = useState(collection);
     const [plants, setPlants] = useState([]);
     // const [currentRoom, setCurrentRoom] = useState([]);
@@ -67,7 +67,7 @@ const Room = ({ collection, loadRoomsData, color, room, getPlants, handleAdd, ha
 
     const handleClose = (action) => {
         map[action](false);
-        loadRoomsData(currentCollection)
+        getRoomsData(currentCollection)
     }
 
     return (
@@ -217,7 +217,7 @@ const Room = ({ collection, loadRoomsData, color, room, getPlants, handleAdd, ha
                                         aria-describedby="modal-modal-description"
                                     >
                                         <Box sx={modalStyle}>
-                                            <AddPlant close={handleClose} handleAdd={handleAdd} roomId={room.id}lightSources={room.lightsources} />
+                                            <AddPlant close={handleClose} roomId={room.id} lightSources={room.lightsources} handleRequest={handleRequest} />
                                         </Box>
                                     </Modal>
                                 </ListItemText>

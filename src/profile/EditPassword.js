@@ -2,7 +2,7 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import EditPasswordForm from '../forms/EditPasswordForm';
+import EditPasswordForm from './EditPasswordForm';
 
 const EditPassword = ({close, handleEdit, user}) => {
     return(

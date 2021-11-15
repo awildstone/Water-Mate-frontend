@@ -5,7 +5,6 @@ import './App.css';
 import NavBar from './navigation/NavBar';
 import Routes from './routes/Routes';
 import { styled } from '@mui/material/styles';
-// import useAxios from './hooks/useAxios';
 import jwt from 'jsonwebtoken';
 import useLocalStorage from './hooks/useLocalStorage';
 import axios from 'axios';
@@ -48,7 +47,7 @@ const App = () => {
   const [ token, setToken ] = useLocalStorage(TOKEN_ID);
   const [ isLoading, setIsLoading ] = useState(true);
   const [ plantTypes, setPlantTypes ] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [ currentUser, setCurrentUser ] = useState(null);
   const [ collections, setCollections ] = useState(null);
   const [ userPlantCount, setUserPlantCount ] = useState(null);
   const [ userCollectionCount, setUserCollectionCount ] = useState(null);
@@ -63,7 +62,6 @@ const App = () => {
   }, [token]);
 
   async function handleRequest(request) {
-    console.log('running handleRequest...')
     const data = request.data ? request.data : {};
     const params = request.params ? request.params : {};
     const method = request.method;
@@ -338,6 +336,7 @@ const App = () => {
           <NavBar logout={logout} />
           <Offset />
           <Routes
+            collections={collections}
             handleRequest={handleRequest} 
             plantTypes={plantTypes}
             collections={collections}

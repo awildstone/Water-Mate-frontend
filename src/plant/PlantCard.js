@@ -10,7 +10,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import Typography from '@mui/material/Typography';
 import SnoozeIcon from '@mui/icons-material/Snooze';
 import InvertColorsIcon from '@mui/icons-material/InvertColors';
-import AddNotesForm from '../forms/AddNotesForm';
+import NotesForm from '../forms/NotesForm';
 import Tooltip from '@mui/material/Tooltip';
 import { NavLink } from 'react-router-dom';
 import Link from '@mui/material/Link';
@@ -56,7 +56,7 @@ const PlantCard = ({ plant, waterSchedule, handleUpdateSchedule }) => {
               Last Water Date: {moment(waterSchedule.water_date).format('MM/DD/YYYY')}
             </Typography>
             <Box sx={{ display: showForm ? true : 'none' }}>
-                <AddNotesForm getNotes={getNotes} notes={notes} setShowForm={setShowForm} showForm={showForm} />
+                <NotesForm getNotes={getNotes} notes={notes} setShowForm={setShowForm} showForm={showForm} />
             </Box>
             <div>
               { error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : '' }
