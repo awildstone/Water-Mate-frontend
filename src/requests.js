@@ -69,11 +69,11 @@ export const getCollections = (token) => ({
 });
 
 /** Request object for getting all Collections data paginated. */
-export const getPaginatedCollections = (token, page) => ({
-    url: buildUrl(BASE_URL, `/collection/${page}/`),
-    method: 'get',
-    headers: { 'content-type': 'application/json', 'x-access-token': token },
-});
+// export const getPaginatedCollections = (token, page) => ({
+//     url: buildUrl(BASE_URL, `/collection/${page}/`),
+//     method: 'get',
+//     headers: { 'content-type': 'application/json', 'x-access-token': token },
+// });
 
 /** Request object for adding a new Collection. */
 export const addCollection = (token, data) => ({

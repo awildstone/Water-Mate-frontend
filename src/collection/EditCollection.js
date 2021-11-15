@@ -3,8 +3,9 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import EditCollectionForm from './EditCollectionForm';
+import CollectionForm from './CollectionForm';
 
-const EditCollection = ({ close, handleEdit, collection }) => {
+const EditCollection = ({ close, collection }) => {
     return(
         <Container maxWidth="md">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 2 } }}>
@@ -13,7 +14,7 @@ const EditCollection = ({ close, handleEdit, collection }) => {
                         Edit Collection
                     </Typography>
                     <p>All fields required.</p>
-                   <EditCollectionForm close={close} handleEdit={handleEdit} collection={collection} />
+                   <CollectionForm close={close} collection={collection} />
                 </Paper>
             </Box>
         </Container>
