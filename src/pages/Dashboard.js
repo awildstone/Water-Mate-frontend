@@ -13,7 +13,7 @@ import AddCollection from '../collection/AddCollection';
 import Loading from '../alerts/Loading';
 
 
-const Dashboard = ({ collections, handleRequest, userCollectionCount, getRooms, getPlants, handleAdd, handleEdit, handleDelete }) => {
+const Dashboard = ({ collections, getCollections, handleRequest, userCollectionCount, getRooms, getPlants, handleAdd, handleEdit, handleDelete }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [ collection, setCollection ] = useState([]);
     const [addCollection, setAddCollection] = useState(false);
@@ -28,22 +28,6 @@ const Dashboard = ({ collections, handleRequest, userCollectionCount, getRooms, 
     const map = {
         'add-collection': setAddCollection,
     };
-
-    const colors = {
-        1: '#ffecc1',
-        2: '#BEDABA',
-        3: '#ffe7e0',
-        4: '#b5f7ff',
-        5: '#ffecc1',
-        6: '#BEDABA',
-        7: '#ffe7e0',
-        8: '#b5f7ff',
-        9: '#ffecc1',
-        10: '#BEDABA',
-        11: '#ffe7e0',
-        12: '#b5f7ff',
-    }
-
 
     useEffect(() => {
         if (collections) setCollection(collections[0]);
@@ -114,6 +98,7 @@ const Dashboard = ({ collections, handleRequest, userCollectionCount, getRooms, 
         return (
             <Collection
                 collections={collections}
+                getCollections={getCollections}
                 userCollectionCount={userCollectionCount}
                 collection={collection}
                 setCollection={setCollection}
