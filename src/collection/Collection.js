@@ -43,7 +43,7 @@ const Collection = ({
     handleDelete, 
     handleRequest, 
     getPlants }) => {
-        
+
     const [ error, rooms, setRooms, handleRoomRequest ] = useRooms();
     const [addCollection, setAddCollection] = useState(false);
     const [editCollection, setEditCollection] = useState(false);
@@ -185,23 +185,23 @@ const Collection = ({
 
                             <Modal
                                 open={editCollection}
-                                onClose={() => handleClose('edit-collection')}
+                                onClose={() => setEditCollection(false)}
                                 aria-labelledby="modal-modal-title"
                                 aria-describedby="modal-modal-description"
                             >
                                 <Box sx={modalStyle}>
-                                    <EditCollection close={handleClose} collection={collection} />
+                                    <EditCollection close={handleClose} setEditCollection={setEditCollection} collection={collection} />
                                 </Box>
                             </Modal>
 
                             <Modal
                                 open={addRoom}
-                                onClose={() => handleClose('add-room')}
+                                onClose={() => setaddRoom(false)}
                                 aria-labelledby="modal-modal-title"
                                 aria-describedby="modal-modal-description"
                             >
                                 <Box sx={modalStyle}>
-                                    <AddRoom close={handleClose} collectionId={collection.id} />
+                                    <AddRoom close={handleClose} setaddRoom={setaddRoom} collectionId={collection.id} />
                                 </Box>
                             </Modal>
 
@@ -327,12 +327,12 @@ const Collection = ({
 
                         <Modal
                             open={addCollection}
-                            onClose={() => handleClose('add-collection')}
+                            onClose={() => setAddCollection(false)}
                             aria-labelledby="modal-modal-title"
                             aria-describedby="modal-modal-description"
                         >
                             <Box sx={modalStyle}>
-                                <AddCollection close={handleClose} />
+                                <AddCollection close={handleClose} setAddCollection={setAddCollection} />
                             </Box>
                         </Modal>
 

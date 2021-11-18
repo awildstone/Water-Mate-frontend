@@ -13,7 +13,7 @@ const validationSchema = yup.object({
         .required('You must enter a name for your collection.'),
 });
 
-const CollectionForm = ({ close, collection=null }) => {
+const CollectionForm = ({ close, setEditCollection, setAddCollection, collection=null }) => {
     const [ error, collections, setCollections, handleCollectionRequest ] = useCollections();
     const [ message, setMessage ] = useState(null);
 
@@ -77,7 +77,7 @@ const CollectionForm = ({ close, collection=null }) => {
                             Submit
                         </Button>
                         <Button 
-                            onClick={() => collection ? close('edit-collection') : close('add-collection')} 
+                            onClick={() => collection ? setEditCollection(false) : setAddCollection(false)} 
                             color="info" sx={{  color: '#fff'}} 
                             variant="contained" 
                             size="large"

@@ -4,7 +4,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import CollectionForm from './CollectionForm';
 
-const AddCollection = ({ close }) => {
+const AddCollection = ({ close, setAddCollection }) => {
 
     return(
         <Container maxWidth="md">
@@ -14,7 +14,7 @@ const AddCollection = ({ close }) => {
                         Add Collection
                     </Typography>
                     <p>All fields required.</p>
-                   <CollectionForm close={close} />
+                   <CollectionForm close={close} setAddCollection={setAddCollection} />
                 </Paper>
             </Box>
         </Container>
