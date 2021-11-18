@@ -203,7 +203,7 @@ const Profile = ({ collections, handleEdit, handleDelete }) => {
                                 </ListItemText>
                             </ListItem>
         
-                            { collections.map((collection) => {
+                            { collections.collections.map((collection) => {
                                 return (
                                     <ListItem key={collection.id}>
                                         <ListItemIcon><CollectionsIcon /></ListItemIcon>

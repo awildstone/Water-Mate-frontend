@@ -29,17 +29,30 @@ import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded';
 import ListItemText from '@mui/material/ListItemText';
 import BedroomChildRoundedIcon from '@mui/icons-material/BedroomChildRounded';
 
+import useRooms from '../room/useRooms';
+import { getRooms, deleteRoom } from '../room/useRooms';
 
-const Collection = ({ collections, getCollections, userCollectionCount, collection, setCollection, handleAdd, handleEdit, handleDelete, handleRequest, getRooms, getPlants }) => {
-    const [rooms, setRooms] = useState([]);
+const Collection = ({ 
+    collections, 
+    handleCollectionRequest, 
+    getCollections, 
+    deleteCollection, 
+    userCollectionCount, 
+    collection, 
+    setCollection, 
+    handleDelete, 
+    handleRequest, 
+    getPlants }) => {
+        
+    const [ error, rooms, setRooms, handleRoomRequest ] = useRooms();
     const [addCollection, setAddCollection] = useState(false);
     const [editCollection, setEditCollection] = useState(false);
     const [addRoom, setaddRoom] = useState(false);
-    const [deleteCollection, setDeleteCollection] = useState(false);
+    const [deleteCollectionToggle, setDeleteCollectionToggle] = useState(false);
     const [filterRoom, setFilterRoom] = useState(null);
-    const [filterCollection, setFilterCollection] = useState(null);
-    const open = Boolean(filterRoom);
-    const openCollection = Boolean(filterCollection)
+    const [viewCollection, setViewCollection] = useState(null);
+    const openRoomMenu = Boolean(filterRoom);
+    const openCollectionMenu = Boolean(viewCollection)
 
     /** Styling for modals. */
     const modalStyle = {
@@ -54,7 +67,7 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
         'add-collection': setAddCollection,
         'edit-collection': setEditCollection,
         'add-room': setaddRoom,
-        'delete-collection': setDeleteCollection
+        'delete-collection': setDeleteCollectionToggle
     };
 
     /** Colors for rooms. */
@@ -75,22 +88,16 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
 
     /** Get rooms for the current collection (if any). */
     useEffect(() => {
-        getRoomsData(collection);
-    },[collection, addCollection, addRoom]);
-
-    /** Get all rooms by collection_id. */
-    async function getRoomsData(collection) {
-        const rooms = await getRooms({ 'collection_id': collection.id });
-        if (rooms) setRooms(rooms);
-    }
+        if (collection) handleRoomRequest(getRooms({ 'collection_id': collection.id }));
+    },[collections, collection, addCollection, addRoom]);
 
     /** Filters the collection rooms by room_id. */
     const filterByRoom = (event, data) => {
         const split = event.target.innerText.split(' ');
         const len = split.length;
         const id = split[len-1].toString();
-        const filtered = data.filter((room) => room.id === +id);
-        setRooms(filtered);
+        const filtered = data.rooms.filter((room) => room.id === +id);
+        setRooms({ rooms: filtered });
     };
 
     /** Handles the opening of filter room menu. */
@@ -100,19 +107,19 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
 
     /** Handles the opening of filter collection menu. */
     const handleClickCollectionMenu = (event) => {
-        setFilterCollection(event.currentTarget);
+        setViewCollection(event.currentTarget);
     }
 
     /** Handles the closing the filter room menu & captures the selection by the user to view all rooms or filter by a room. */
     const handleCloseMenu = (event, criteria, data) => {
         if (criteria === 'collection') {
             setCollection(data);
-            setFilterCollection(null);
+            setViewCollection(null);
         } else if (criteria === 'room') {
             filterByRoom(event, data);
             setFilterRoom(null);
         } else if (criteria === 'filter') {
-            getRoomsData(collection);
+            handleRoomRequest(getRooms({ 'collection_id': collection.id }));
             setFilterRoom(null);
         }
     };
@@ -125,11 +132,10 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
     /** Handles action to close a form modal. */
     const handleClose = (action) => {
         map[action](false);
-        //trigger reload of the collections to reflect any changes.
-        getCollections();
+        handleCollectionRequest(getCollections());
     }
 
-    if (collections && userCollectionCount) {
+    if (collection && userCollectionCount && rooms) {
         return (
             <Container key={collection.id} maxWidth="lg"> 
                 <Box sx={{  '& > :not(style)': { m: 2, p: 2 } }}>
@@ -169,9 +175,10 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
                                 title='Delete Collection'
                                 type='Collection'
                                 action='delete-collection'
-                                open={deleteCollection}
+                                open={deleteCollectionToggle}
                                 handleClose={handleClose}
-                                handleDelete={handleDelete}
+                                handleDelete={handleCollectionRequest}
+                                request={deleteCollection}
                                 resource={'collection'}
                                 id={collection.id}
                             />
@@ -183,7 +190,7 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
                                 aria-describedby="modal-modal-description"
                             >
                                 <Box sx={modalStyle}>
-                                    <EditCollection close={handleClose} handleEdit={handleEdit} collection={collection} />
+                                    <EditCollection close={handleClose} collection={collection} />
                                 </Box>
                             </Modal>
 
@@ -194,16 +201,11 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
                                 aria-describedby="modal-modal-description"
                             >
                                 <Box sx={modalStyle}>
-                                    <AddRoom 
-                                        close={handleClose} 
-                                        collectionId={collection.id} 
-                                        handleAdd={handleAdd}
-                                        handleRequest={handleRequest}
-                                    />
+                                    <AddRoom close={handleClose} collectionId={collection.id} />
                                 </Box>
                             </Modal>
 
-                            <Grid item xs={12} >
+                            <Grid item xs={12} >                            
                                 <Paper sx={{ backgroundColor: '#243246' }}>
                                     <Tooltip title="Add Collection">
                                         <Button 
@@ -211,7 +213,7 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
                                             startIcon={<AddRoundedIcon />}
                                             onClick={() => handleOpen('add-collection')}
                                             aria-label="add" 
-                                            sx={{ color: '#fff' }}
+                                            sx={{ color: '#fff', mr: 2 }}
                                         >
                                             Collection
                                         </Button>
@@ -224,10 +226,10 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
                                                 id="filter-collections"
                                                 aria-controls="filter-collections"
                                                 aria-haspopup="true"
-                                                aria-expanded={open ? 'true' : undefined}
+                                                aria-expanded={openCollectionMenu ? 'true' : undefined}
                                                 onClick={handleClickCollectionMenu} 
                                                 aria-label="filter-collections" 
-                                                sx=  {{ color: '#fff' }} 
+                                                sx=  {{ color: '#fff', mr: 2 }} 
                                                 startIcon={<VisibilityRoundedIcon />}
                                             >
                                                 Collections
@@ -235,15 +237,18 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
                                         </Tooltip>
                                         <Menu
                                             id="filter-collections"
-                                            anchorEl={filterCollection}
-                                            open={openCollection}
-                                            onClose={() => setFilterCollection(null)}
+                                            anchorEl={viewCollection}
+                                            open={openCollectionMenu}
+                                            onClose={() => setViewCollection(null)}
                                             MenuListProps={{'aria-labelledby': 'filter-collections-menu',}}
                                         >
                                             <MenuList>
-                                                  { collections.map((collection, i) => {
+                                                  { collections.collections.map((collection, i) => {
                                                     return (
-                                                        <MenuItem key={i+1} onClick={(e) => handleCloseMenu(e, 'collection',    collection)}>
+                                                        <MenuItem 
+                                                            key={i+1} 
+                                                            onClick={(e) => handleCloseMenu(e, 'collection', collection)}
+                                                        >
                                                             <ListItemIcon>
                                                                 <CollectionsRoundedIcon fontSize="small" />
                                                             </ListItemIcon>
@@ -255,8 +260,9 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
                                                 }
                                             </MenuList>
                                         </Menu>
-                                        </>
-                                    : ''
+                                    </>
+                                    : 
+                                    ''
                                 }
                                     <Tooltip title="Add Room">
                                         <Button
@@ -264,7 +270,7 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
                                             startIcon={<AddRoundedIcon />}
                                             onClick={() => handleOpen('add-room')}
                                             aria-label="add" 
-                                            sx={{ color: '#fff' }}
+                                            sx={{ color: '#fff', mr: 2 }}
                                         >
                                             Room
                                         </Button>
@@ -275,7 +281,7 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
                                             id="filter-button"
                                             aria-controls="filter-menu"
                                             aria-haspopup="true"
-                                            aria-expanded={open ? 'true' : undefined}
+                                            aria-expanded={openRoomMenu ? 'true' : undefined}
                                             onClick={handleClickRoomMenu} 
                                             aria-label="filter" 
                                             sx=  {{ color: '#fff' }} 
@@ -287,7 +293,7 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
                                     <Menu
                                         id="filter-room-menu"
                                         anchorEl={filterRoom}
-                                        open={open}
+                                        open={openRoomMenu}
                                         onClose={() => setFilterRoom(null)}
                                         MenuListProps={{'aria-labelledby': 'filter-room-button',}}
                                     >
@@ -298,8 +304,8 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
                                                 </ListItemIcon>
                                                 <ListItemText>Show All</ListItemText>
                                               </MenuItem>
-                                              { rooms.length ?
-                                                rooms.map((room, i) => {
+                                              { rooms ?
+                                                rooms.rooms.map((room, i) => {
                                                 return (
                                                     <MenuItem key={i+1} onClick={(e) => handleCloseMenu(e, 'room', rooms)}>
                                                         <ListItemIcon>
@@ -326,7 +332,7 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
                             aria-describedby="modal-modal-description"
                         >
                             <Box sx={modalStyle}>
-                                <AddCollection close={handleClose} handleAdd={handleAdd} handleRequest={handleRequest}/>
+                                <AddCollection close={handleClose} />
                             </Box>
                         </Modal>
 
@@ -344,17 +350,18 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
                             justifyContent='space-between' 
                             alignItems='stretch'
                         >
-                            { rooms.length ?
-                                rooms.map((room, i) => {
+                            { rooms.rooms.length ?
+                                rooms.rooms.map((room, i) => {
                                     return (
                                         <Grid key={room.id} item sm={12} md={6} sx={{ display: 'flex', alignItems:'stretch',    width: '100%' }} >
                                             <Room
-                                                collection={collection}
                                                 handleRequest={handleRequest}
-                                                getRoomsData={getRoomsData}
+                                                handleCollectionRequest={handleCollectionRequest}
+                                                getCollections={getCollections}
+                                                handleRoomRequest={handleRoomRequest}
+                                                getRooms={getRooms}
+                                                deleteRoom={deleteRoom}
                                                 getPlants={getPlants}
-                                                handleAdd={handleAdd} 
-                                                handleEdit={handleEdit} 
                                                 handleDelete={handleDelete} 
                                                 sx={{ height: '100%'}} 
                                                 color={colors[i+1] }  
@@ -376,7 +383,7 @@ const Collection = ({ collections, getCollections, userCollectionCount, collecti
             </Container>
         );
     }
-        return <Loading />
+    return <Loading />
 };
 
 export default Collection;

@@ -13,12 +13,10 @@ import ProtectedRoute from './ProtectedRoute';
 
 const Routes = ({
     collections,
+    handleCollectionRequest,
     handleRequest,
     plantTypes,
-    userCollectionCount,
-    userPlantCount, 
-    getCollections, 
-    getRooms, 
+    userPlantCount,
     getPlants,
     getPlantsToWater, 
     getPlant, 
@@ -55,10 +53,7 @@ const Routes = ({
             <ProtectedRoute exact path='/dashboard'>
                 <Dashboard
                     collections={collections}
-                    handleRequest={handleRequest}
-                    userCollectionCount={userCollectionCount}
-                    getCollections={getCollections} 
-                    getRooms={getRooms}
+                    handleCollectionRequest={handleCollectionRequest}
                     getPlants={getPlants}
                     getPlant={getPlant}
                     handleAdd={handleAdd} 
@@ -79,7 +74,7 @@ const Routes = ({
 
             <ProtectedRoute exact path='/profile'>
                 <Profile 
-                    collections={collections}
+                    // collections={collections}
                     handleEdit={handleEdit}
                     handleDelete={handleDelete} 
                     handleRequest={handleRequest}
@@ -90,7 +85,7 @@ const Routes = ({
                 <PlantDetails
                     plantTypes={plantTypes}
                     getPlant={getPlant} 
-                    collections={collections} 
+                    // collections={collections}
                     handleEdit={handleEdit} 
                     handleDelete={handleDelete} 
                     getHistory={getHistory}

@@ -11,13 +11,22 @@ import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import Collection from '../collection/Collection';
 import AddCollection from '../collection/AddCollection';
 import Loading from '../alerts/Loading';
+import { getCollections, deleteCollection } from '../collection/useCollections';
 
 
-const Dashboard = ({ collections, getCollections, handleRequest, userCollectionCount, getRooms, getPlants, handleAdd, handleEdit, handleDelete }) => {
+const Dashboard = ({ 
+    collections, 
+    handleCollectionRequest, 
+    getPlants, 
+    handleAdd, 
+    handleEdit, 
+    handleDelete }) => {
+        
     const [isLoading, setIsLoading] = useState(true);
-    const [ collection, setCollection ] = useState([]);
+    const [collection, setCollection] = useState(null);
     const [addCollection, setAddCollection] = useState(false);
 
+    /** Styling for Modals. */
     const modalStyle = {
         position: 'absolute',
         top: '50%',
@@ -25,24 +34,29 @@ const Dashboard = ({ collections, getCollections, handleRequest, userCollectionC
         transform: 'translate(-50%, -50%)',
     };
 
+    /** Mapping of actions and state setters. */
     const map = {
         'add-collection': setAddCollection,
     };
 
+    /** Set the current collection (if any) in state. */
     useEffect(() => {
-        if (collections) setCollection(collections[0]);
+        if (collections) setCollection(collections.collections[0]);
         setIsLoading(false);
-    },[collections, addCollection]);
+    },[collections, handleCollectionRequest, addCollection]);
 
-
+    /** Handles action to open a form modal. */
     const handleOpen = (action) => {
         map[action](true);
     } 
 
+    /** Handles action to close a form modal. */
     const handleClose = (action) => {
         map[action](false);
+        handleCollectionRequest(getCollections());
     }
 
+    /** Returns instructions and form for user to add their first Collection. */
     const noCollections = () => {
         return (
             <Container maxWidth="lg"> 
@@ -82,7 +96,7 @@ const Dashboard = ({ collections, getCollections, handleRequest, userCollectionC
                                             aria-describedby="modal-modal-description"
                                         >
                                             <Box sx={modalStyle}>
-                                                <AddCollection close={handleClose} handleAdd={handleAdd} handleRequest={handleRequest} />
+                                                <AddCollection close={handleClose} />
                                             </Box>
                                         </Modal>
 
@@ -94,27 +108,28 @@ const Dashboard = ({ collections, getCollections, handleRequest, userCollectionC
         );
     }
 
+    /** Returns a Collection component. */
     const hasCollections = () => {
         return (
             <Collection
                 collections={collections}
+                handleCollectionRequest={handleCollectionRequest}
                 getCollections={getCollections}
-                userCollectionCount={userCollectionCount}
+                deleteCollection={deleteCollection}
+                userCollectionCount={collections.collections.length}
                 collection={collection}
                 setCollection={setCollection}
                 handleAdd={handleAdd}
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
-                handleRequest={handleRequest}
-                getRooms={getRooms}
                 getPlants={getPlants}
             />
         );
     }
 
-    if (isLoading || !collections || !collection) {
+    if (isLoading || !collections) {
         return <Loading />
-    } else if (userCollectionCount > 0) {
+    } else if (collections.collections.length > 0) {
         return hasCollections();
     } else {
         return noCollections();

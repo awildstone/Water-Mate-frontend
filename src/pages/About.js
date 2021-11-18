@@ -42,16 +42,14 @@ const About = () => {
                         <Typography variant="h6">Water Manager</Typography>
                         </AccordionSummary>
                         <AccordionDetails>  
-                        <Typography>
                             Water Mate calculates the next water date for your plant then displays the plant in the Water Manager view when its time to water.
-                        <ul>
-                            <li>In the Water Manager, users can Water or Snooze the plant.</li> 
-                            <li> Clicking <b>Water</b> will activate the Water Mate algorithm to generate a solar forcast using realtime solar data and calculate the next reccomended water date for your plant.</li>
-                            <li>Clicking <b>Snooze</b> will update the plant's water schedule to check if needs water in 3 days.</li>
-                            <li>Users can add notes about the plant for the Water or Snooze event such as the condition of the plant, pest prevention or other care notes, or why the water schedule was snoozed.</li>
-                        </ul>
-                        <img className="rounded" src='/images/water_manager_view.png' alt="Water Manager View" width="100%" />
-                        </Typography>
+                            <ul>
+                                <li>In the Water Manager, users can Water or Snooze the plant.</li> 
+                                <li> Clicking <b>Water</b> will activate the Water Mate algorithm to generate a solar forcast using realtime solar data and calculate the next reccomended water date for your plant.</li>
+                                <li>Clicking <b>Snooze</b> will update the plant's water schedule to check if needs water in 3 days.</li>
+                                <li>Users can add notes about the plant for the Water or Snooze event such as the condition of the plant, pest prevention or other care notes, or why the water schedule was snoozed.</li>
+                            </ul>
+                            <img className="rounded" src='/images/water_manager_view.png' alt="Water Manager View" width="100%" />
                         </AccordionDetails>
                     </Accordion>
 
@@ -64,17 +62,15 @@ const About = () => {
                         <Typography variant="h6">Dashboard View</Typography>
                         </AccordionSummary>
                         <AccordionDetails>  
-                        <Typography>
                             Users can see a bird's eye view of their Collection(s) in the Dashboard where the details can be viewed, edited, or deleted.
-                        <ul>
-                            <li>Users can organize their plants into Collection(s) like Home or Work.</li>
-                            <li>Inside a user's collection are Rooms like Bedroom or Kitchen.</li>
-                            <li>Rooms organize Lightsources (like Artifical lights South, or East window) and Plants!</li>
-                            <li>Users add Rooms to their Collection, select the Lightsource available in the Room, then add their Plant to the room selecting the plant's type and lightsource on creation.</li>
-                            <li>Collections can be filtered by room for quick access to data.</li>
-                        </ul>
-                        <img className="rounded" src='/images/dashboard_view.png' alt="Dashboard View" width="100%" />
-                        </Typography>
+                            <ul>
+                                <li>Users can organize their plants into Collection(s) like Home or Work.</li>
+                                <li>Inside a user's collection are Rooms like Bedroom or Kitchen.</li>
+                                <li>Rooms organize Lightsources (like Artifical lights South, or East window) and Plants!</li>
+                                <li>Users add Rooms to their Collection, select the Lightsource available in the Room, then add their Plant to the room selecting the plant's type and lightsource on creation.</li>
+                                <li>Collections can be filtered by room for quick access to data.</li>
+                            </ul>
+                            <img className="rounded" src='/images/dashboard_view.png' alt="Dashboard View" width="100%" />
                         </AccordionDetails>
                     </Accordion>
                   
@@ -87,15 +83,13 @@ const About = () => {
                         <Typography variant="h6">Plant View</Typography>
                         </AccordionSummary>
                         <AccordionDetails>  
-                        <Typography>
                             Users can view or manage the details about their plant in the Plant detail view.
-                        <ul>
+                            <ul>
                                 <li>Users can modify a plant's details such as the name, photo, type of plant, or lightsource.</li>
                                 <li>Users can modify a plant's water schedule manually, and even set a manual water interval.</li>
                                 <li>Users can view the full history of the plant's care in the water history table.</li>
-                        </ul>
-                        <img className="rounded" src='/images/plant_view.png' alt="Plant Details View" width="100%" />
-                        </Typography>
+                            </ul>
+                            <img className="rounded" src='/images/plant_view.png' alt="Plant Details View" width="100%" />
                         </AccordionDetails>
                     </Accordion>
                     
@@ -108,16 +102,12 @@ const About = () => {
                         <Typography variant="h6">Water Schedule</Typography>
                         </AccordionSummary>
                         <AccordionDetails>  
-                        <Typography>
                             Water Mate fully automates your plant's water schedule using realtime location and solar data, but sometimes adjustments are needed to account for other environmental conditions outside of the app's control.
-                        </Typography>
-                        <Typography>
                             <ul>
                                 <li>Users can set the water schedule to manual mode. This turns off the Water Mate algorithm and only reminds the user to water the plant after X number of days set by the user. Changes to the water interval will not occur until Manual Mode is disabled.</li>
-                                <li>Users can modify the current water interval for a plant manually if they notice the algorithm is    too frequent or not frequent enough. This keeps the Water Mate automation on, and seasonal adjustments  will continue.</li>
+                                <li>Users can modify the current water interval for a plant manually if they notice the algorithm is too frequent or not frequent enough. This keeps the Water Mate automation on, and seasonal adjustments  will continue.</li>
                             </ul>
                             <img className="rounded" src='/images/edit_schedule_view.png' alt="Edit Plant Schedule Form" width="100%" />
-                        </Typography>
                         </AccordionDetails>
                     </Accordion>
                     <p>

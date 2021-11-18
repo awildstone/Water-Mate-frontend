@@ -14,7 +14,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import Alert from '@mui/material/Alert';
 import { useHistory } from 'react-router-dom';
 
-const WarningModal = ({ title, type, action, open, handleClose, handleDelete, resource, id, redirect=null}) => {
+const WarningModal = ({ title, type, action, open, handleClose, handleDelete, request, id, redirect=null}) => {
 
     const [ isConfirmed, setIsConfirmed ] = useState(false);
     const [ isChecked, setIsChecked ] = useState(false);
@@ -68,13 +68,14 @@ const WarningModal = ({ title, type, action, open, handleClose, handleDelete, re
                     <Button
                         variant="contained"
                         onClick={async () => {
-                            let result = await handleDelete(resource, id);
-                            if(result.success) {
+                            let result = await handleDelete(request(id));
+                            
+                            if (result.success) {
                                 if (redirect) history.push(redirect);
                                 handleClose(action);
                             } else {
                                 setError(result.message);
-                            } 
+                            }
                         }}
                         disabled={!isConfirmed}
                         color="error"

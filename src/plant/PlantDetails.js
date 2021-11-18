@@ -53,7 +53,7 @@ const PlantDetails = ({ getPlant, collections, handleEdit, handleDelete, getHist
            const type = plantTypes.filter(type => type.id === plantData.type_id);
            if (type) setPlantType(type[0]);
            const collection_id = plantData.room.collection_id;
-           const collection = collections.filter(collection => collection.id === collection_id);
+           const collection = collections.collections.filter(collection => collection.id === collection_id);
            if (collection) setCollection(collection[0]);
         } 
     }

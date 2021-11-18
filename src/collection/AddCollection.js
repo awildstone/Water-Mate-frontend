@@ -2,7 +2,6 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import AddCollectionForm from './AddCollectionForm';
 import CollectionForm from './CollectionForm';
 
 const AddCollection = ({ close }) => {
