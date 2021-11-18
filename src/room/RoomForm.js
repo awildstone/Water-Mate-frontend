@@ -13,7 +13,7 @@ const validationSchema = yup.object({
         .required('You must enter a name for your room.'),
 });
 
-const RoomForm = ({ close, collectionId=null, room=null }) => {
+const RoomForm = ({ close, setaddRoom, setEditRoom, collectionId=null, room=null }) => {
     const [ error, rooms, setRooms, handleRoomRequest ] = useRooms();
     const [ message, setMessage ] = useState(null);
 
@@ -76,7 +76,7 @@ const RoomForm = ({ close, collectionId=null, room=null }) => {
                             Submit
                         </Button>
                         <Button 
-                            onClick={() => room ? close('edit-room') : close('add-room')} 
+                            onClick={() => room ? setEditRoom(false) : setaddRoom(false)} 
                             color="info" 
                             sx={{ color: '#fff'}} 
                             variant="contained"

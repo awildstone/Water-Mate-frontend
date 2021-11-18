@@ -46,7 +46,7 @@ const useRooms = () => {
         const headers = { 'content-type': 'application/json', 'x-access-token': TOKEN };
         try {
             const response = await axios({ url, method, data, headers, params});
-            console.log('useRooms API response:', response);
+            // console.log('useRooms API response:', response);
             if (method !== 'delete') {
                 setError(null);
                 setRooms(response.data);
@@ -55,7 +55,7 @@ const useRooms = () => {
             return { success: true, message };
         } catch (err) {
             const message = err.response.data.msg;
-            console.error('API ERROR:', err);
+            // console.error('API ERROR:', err);
             setError(message);
             return { success: false, message };
         }

@@ -4,7 +4,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import RoomForm from './RoomForm';
 
-const EditRoom = ({ close, room }) => {
+const EditRoom = ({ close, setEditRoom, room }) => {
     return(
         <Container maxWidth="md">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 2 } }}>
@@ -13,7 +13,7 @@ const EditRoom = ({ close, room }) => {
                         Edit Room
                     </Typography>
                     <p>All fields required.</p>
-                   <RoomForm close={close} room={room} />
+                   <RoomForm close={close} setEditRoom={setEditRoom} room={room} />
                 </Paper>
             </Box>
         </Container>
