@@ -1,12 +1,10 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { TextField, Button, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
-import UserContext from '../context/UserContext';
-import useCollectionForm from './useCollectionForm';
-import { addCollection } from '../requests';
-import { editCollection } from '../requests';
+import useCollections from './useCollections';
+import { addCollection, editCollection } from './useCollections';
 
 const validationSchema = yup.object({
     name: yup.string()
@@ -16,8 +14,7 @@ const validationSchema = yup.object({
 });
 
 const CollectionForm = ({ close, collection=null }) => {
-    const { token } = useContext(UserContext);
-    const [ error, handleSubmit ] = useCollectionForm();
+    const [ error, collections, setCollections, handleCollectionRequest ] = useCollections();
     const [ message, setMessage ] = useState(null);
 
     const formik = useFormik({
@@ -29,11 +26,11 @@ const CollectionForm = ({ close, collection=null }) => {
             console.log(values);
             let result;
             if (collection) {
-                result = await handleSubmit(editCollection(token, collection.id, values));
+                result = await handleCollectionRequest(editCollection(collection.id, values));
             } else {
-                result = await handleSubmit(addCollection(token, values));
+                result = await handleCollectionRequest(addCollection(values));
             }
-            if (result.success) setMessage(result.data.msg);
+            if (result.success) setMessage(result.message);
         },
     });
     
@@ -70,23 +67,23 @@ const CollectionForm = ({ close, collection=null }) => {
                     </Button>
                     :
                     <>
-                    <Button 
-                        color="success" 
-                        sx={{ color: '#fff'}} 
-                        variant="contained" 
-                        size="large" 
-                        type="submit"
-                    >
-                        Submit
-                    </Button>
-                    <Button 
-                        onClick={() => collection ? close('edit-collection') : close('add-collection')} 
-                        color="info" sx={{  color: '#fff'}} 
-                        variant="contained" 
-                        size="large"
-                    >
-                        Cancel
-                    </Button>
+                        <Button 
+                            color="success" 
+                            sx={{ color: '#fff'}} 
+                            variant="contained" 
+                            size="large" 
+                            type="submit"
+                        >
+                            Submit
+                        </Button>
+                        <Button 
+                            onClick={() => collection ? close('edit-collection') : close('add-collection')} 
+                            color="info" sx={{  color: '#fff'}} 
+                            variant="contained" 
+                            size="large"
+                        >
+                            Cancel
+                        </Button>
                     </>
                 }
             </Stack>

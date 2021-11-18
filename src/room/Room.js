@@ -23,15 +23,23 @@ import AddLightSource from '../lightsource/AddLightSource';
 import AddPlant from '../plant/AddPlant';
 import WarningModal from '../alerts/WarningModal';
 
-const Room = ({ collection, getRoomsData, color, room, getPlants, handleAdd, handleEdit, handleDelete, handleRequest }) => {
-    const [currentCollection, setCurrentCollection] = useState(collection);
+const Room = ({ 
+    handleRoomRequest, 
+    deleteRoom, 
+    getRooms, 
+    color, 
+    room, 
+    getPlants, 
+    handleAdd, 
+    handleDelete, 
+    handleRequest }) => {
+        
     const [plants, setPlants] = useState([]);
-    // const [currentRoom, setCurrentRoom] = useState([]);
     // const [lights, setLights] = useState([]);
     const [editRoom, setEditRoom] = useState(false);
     const [addLight, setAddLight] = useState(false);
     const [addPlant, setaddPlant] = useState(false);
-    const [deleteRoom, setDeleteRoom] = useState(false);
+    const [deleteRoomToggle, setDeleteRoomToggle] = useState(false);
     const [deleteLight, setDeleteLight] = useState(false);
 
     const modalStyle = {
@@ -45,16 +53,14 @@ const Room = ({ collection, getRoomsData, color, room, getPlants, handleAdd, han
         'edit-room': setEditRoom,
         'add-plant': setaddPlant,
         'add-light': setAddLight,
-        'delete-room': setDeleteRoom,
+        'delete-room': setDeleteRoomToggle,
         'delete-light': setDeleteLight
     };
 
     useEffect(() => {
-        // setCurrentCollection(collection);
-        // setCurrentRoom(room);
         // setLights(room.lightsources);
         loadPlantData(); 
-    },[editRoom, deleteRoom, addLight, deleteLight, addPlant]);
+    },[addPlant]);
 
     async function loadPlantData() {
         const response = await getPlants({'room_id': room.id });
@@ -67,7 +73,7 @@ const Room = ({ collection, getRoomsData, color, room, getPlants, handleAdd, han
 
     const handleClose = (action) => {
         map[action](false);
-        getRoomsData(currentCollection)
+        handleRoomRequest(getRooms({ 'collection_id': room.collection_id }));
     }
 
     return (
@@ -115,16 +121,17 @@ const Room = ({ collection, getRoomsData, color, room, getPlants, handleAdd, han
                                 aria-describedby="modal-modal-description"
                             >
                                 <Box sx={modalStyle}>
-                                    <EditRoom close={handleClose} handleEdit={handleEdit} room={room} />
+                                    <EditRoom close={handleClose} room={room} />
                                 </Box>
                             </Modal>
                             <WarningModal
                                 title='Delete Room'
                                 type='Room'
                                 action='delete-room'
-                                open={deleteRoom}
+                                open={deleteRoomToggle}
                                 handleClose={handleClose}
-                                handleDelete={handleDelete}
+                                handleDelete={handleRoomRequest}
+                                request={deleteRoom}
                                 resource={'room'}
                                 id={room.id}
                             />

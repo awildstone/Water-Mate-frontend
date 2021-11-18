@@ -11,9 +11,11 @@ import axios from 'axios';
 import UserContext from './context/UserContext';
 import PlantContext from './context/PlantContext';
 import Loading from './alerts/Loading';
+import useCollections from './collection/useCollections';
+import { getCollections } from './collection/useCollections';
 
-const TOKEN_ID = 'watermate-user';
-const BASE_URL = process.env.APP_BASE_URL || 'http://127.0.0.1:5000';
+export const TOKEN_ID = 'watermate-user';
+export const BASE_URL = process.env.APP_BASE_URL || 'http://127.0.0.1:5000';
 
 /** Theme colors for App */
 const theme = createTheme({
@@ -34,7 +36,6 @@ const theme = createTheme({
       main: '#1CBC9B'
     },
     error: {
-      // main: '#c62828'
       main: '#B9423A'
     },
   },
@@ -48,34 +49,34 @@ const App = () => {
   const [ isLoading, setIsLoading ] = useState(true);
   const [ plantTypes, setPlantTypes ] = useState(null);
   const [ currentUser, setCurrentUser ] = useState(null);
-  const [ collections, setCollections ] = useState(null);
+  const [ error, collections, setCollections, handleCollectionRequest ] = useCollections();
   const [ userPlantCount, setUserPlantCount ] = useState(null);
-  const [ userCollectionCount, setUserCollectionCount ] = useState(null);
 
   useEffect(() => {
     if (token) {
       loadPlantData();
       loadUserData();
-      loadCollections();
+      // loadCollections();
+      handleCollectionRequest(getCollections());
     }
     setIsLoading(false);
   }, [token]);
 
-  async function handleRequest(request) {
-    const data = request.data ? request.data : {};
-    const params = request.params ? request.params : {};
-    const method = request.method;
-    const url = request.url;
-    const headers = request.headers ? request.headers : {};
-    try {
-      let response = await axios({ method, url, data, headers, params});
-      return { success: true, data: response.data }
-    } catch (err) {
-      const message = err.response.data.msg;
-      console.error('API ERROR:', err);
-      return { success: false, message };
-    }
-  };
+  // async function handleRequest(request) {
+  //   const data = request.data ? request.data : {};
+  //   const params = request.params ? request.params : {};
+  //   const method = request.method;
+  //   const url = request.url;
+  //   const headers = request.headers ? request.headers : {};
+  //   try {
+  //     let response = await axios({ method, url, data, headers, params});
+  //     return { success: true, data: response.data }
+  //   } catch (err) {
+  //     const message = err.response.data.msg;
+  //     console.error('API ERROR:', err);
+  //     return { success: false, message };
+  //   }
+  // };
 
   async function loadUserData() {
       try {
@@ -114,25 +115,21 @@ const App = () => {
     }
   }
 
-  async function loadCollections(page=null) {
-      try {
-        let collectionsData;
-        if (page) {
-          collectionsData = await handleGetFilteredResources(`collection/${page}`);
-        } else {
-          collectionsData = await handleGetFilteredResources('collection');
-          setCollections(collectionsData.collections);
-        } 
-        console.log('LOAD COLLECTIONS DATA & COUNT');
-        console.log(collectionsData);
-        console.log(collectionsData.collections.length);
-        setUserCollectionCount(collectionsData.collections.length);
+  // async function loadCollections() {
+  //     try {
+  //       let collectionsData = await handleGetFilteredResources('collection');
+  //       setCollections(collectionsData.collections);
+  //       setUserCollectionCount(collectionsData.collections.length);
 
-        return collectionsData;
-      } catch (err) {
-        console.error('Error', err);
-      }
-  }
+  //       console.log('LOAD COLLECTIONS DATA & COUNT');
+  //       console.log(collectionsData);
+  //       console.log(collectionsData.collections.length);
+
+  //       return collectionsData;
+  //     } catch (err) {
+  //       console.error('Error', err);
+  //     }
+  // }
 
   async function loadPlantData() {
     try {
@@ -149,17 +146,17 @@ const App = () => {
     }
 }
 
-  async function getRooms(query) {
-      try {
-        const roomsData = await handleGetFilteredResources('room', query);
-        console.log('LOAD ROOMS DATA')
-        console.log(roomsData);
-        return roomsData.rooms
-      } catch (err) {
-        console.error('Error', err);
-        return []
-      }
-  }
+  // async function getRooms(query) {
+  //     try {
+  //       const roomsData = await handleGetFilteredResources('room', query);
+  //       console.log('LOAD ROOMS DATA')
+  //       console.log(roomsData);
+  //       return roomsData.rooms
+  //     } catch (err) {
+  //       console.error('Error', err);
+  //       return []
+  //     }
+  // }
 
   async function getPlants(query) {
       try {
@@ -280,7 +277,7 @@ const App = () => {
     };
     try {
       let response = await axios.post(`${BASE_URL}/${resource}/`, data, { headers });
-      if (response) loadCollections();
+      // if (response) loadCollections();
       return { success: true }
     } catch (err) {
       const message = err.response.data.msg;
@@ -295,7 +292,7 @@ const App = () => {
     };
     try {
       let response = await axios.patch(`${BASE_URL}/${resource}/${id}/`, data, { headers });
-      if (response) loadCollections();
+      // if (response) loadCollections();
       return { success: true }
     } catch (err) {
       const message = err.response.data.msg;
@@ -310,7 +307,7 @@ const App = () => {
     };
     try {
       let response = await axios.delete(`${BASE_URL}/${resource}/${id}/`, { headers });
-      if (response) loadCollections();
+      // if (response) loadCollections();
       return { success: true }
     } catch (err) {
       const message = err.response.data.msg;
@@ -321,7 +318,7 @@ const App = () => {
   function logout() {
     setToken(null);
     setCurrentUser(null);
-    setCollections(null);
+    // setCollections(null);
     setPlantTypes(null);
   }
 
@@ -337,14 +334,10 @@ const App = () => {
           <Offset />
           <Routes
             collections={collections}
-            handleRequest={handleRequest} 
+            handleCollectionRequest={handleCollectionRequest}
             plantTypes={plantTypes}
-            collections={collections}
-            userCollectionCount={userCollectionCount}
             userPlantCount={userPlantCount}
-            getCollections={loadCollections}
             getHistory={getHistory}
-            getRooms={getRooms}
             getPlants={getPlants}
             getPlantsToWater={getPlantsToWater}
             getPlant={getPlant}

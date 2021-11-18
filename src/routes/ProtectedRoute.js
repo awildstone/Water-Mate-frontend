@@ -11,8 +11,8 @@ import { Redirect, Route } from 'react-router-dom';
  */
 
 const ProtectedRoute = ({ children, ...otherProps }) => {
-    
-    if (window.localStorage.getItem('watermate-user')) {
+    const TOKEN_ID = 'watermate-user';
+    if (window.localStorage.getItem(TOKEN_ID)) {
         return (
             <Route {...otherProps}>
                 { children }
