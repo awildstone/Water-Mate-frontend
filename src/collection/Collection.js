@@ -39,7 +39,8 @@ const Collection = ({
     deleteCollection, 
     userCollectionCount, 
     collection, 
-    setCollection, 
+    setCollection,
+    handleAdd, 
     handleDelete, 
     handleRequest, 
     getPlants }) => {
@@ -62,7 +63,7 @@ const Collection = ({
         transform: 'translate(-50%, -50%)',
     };
 
-    /** Mapped list of actions and setters for toggling state. */
+    /** Mapped list of actions and setters for toggling modal open/closed state. */
     const map = {
         'add-collection': setAddCollection,
         'edit-collection': setEditCollection,
@@ -176,6 +177,7 @@ const Collection = ({
                                 type='Collection'
                                 action='delete-collection'
                                 open={deleteCollectionToggle}
+                                close={setDeleteCollectionToggle}
                                 handleClose={handleClose}
                                 handleDelete={handleCollectionRequest}
                                 request={deleteCollection}
@@ -361,7 +363,7 @@ const Collection = ({
                                                 handleRoomRequest={handleRoomRequest}
                                                 getRooms={getRooms}
                                                 deleteRoom={deleteRoom}
-                                                getPlants={getPlants}
+                                                handleAdd={handleAdd}
                                                 handleDelete={handleDelete} 
                                                 sx={{ height: '100%'}} 
                                                 color={colors[i+1] }  

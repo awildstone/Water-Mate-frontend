@@ -19,7 +19,7 @@ const RoomForm = ({ close, setaddRoom, setEditRoom, collectionId=null, room=null
 
     const formik = useFormik({
         initialValues: {
-          name: room? room.name : '',
+          name: room ? room.name : '',
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {

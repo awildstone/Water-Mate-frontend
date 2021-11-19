@@ -2,9 +2,9 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import EditPlantForm from './EditPlantForm';
+import PlantForm from './PlantForm';
 
-const EditPlant = ({close, handleEdit, lightsources, plant}) => {
+const EditPlant = ({close, setEditPlant, lightSources, plant}) => {
     return(
         <Container maxWidth="md">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 2 } }}>
@@ -13,7 +13,12 @@ const EditPlant = ({close, handleEdit, lightsources, plant}) => {
                         Edit Plant
                     </Typography>
                     <p>All fields required.</p>
-                   <EditPlantForm close={close} handleEdit={handleEdit} lightsources={lightsources} plant={plant} />
+                <PlantForm 
+                    close={close}
+                    setEditPlant={setEditPlant} 
+                    lightSources={lightSources} 
+                    plant={plant} 
+                />
                 </Paper>
             </Box>
         </Container>

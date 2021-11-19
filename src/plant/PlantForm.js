@@ -4,10 +4,11 @@ import * as yup from 'yup';
 import { TextField, Button, FormControl, InputLabel, Select, MenuItem, FormHelperText, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import PlantContext from '../context/PlantContext';
+import moment from 'moment';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
-import UserContext from '../context/UserContext';
-import { addPlant } from '../requests';
+import usePlants from './usePlants';
+import { addPlant, editPlant } from './usePlants';
 
 const SUPPORTED_FORMATS =  [ "image/jpg", "image/jpeg", "image/gif", "image/png" ];
 const FILE_SIZE = 3145728;
@@ -27,49 +28,51 @@ const validationSchema = yup.object({
         .required('You must select a light source.'),
 });
 
-const AddPlantForm = ({ close, handleRequest, roomId, lightSources }) => {
-    const [ error, setError ] = useState(null);
+const PlantForm = ({close, setAddPlant, setEditPlant, lightSources, roomId=null, plant=null}) => {
     const [ isLoading, setIsLoading ] = useState(false);
     const { plantTypes } = useContext(PlantContext);
-    const { token } = useContext(UserContext);
+    const [error, plants, setPlants, handlePlantRequest] = usePlants();
+    const [ message, setMessage ] = useState(null);
 
     const formik = useFormik({
         initialValues: {
-          name: '',
-          water_date: '',
+          name: plant ? plant.name : '',
+          water_date: plant ? moment(plant.water_schedule[0].water_date).format('yyyy-MM-DD') : '',
           file: { size: 0, type: 'image/jpg' },
-          plant_type: '',
-          light_source: '',
+          plant_type: plant ? plant.type_id : '',
+          light_source: plant ? plant.light_id : '',
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             console.log(values);
+
             const data = new FormData();
 
-            if (values.file.size) {
-                data.append('file', values.file);
-                data.append('name', values.name);
-            } 
+            if (values.file.size) data.append('file', values.file);
+            if (roomId) data.append('roomId', roomId);
             data.append('name', values.name);
             data.append('water_date', values.water_date);
             data.append('plant_type', values.plant_type);
             data.append('light_source', values.light_source);
-            data.append('roomId', roomId);
 
             setIsLoading(true);
-            const result = await handleRequest(addPlant(token, data));
-        
-            if(result.success) {
-                close('add-plant');
+
+            let result;
+            if (plant) {
+                result = await handlePlantRequest(editPlant(plant.id, data));
+                console.log(result);
             } else {
-                setError(result.message);
+                result = await handlePlantRequest(addPlant(data));
+                console.log(result);
             }
+            if (result.success) setMessage(result.message);
+
             setIsLoading(false);
         },
     });
     
     return (
-        <form onSubmit={formik.handleSubmit} encType="multipart/form-data" autoComplete="off">
+        <form onSubmit={formik.handleSubmit} autoComplete="off">
                 <div>
                     <TextField
                         variant="outlined"
@@ -125,7 +128,7 @@ const AddPlantForm = ({ close, handleRequest, roomId, lightSources }) => {
                             onBlur={formik.handleBlur}
                             error={formik.touched.plant_type && Boolean(formik.errors.plant_type)}
                         >
-                            <MenuItem value=""><em>Select</em></MenuItem>
+                             <MenuItem value=""><em>Select</em></MenuItem>
                             { plantTypes.map((type) => {
                                 return <MenuItem key={type.id} value={type.id}>{type.name}</MenuItem>
                             }) }
@@ -162,28 +165,55 @@ const AddPlantForm = ({ close, handleRequest, roomId, lightSources }) => {
                 </div>
                 <div>
                     { error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : '' }
+                    { message ? <Alert sx={{ mb: 1 }} severity="success">{message}</Alert> : '' }
                 </div>
                 <Stack direction="row" spacing={2} >
-                { !isLoading ?
-                    <Button color="success" sx={{ color: '#fff'}} variant="contained" size="large" type="submit">
-                        Submit
+                { message ?
+                    <Button 
+                        color="success" 
+                        sx={{ color: '#fff'}} 
+                        variant="contained" 
+                        size="large" 
+                        onClick={() => plant ? close('edit-plant') : close('add-plant')}
+                    >
+                        Close
                     </Button>
                     :
-                    <LoadingButton
-                        loading
-                        loadingPosition="start"
-                        startIcon={<SaveIcon />}
-                        variant="outlined"
-                    >
-                        Saving
-                    </LoadingButton>
+                    <>
+                        { !isLoading ?
+                            <>
+                                <Button 
+                                    color="success" sx={{ color: '#fff'}} 
+                                    variant="contained" 
+                                    size="large" 
+                                    type="submit">
+                                    Submit
+                                </Button>
+
+                                <Button 
+                                    onClick={() => plant ? setEditPlant(false) : setAddPlant(false)} 
+                                    color="info" sx={{ color: '#fff'}} 
+                                    variant="contained" 
+                                    size="large"
+                                >
+                                    Cancel
+                                </Button>
+                            </>
+                            :
+                            <LoadingButton
+                                loading
+                                loadingPosition="start"
+                                startIcon={<SaveIcon />}
+                                variant="outlined"
+                            >
+                                Saving
+                            </LoadingButton>
+                        }
+                    </>
                 }
-                <Button onClick={() => close('add-plant')} color="info" sx={{ color: '#fff'}} variant="contained" size="large">
-                    Cancel
-                </Button>
                 </Stack>
-        </form>
+            </form>
     );
 }
 
-export default AddPlantForm;
+export default PlantForm;

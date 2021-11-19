@@ -2,9 +2,9 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import AddPlantForm from './AddPlantForm';
+import PlantForm from './PlantForm';
 
-const AddPlant = ({ close, roomId, lightSources, handleRequest }) => {
+const AddPlant = ({ close, setAddPlant, roomId, lightSources }) => {
     return(
         <Container maxWidth="md">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 2 } }}>
@@ -13,7 +13,12 @@ const AddPlant = ({ close, roomId, lightSources, handleRequest }) => {
                         Add Plant
                     </Typography>
                     <p>All fields required.</p>
-                   <AddPlantForm close={close} handleRequest={handleRequest} roomId={roomId} lightSources={lightSources} />
+                <PlantForm 
+                    close={close} 
+                    setAddPlant={setAddPlant} 
+                    roomId={roomId} 
+                    lightSources={lightSources} 
+                />
                 </Paper>
             </Box>
         </Container>
