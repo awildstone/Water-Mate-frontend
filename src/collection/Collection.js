@@ -33,7 +33,7 @@ import useRooms from '../room/useRooms';
 import { getRooms, deleteRoom } from '../room/useRooms';
 
 const Collection = ({ 
-    collections, 
+    collections,
     handleCollectionRequest, 
     getCollections, 
     deleteCollection, 
@@ -42,8 +42,7 @@ const Collection = ({
     setCollection,
     handleAdd, 
     handleDelete, 
-    handleRequest, 
-    getPlants }) => {
+    handleRequest}) => {
 
     const [ error, rooms, setRooms, handleRoomRequest ] = useRooms();
     const [addCollection, setAddCollection] = useState(false);

@@ -26,7 +26,7 @@ import Paginator from '../Paginator';
 import PlantContext from '../context/PlantContext';
 
 
-const WaterManager = ({ userPlantCount, getPlants, getPlantsToWater, handleUpdateSchedule }) => {
+const WaterManager = ({ userPlantCount, getPlantsToWater, handleUpdateSchedule }) => {
     const [ isLoading, setIsLoading ] = useState(true);
     const { currentUser } = useContext(UserContext);
     const { plantTypes } = useContext(PlantContext);

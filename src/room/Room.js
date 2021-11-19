@@ -24,6 +24,7 @@ import AddPlant from '../plant/AddPlant';
 import WarningModal from '../alerts/WarningModal';
 import usePlants, { getPlants } from '../plant/usePlants';
 import Loading from '../alerts/Loading';
+import Paginator from '../Paginator';
 
 const Room = ({ 
     handleRoomRequest, 
@@ -41,6 +42,9 @@ const Room = ({
     const [addPlant, setAddPlant] = useState(false);
     const [deleteRoomToggle, setDeleteRoomToggle] = useState(false);
     const [deleteLight, setDeleteLight] = useState(false);
+    const [itemsPerPage, setItemsPerPage] = useState(null);
+    const [page, setPage] = useState(1);
+    const [count, setCount] = useState(null);
 
     /** Styling for modals. */
     const modalStyle = {
@@ -59,11 +63,20 @@ const Room = ({
         'delete-light': setDeleteLight
     };
 
+    async function loadPlantsData() {
+        const { data } = await handlePlantRequest(getPlants(page, { 'room_id': room.id }));
+        console.log(data);
+        if (data) {
+            setItemsPerPage(data.itemsPerPage);
+            setCount(data.count);
+        }
+    }
+
     /** Get plants for the room (if any) */
     useEffect(() => {
         setLights(room.lightsources);
-        handlePlantRequest(getPlants({ 'room_id': room.id }));
-    },[room]);
+        loadPlantsData();
+    },[page, room]);
 
     /** Handles action to open a form modal. */
     const handleOpen = (action) => {
@@ -75,6 +88,11 @@ const Room = ({
         map[action](false);
         handleRoomRequest(getRooms({ 'collection_id': room.collection_id }));
     }
+
+    /** Handles updating the plants list pagination. */
+    const handlePageChange = (event, value) => {
+        setPage(value);
+    };
 
     if (room && plants && lights) {
         return (
@@ -238,6 +256,8 @@ const Room = ({
                                         </Modal>
                                     </ListItemText>
                                 </ListItem>
+                                </List>
+                                <List>
                                 { plants.plants.map((plant) => {
                                     return (
                                         <ListItem key={plant.id}>
@@ -268,6 +288,26 @@ const Room = ({
                                         </ListItem>
                                     );
                                 }) }
+                                { count > 5 ?
+                                    <>
+                                        <ListItem>
+                                            <Typography>
+                                                More Plants
+                                            </Typography>
+                                        </ListItem>
+                                        <ListItem>
+                                            <Paginator
+                                                itemsPerPage={itemsPerPage}
+                                                currentPage={page}
+                                                pageCount={Math.ceil(count / itemsPerPage)}
+                                                handlePageChange={handlePageChange}
+                                                size={"small"}
+                                            />
+                                        </ListItem>
+                                    </>
+                                :
+                                    ''
+                                }
                             </List>
                         </Grid>
                     :
