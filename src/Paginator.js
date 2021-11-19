@@ -1,14 +1,21 @@
 import Pagination from '@mui/material/Pagination';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 
-const Paginator = ({ pageCount, currentPage, handlePageChange }) => {
+const Paginator = ({ title, pageCount, currentPage, handlePageChange, size="large" }) => {
     return (
-        <Pagination 
-            count={pageCount}
-            onChange={handlePageChange}
-            page={currentPage}
-            size="large"
-            color="secondary" 
-        />
+        <Stack>
+            <Typography component="div">
+                {title}
+            </Typography>
+            <Pagination 
+                count={pageCount}
+                onChange={handlePageChange}
+                page={currentPage}
+                size={size}
+                color="secondary" 
+            />
+        </Stack>
     );
 };
 

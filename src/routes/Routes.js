@@ -53,8 +53,6 @@ const Routes = ({
                 <Dashboard
                     collections={collections}
                     handleCollectionRequest={handleCollectionRequest}
-                    getPlants={getPlants}
-                    getPlant={getPlant}
                     handleAdd={handleAdd} 
                     handleEdit={handleEdit} 
                     handleDelete={handleDelete} 
@@ -65,7 +63,6 @@ const Routes = ({
                 <WaterManager 
                     userPlantCount={userPlantCount}
                     getPlantsToWater={getPlantsToWater} 
-                    getPlants={getPlants}
                     handleUpdateSchedule={handleUpdateSchedule}
                     handleRequest={handleRequest}
                 />

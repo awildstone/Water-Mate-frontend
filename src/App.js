@@ -318,7 +318,7 @@ const App = () => {
   function logout() {
     setToken(null);
     setCurrentUser(null);
-    // setCollections(null);
+    setCollections(null);
     setPlantTypes(null);
   }
 
@@ -327,7 +327,7 @@ const App = () => {
   } 
   return (
     <BrowserRouter>
-      <UserContext.Provider value={{ currentUser, token }}>
+      <UserContext.Provider value={{ currentUser, token, collections }}>
       <PlantContext.Provider value={{ plantTypes }}>
         <ThemeProvider theme={theme}>
           <NavBar logout={logout} />

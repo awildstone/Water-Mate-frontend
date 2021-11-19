@@ -33,7 +33,7 @@ import useRooms from '../room/useRooms';
 import { getRooms, deleteRoom } from '../room/useRooms';
 
 const Collection = ({ 
-    collections, 
+    collections,
     handleCollectionRequest, 
     getCollections, 
     deleteCollection, 
@@ -42,8 +42,7 @@ const Collection = ({
     setCollection,
     handleAdd, 
     handleDelete, 
-    handleRequest, 
-    getPlants }) => {
+    handleRequest}) => {
 
     const [ error, rooms, setRooms, handleRoomRequest ] = useRooms();
     const [addCollection, setAddCollection] = useState(false);
@@ -90,7 +89,7 @@ const Collection = ({
     /** Get rooms for the current collection (if any). */
     useEffect(() => {
         if (collection) handleRoomRequest(getRooms({ 'collection_id': collection.id }));
-    },[collections, collection, addCollection, addRoom]);
+    },[collections, collection]);
 
     /** Filters the collection rooms by room_id. */
     const filterByRoom = (event, data) => {

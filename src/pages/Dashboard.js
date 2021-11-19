@@ -17,7 +17,6 @@ import { getCollections, deleteCollection } from '../collection/useCollections';
 const Dashboard = ({ 
     collections, 
     handleCollectionRequest, 
-    getPlants, 
     handleAdd, 
     handleEdit, 
     handleDelete }) => {
@@ -122,7 +121,6 @@ const Dashboard = ({
                 handleAdd={handleAdd}
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
-                getPlants={getPlants}
             />
         );
     }

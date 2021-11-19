@@ -38,9 +38,9 @@ export const getPlantCount = (user_id) => ({
     headers: JSON,
 });
 
-/** Request object for getting plant data with a query. */
-export const getPlants = (params) => ({
-    url: buildUrl(`/plant/`),
+/** Request object for getting paginated plant data with a query. */
+export const getPlants = (page, params) => ({
+    url: buildUrl(`/plant/page/${page}/`),
     method: 'get',
     headers: JSON,
     params: params,
@@ -48,7 +48,7 @@ export const getPlants = (params) => ({
 
 /** Request object for getting all Plants to Water data paginated with or without query. */
 export const getPaginatedPlants = (page, params) => ({
-    url: buildUrl(`/plant/${page}/`),
+    url: buildUrl(`/plant/water-schedule/${page}/`),
     method: 'get',
     params: params,
     headers: JSON,
