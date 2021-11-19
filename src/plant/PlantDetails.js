@@ -28,41 +28,25 @@ import EditPlant from './EditPlant';
 import EditWaterSchedule from './EditWaterSchedule';
 import PlantWaterHistory from './PlantWaterHistory';
 import WarningModal from '../alerts/WarningModal';
-import UserContext from '../context/UserContext';
 import PlantContext from '../context/PlantContext';
 import Loading from '../alerts/Loading';
 import moment from 'moment';
+import usePlants, { getPlant, deletePlant } from './usePlants';
 
-const PlantDetails = ({ getPlant, collections, handleEdit, handleDelete, getHistory }) => {
+const PlantDetails = ({ collections, handleEdit, getHistory }) => {
     const { id } = useParams();
-    const { currentUser } = useContext(UserContext);
     const { plantTypes } = useContext(PlantContext);
     const [ isLoading, setIsLoading ] = useState(true);
-    const [ plant, setPlant ] = useState(null);
+    const [error, plants, setPlants, handlePlantRequest] = usePlants();
     const [ plantType, setPlantType ] = useState(null);
+    const [ light, setLight ] = useState(null);
     const [ collection, setCollection ] = useState(null);
     const [ editPlant, setEditPlant ] = useState(false);
     const [ editSchedule, setEditSchedule ] = useState(false);
     const [ viewHistory, setViewHistory ] = useState(false);
-    const [ deletePlant, setDeletePlant ] = useState(false);
+    const [ deletePlantToggle, setDeletePlantToggle ] = useState(false);
 
-    async function getPlantData() {
-        const plantData = await getPlant(id);
-        if (plantData) {
-           setPlant(plantData);
-           const type = plantTypes.filter(type => type.id === plantData.type_id);
-           if (type) setPlantType(type[0]);
-           const collection_id = plantData.room.collection_id;
-           const collection = collections.collections.filter(collection => collection.id === collection_id);
-           if (collection) setCollection(collection[0]);
-        } 
-    }
-
-    useEffect(() => {
-        if (currentUser && plantTypes && collections) getPlantData();
-        setIsLoading(false); 
-    },[currentUser, plantTypes, collections]);
-
+    /** Styling for modals. */
     const modalStyle = {
         position: 'absolute',
         top: '50%',
@@ -70,38 +54,53 @@ const PlantDetails = ({ getPlant, collections, handleEdit, handleDelete, getHist
         transform: 'translate(-50%, -50%)',
     };
 
-    const handleOpen = (action) => {
-        let map = {
-            'edit-plant': setEditPlant,
-            'edit-schedule': setEditSchedule,
-            'view-history': setViewHistory,
-            'delete-plant': setDeletePlant
-        };
+    /** Mapped list of actions and setters for toggling modal open/closed state. */
+    let map = {
+        'edit-plant': setEditPlant,
+        'edit-schedule': setEditSchedule,
+        'view-history': setViewHistory,
+        'delete-plant': setDeletePlantToggle
+    };
 
+    /** Gets current plant data and uses current plant data to set light, plantType and collection state. */
+    async function getPlantData() {
+        let { data } = await handlePlantRequest(getPlant(id));
+        if (data) {
+            setLight(data.plant.room.lightsources);
+            const type = plantTypes.filter(type => type.id === data.plant.type_id);
+            setPlantType(type[0]);
+            const collection_id = data.plant.room.collection_id;
+            const collection = collections.collections.filter(collection => collection.id === collection_id);
+            setCollection(collection[0]);
+        }
+    }
+
+    /** Get & Set plant data in state. */
+    useEffect(() => {
+        if (id && plantTypes && collections) getPlantData();
+        setIsLoading(false); 
+    },[id, plantTypes, collections]);
+
+    /** Handles action to open a form modal. */
+    const handleOpen = (action) => {
         map[action](true);
     } 
 
+    /** Handles action to close a form modal. */
     const handleClose = (action) => {
-         let map = {
-            'edit-plant': setEditPlant,
-            'edit-schedule': setEditSchedule,
-            'view-history': setViewHistory,
-            'delete-plant': setDeletePlant
-        };
-
         map[action](false);
+        getPlantData();
     }
 
-    if (!isLoading && plant && plantType && collection) {
+    if (!isLoading && plants && plantType && collection) {
         return (
             <Container maxWidth="lg">
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', textAlign: 'center', '& > :not(style)': { m: 2, p: 2 } }}>
                     <Paper>
-                    { plant ?
                         <Grid container direction='row' spacing={2} alignItems="stretch">
                             <Grid item md={12}>
                                 <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
-                                    {plant.name}
+                                    {plants.plant.name}
                                 </Typography>
                             </Grid>
                             <Grid item md={6}>
@@ -129,13 +128,13 @@ const PlantDetails = ({ getPlant, collections, handleEdit, handleDelete, getHist
                                     <ListItem>
                                             <ListItemIcon><BedroomChildIcon /></ListItemIcon>
                                             <ListItemText>
-                                                Room: {plant.room.name}
+                                                Room: {plants.plant.room.name}
                                             </ListItemText>
                                     </ListItem>
                                     <ListItem>
                                             <ListItemIcon><LightModeRoundedIcon /></ListItemIcon>
                                             <ListItemText>
-                                                Lightsource: {plant.light.type}
+                                                Lightsource: {plants.plant.light.type}
                                             </ListItemText>
                                     </ListItem>
                                     <ListItem>
@@ -159,10 +158,10 @@ const PlantDetails = ({ getPlant, collections, handleEdit, handleDelete, getHist
                                             >
                                                 <Box sx={modalStyle}>
                                                     <EditPlant 
-                                                        close={handleClose} 
-                                                        handleEdit={handleEdit} 
-                                                        lightsources={plant.room.lightsources}
-                                                        plant={plant} 
+                                                        close={handleClose}
+                                                        setEditPlant={setEditPlant}
+                                                        lightSources={light}
+                                                        plant={plants.plant} 
                                                     />
                                                 </Box>
                                             </Modal>
@@ -182,11 +181,13 @@ const PlantDetails = ({ getPlant, collections, handleEdit, handleDelete, getHist
                                                 title='Delete Plant'
                                                 type='Plant'
                                                 action='delete-plant'
-                                                open={deletePlant}
+                                                open={deletePlantToggle}
+                                                close={setDeletePlantToggle}
                                                 handleClose={handleClose}
-                                                handleDelete={handleDelete}
+                                                handleDelete={handlePlantRequest}
+                                                request={deletePlant}
                                                 resource={'plant'}
-                                                id={plant.id}
+                                                id={plants.plant.id}
                                                 redirect={'/dashboard/'}
                                             />
 
@@ -208,25 +209,25 @@ const PlantDetails = ({ getPlant, collections, handleEdit, handleDelete, getHist
                                     <ListItem>
                                         <ListItemIcon><EventAvailableRoundedIcon /></ListItemIcon>
                                         <ListItemText>
-                                            Last Water Date: {moment(plant.water_schedule[0].water_date).format('MM/DD/YYYY')}
+                                            Last Water Date: {moment(plants.plant.water_schedule[0].water_date).format('MM/DD/YYYY')}
                                         </ListItemText>
                                     </ListItem>
                                     <ListItem>
                                         <ListItemIcon><EventAvailableRoundedIcon /></ListItemIcon>
                                         <ListItemText>
-                                            Next Water Date: {moment(plant.water_schedule[0].next_water_date).format('MM/DD/YYYY')}
+                                            Next Water Date: {moment(plants.plant.water_schedule[0].next_water_date).format('MM/DD/YYYY')}
                                         </ListItemText>
                                     </ListItem>
                                     <ListItem>
                                         <ListItemIcon><EventAvailableRoundedIcon /></ListItemIcon>
                                         <ListItemText>
-                                            Water Interval: {plant.water_schedule[0].water_interval} Days
+                                            Water Interval: {plants.plant.water_schedule[0].water_interval} Days
                                         </ListItemText>
                                     </ListItem>
                                     <ListItem>
                                         <ListItemIcon><PanToolRoundedIcon /></ListItemIcon>
                                         <ListItemText>
-                                            Manual Mode Enabled? {plant.water_schedule[0].manual_mode.toString()}
+                                            Manual Mode Enabled? {plants.plant.water_schedule[0].manual_mode.toString()}
                                         </ListItemText>
                                     </ListItem>
                                     <ListItem>
@@ -250,8 +251,8 @@ const PlantDetails = ({ getPlant, collections, handleEdit, handleDelete, getHist
                                                 <Box sx={modalStyle}>
                                                     <PlantWaterHistory 
                                                         close={handleClose} 
-                                                        data={plant.water_schedule[0].water_history} 
-                                                        plant={plant}
+                                                        data={plants.plant.water_schedule[0].water_history} 
+                                                        plant={plants.plant}
                                                         getHistory={getHistory} 
                                                     />
                                                 </Box>
@@ -275,7 +276,7 @@ const PlantDetails = ({ getPlant, collections, handleEdit, handleDelete, getHist
                                                 aria-describedby="modal-modal-description"
                                             >
                                                 <Box sx={modalStyle}>
-                                                    <EditWaterSchedule close={handleClose} handleEdit={handleEdit} plant={plant} />
+                                                    <EditWaterSchedule close={handleClose} handleEdit={handleEdit} plant={plants.plant} />
                                                 </Box>
                                             </Modal>
 
@@ -286,20 +287,11 @@ const PlantDetails = ({ getPlant, collections, handleEdit, handleDelete, getHist
                             <Grid item md={12} display='flex' justifyContent='center' alignItems='center'>
                                 <Avatar 
                                     alt="Plant Name"
-                                    src={plant.image}
+                                    src={plants.plant.image}
                                     sx={{ height: '400px', width: '400px'}}
                                 />
                             </Grid>
                         </Grid>
-                        :
-                        <Grid container direction='row' spacing={2} alignItems="stretch">
-                            <Grid item md={12}>
-                                <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
-                                    Unauthorized.
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                    }
                     </Paper>
                 </Box>
             </Container>

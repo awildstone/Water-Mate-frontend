@@ -3,20 +3,30 @@ import { useFormik } from 'formik';
 import { Button, FormControl, FormLabel, FormGroup, FormControlLabel, Checkbox, FormHelperText, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
 
-const AddLightSourceForm = ({ close, handleAdd, roomId, current }) => {
+const LightSourceForm = ({ close, setAddLight, handleAdd, roomId, current }) => {
     const [ error, setError ] = useState(null);
+    
+    const artificial = current.find((light) => (light.type === 'Artificial')) ? true : false;
+    const north = current.find((light) => (light.type === 'North')) ? true : false;
+    const northeast = current.find((light) => (light.type === 'Northeast')) ? true : false;
+    const northwest = current.find((light) => (light.type === 'Northwest')) ? true : false;
+    const south = current.find((light) => (light.type === 'South')) ? true : false;
+    const southeast = current.find((light) => (light.type === 'Southeast')) ? true : false;
+    const southwest = current.find((light) => (light.type === 'Southwest')) ? true : false;
+    const east = current.find((light) => (light.type === 'East')) ? true : false;
+    const west = current.find((light) => (light.type === 'West')) ? true : false;
 
     const formik = useFormik({
         initialValues: {
-            Artificial: false,
-            North: false,
-            Northeast: false,
-            Northwest: false,
-            South: false,
-            Southeast: false,
-            Southwest: false,
-            East: false,
-            West: false,
+            Artificial: artificial ? artificial : false,
+            North: north ? north : false,
+            Northeast: northeast ? northeast : false,
+            Northwest: northwest ? northwest : false,
+            South: south ? south : false,
+            Southeast: southeast ? southeast : false,
+            Southwest: southwest ? southwest : false,
+            East: east ? east : false,
+            West: west ? west : false,
         },
         onSubmit: async (values) => {
             console.log(values);
@@ -47,7 +57,7 @@ const AddLightSourceForm = ({ close, handleAdd, roomId, current }) => {
                                     checked={formik.values.Artificial} 
                                     onChange={formik.handleChange} 
                                     name="Artificial" 
-                                    disabled={current.filter((light) => (light.type === 'Artificial' ? true : false))[0]} />
+                                    disabled={artificial} />
                                 } 
                                 label="Artificial" />
                             <FormControlLabel 
@@ -56,7 +66,7 @@ const AddLightSourceForm = ({ close, handleAdd, roomId, current }) => {
                                         checked={formik.values.North} 
                                         onChange={formik.handleChange} 
                                         name="North"
-                                        disabled={current.filter((light) => (light.type === 'North' ? true : false))[0]} />
+                                        disabled={north} />
                                     } 
                                 label="North" />
                             <FormControlLabel 
@@ -65,7 +75,7 @@ const AddLightSourceForm = ({ close, handleAdd, roomId, current }) => {
                                         checked={formik.values.Northeast} 
                                         onChange={formik.handleChange} 
                                         name="Northeast"
-                                        disabled={current.filter((light) => (light.type === 'Northeast' ? true : false))[0]} />
+                                        disabled={northeast} />
                                     } 
                                 label="Northeast" />
                             <FormControlLabel 
@@ -74,7 +84,7 @@ const AddLightSourceForm = ({ close, handleAdd, roomId, current }) => {
                                         checked={formik.values.Northwest} 
                                         onChange={formik.handleChange} 
                                         name="Northwest"
-                                        disabled={current.filter((light) => (light.type === 'Northwest' ? true : false))[0]} />
+                                        disabled={northwest} />
                                     } 
                                 label="Northwest" />
                             <FormControlLabel 
@@ -83,7 +93,7 @@ const AddLightSourceForm = ({ close, handleAdd, roomId, current }) => {
                                         checked={formik.values.South} 
                                         onChange={formik.handleChange} 
                                         name="South"
-                                        disabled={current.filter((light) => (light.type === 'South' ? true : false))[0]} />
+                                        disabled={south} />
                                     } 
                                 label="South" />
                             <FormControlLabel 
@@ -92,7 +102,7 @@ const AddLightSourceForm = ({ close, handleAdd, roomId, current }) => {
                                         checked={formik.values.Southeast} 
                                         onChange={formik.handleChange} 
                                         name="Southeast"
-                                        disabled={current.filter((light) => (light.type === 'Southeast' ? true : false))[0]} />
+                                        disabled={southeast} />
                                     } 
                                 label="Southeast" />
                             <FormControlLabel 
@@ -101,7 +111,7 @@ const AddLightSourceForm = ({ close, handleAdd, roomId, current }) => {
                                         checked={formik.values.Southwest} 
                                         onChange={formik.handleChange} 
                                         name="Southwest" 
-                                        disabled={current.filter((light) => (light.type === 'Southwest' ? true : false))[0]} />
+                                        disabled={southwest} />
                                     } 
                                 label="Southwest" />
                             <FormControlLabel
@@ -110,7 +120,7 @@ const AddLightSourceForm = ({ close, handleAdd, roomId, current }) => {
                                         checked={formik.values.East} 
                                         onChange={formik.handleChange} 
                                         name="East"
-                                        disabled={current.filter((light) => (light.type === 'East' ? true : false))[0]} />
+                                        disabled={east} />
                                     } 
                                 label="East" />
                             <FormControlLabel 
@@ -119,7 +129,7 @@ const AddLightSourceForm = ({ close, handleAdd, roomId, current }) => {
                                         checked={formik.values.West} 
                                         onChange={formik.handleChange} 
                                         name="West"
-                                        disabled={current.filter((light) => (light.type === 'West' ? true : false))[0]} />
+                                        disabled={west} />
                                     } 
                                 label="West" />
                         </FormGroup>
@@ -133,7 +143,7 @@ const AddLightSourceForm = ({ close, handleAdd, roomId, current }) => {
                 <Button color="success" sx={{ color: '#fff'}} variant="contained" size="large" type="submit">
                     Submit
                 </Button>
-                <Button onClick={() => close('add-light')} color="info" sx={{ color: '#fff'}} variant="contained" size="large">
+                <Button onClick={() => setAddLight(false)} color="info" sx={{ color: '#fff'}} variant="contained" size="large">
                     Cancel
                 </Button>
                 </Stack>
@@ -141,4 +151,4 @@ const AddLightSourceForm = ({ close, handleAdd, roomId, current }) => {
     );
 }
 
-export default AddLightSourceForm;
+export default LightSourceForm;

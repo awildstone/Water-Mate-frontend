@@ -15,7 +15,6 @@ const Routes = ({
     collections,
     handleCollectionRequest,
     handleRequest,
-    plantTypes,
     userPlantCount,
     getPlants,
     getPlantsToWater, 
@@ -74,7 +73,7 @@ const Routes = ({
 
             <ProtectedRoute exact path='/profile'>
                 <Profile 
-                    // collections={collections}
+                    collections={collections}
                     handleEdit={handleEdit}
                     handleDelete={handleDelete} 
                     handleRequest={handleRequest}
@@ -83,9 +82,8 @@ const Routes = ({
             
             <ProtectedRoute exact path='/plant/:id'>
                 <PlantDetails
-                    plantTypes={plantTypes}
-                    getPlant={getPlant} 
-                    // collections={collections}
+                    // getPlant={getPlant} 
+                    collections={collections}
                     handleEdit={handleEdit} 
                     handleDelete={handleDelete} 
                     getHistory={getHistory}

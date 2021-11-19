@@ -22,7 +22,7 @@ const validationSchema = yup.object({
           }), 
 });
 
-const EditWaterScheduleForm = ({close, handleEdit, plant}) => {
+const WaterScheduleForm = ({close, handleEdit, plant}) => {
     const [ error, setError ] = useState(null);
 
     const formik = useFormik({
@@ -92,4 +92,4 @@ const EditWaterScheduleForm = ({close, handleEdit, plant}) => {
     );
 }
 
-export default EditWaterScheduleForm;
+export default WaterScheduleForm;

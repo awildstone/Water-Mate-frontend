@@ -14,7 +14,17 @@ import WarningIcon from '@mui/icons-material/Warning';
 import Alert from '@mui/material/Alert';
 import { useHistory } from 'react-router-dom';
 
-const WarningModal = ({ title, type, action, open, handleClose, handleDelete, request, id, redirect=null}) => {
+const WarningModal = ({ 
+    title, 
+    type, 
+    action, 
+    open,
+    close, 
+    handleClose,
+    handleDelete, 
+    request, 
+    id, 
+    redirect=null }) => {
 
     const [ isConfirmed, setIsConfirmed ] = useState(false);
     const [ isChecked, setIsChecked ] = useState(false);
@@ -42,7 +52,7 @@ const WarningModal = ({ title, type, action, open, handleClose, handleDelete, re
         <Box sx={modalStyle}>
             <Dialog
                 open={open}
-                onClose={() => handleClose(action)}
+                onClose={() => close(false)}
                 aria-labelledby="confirm-dialog"
             >
                 <DialogTitle id="confirm-dialog">{title}</DialogTitle>
@@ -60,7 +70,7 @@ const WarningModal = ({ title, type, action, open, handleClose, handleDelete, re
                 <DialogActions>
                     <Button
                         variant="contained"
-                        onClick={() => handleClose(action)}
+                        onClick={() => close(false)}
                         color="info"
                     >
                         Cancel
