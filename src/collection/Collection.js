@@ -159,6 +159,22 @@ const Collection = ({
                                             <EditRoundedIcon />
                                         </IconButton>
                                     </Tooltip>
+
+                                    <Modal
+                                        open={editCollection}
+                                        onClose={() => setEditCollection(false)}
+                                        aria-labelledby="modal-modal-title"
+                                        aria-describedby="modal-modal-description"
+                                    >
+                                        <Box sx={modalStyle}>
+                                            <EditCollection 
+                                                close={handleClose} 
+                                                setEditCollection={setEditCollection} 
+                                                collection={collection} 
+                                            />
+                                        </Box>
+                                    </Modal>
+
                                     <Tooltip title="Delete Collection">
                                         <IconButton 
                                             onClick={() => handleOpen('delete-collection') }
@@ -168,43 +184,22 @@ const Collection = ({
                                             <DeleteForeverRoundedIcon />
                                         </IconButton>
                                     </Tooltip>
+
+                                    <WarningModal
+                                        title='Delete Collection'
+                                        type='Collection'
+                                        action='delete-collection'
+                                        open={deleteCollectionToggle}
+                                        close={setDeleteCollectionToggle}
+                                        handleClose={handleClose}
+                                        handleDelete={handleCollectionRequest}
+                                        request={deleteCollection}
+                                        resource={'collection'}
+                                        id={collection.id}
+                                    />
+
                                 </Typography>
                             </Grid>
-
-                            <WarningModal
-                                title='Delete Collection'
-                                type='Collection'
-                                action='delete-collection'
-                                open={deleteCollectionToggle}
-                                close={setDeleteCollectionToggle}
-                                handleClose={handleClose}
-                                handleDelete={handleCollectionRequest}
-                                request={deleteCollection}
-                                resource={'collection'}
-                                id={collection.id}
-                            />
-
-                            <Modal
-                                open={editCollection}
-                                onClose={() => setEditCollection(false)}
-                                aria-labelledby="modal-modal-title"
-                                aria-describedby="modal-modal-description"
-                            >
-                                <Box sx={modalStyle}>
-                                    <EditCollection close={handleClose} setEditCollection={setEditCollection} collection={collection} />
-                                </Box>
-                            </Modal>
-
-                            <Modal
-                                open={addRoom}
-                                onClose={() => setaddRoom(false)}
-                                aria-labelledby="modal-modal-title"
-                                aria-describedby="modal-modal-description"
-                            >
-                                <Box sx={modalStyle}>
-                                    <AddRoom close={handleClose} setaddRoom={setaddRoom} collectionId={collection.id} />
-                                </Box>
-                            </Modal>
 
                             <Grid item xs={12} >                            
                                 <Paper sx={{ backgroundColor: '#243246' }}>
@@ -219,6 +214,22 @@ const Collection = ({
                                             Collection
                                         </Button>
                                     </Tooltip>
+
+                                    <Modal
+                                        open={addCollection}
+                                        onClose={() => setAddCollection(false)}
+                                        aria-labelledby="modal-modal-title"
+                                        aria-describedby="modal-modal-description"
+                                    >
+                                        <Box sx={modalStyle}>
+                                            <AddCollection 
+                                                close={handleClose} 
+                                                setAddCollection={setAddCollection} 
+                                            />
+                                        </Box>
+                                    </Modal>
+
+                                {/* If the user has more than 1 colleciton, display the collecton toggle dropdown menu. */}
                                 { userCollectionCount > 1 ?
                                     <>
                                         <Tooltip title="View Other Collections">
@@ -276,6 +287,22 @@ const Collection = ({
                                             Room
                                         </Button>
                                     </Tooltip>
+
+                                    <Modal
+                                        open={addRoom}
+                                        onClose={() => setaddRoom(false)}
+                                        aria-labelledby="modal-modal-title"
+                                        aria-describedby="modal-modal-description"
+                                    >
+                                        <Box sx={modalStyle}>
+                                            <AddRoom 
+                                                close={handleClose} 
+                                                setaddRoom={setaddRoom} 
+                                                collectionId={collection.id} 
+                                            />
+                                        </Box>
+                                    </Modal>
+
                                     <Tooltip title="Filter by Room">
                                         <Button
                                             size='small'
@@ -305,6 +332,8 @@ const Collection = ({
                                                 </ListItemIcon>
                                                 <ListItemText>Show All</ListItemText>
                                               </MenuItem>
+
+                                              {/* Render room name & id in the room filter dropdown menu. */}
                                               { rooms ?
                                                 rooms.rooms.map((room, i) => {
                                                 return (
@@ -326,18 +355,6 @@ const Collection = ({
                             </Grid>
                         </Grid>
 
-                        <Modal
-                            open={addCollection}
-                            onClose={() => setAddCollection(false)}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                        >
-                            <Box sx={modalStyle}>
-                                <AddCollection close={handleClose} setAddCollection={setAddCollection} />
-                            </Box>
-                        </Modal>
-
-
                         <Box 
                             textAlign='center' 
                             sx={{ marginTop: '2px'}}
@@ -351,20 +368,17 @@ const Collection = ({
                             justifyContent='space-between' 
                             alignItems='stretch'
                         >
+                            {/* If the collection has rooms, render them. Otherwise render a message instructing the user to add Rooms to their collection. */}
                             { rooms.rooms.length ?
                                 rooms.rooms.map((room, i) => {
                                     return (
                                         <Grid key={room.id} item sm={12} md={6} sx={{ display: 'flex', alignItems:'stretch',    width: '100%' }} >
                                             <Room
-                                                handleRequest={handleRequest}
-                                                handleCollectionRequest={handleCollectionRequest}
-                                                getCollections={getCollections}
                                                 handleRoomRequest={handleRoomRequest}
                                                 getRooms={getRooms}
                                                 deleteRoom={deleteRoom}
                                                 handleAdd={handleAdd}
                                                 handleDelete={handleDelete} 
-                                                sx={{ height: '100%'}} 
                                                 color={colors[i+1] }  
                                                 room={room} 
                                             />
