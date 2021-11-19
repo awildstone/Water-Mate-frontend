@@ -37,6 +37,7 @@ export const deleteCollection = (id) => ({
     method: 'delete',
 });
 
+/** useCollections hook for making API calls for different types of Collection requests. */
 const useCollections = () => {
     const [error, setError] = useState(null);
     const [collections, setCollections] = useState(null);
@@ -45,7 +46,6 @@ const useCollections = () => {
         const headers = { 'content-type': 'application/json', 'x-access-token': TOKEN };
         try {
             const response = await axios({ url, method, data, headers});
-            // console.log('useCollections API response:', response);
             if (method !== 'delete') {
                 setError(null);
                 setCollections(response.data);
@@ -54,7 +54,6 @@ const useCollections = () => {
             return { success: true, message };
         } catch (err) {
             const message = err.response.data.msg;
-            // console.error('API ERROR:', err);
             setError(message);
             return { success: false, message };
         }

@@ -89,7 +89,7 @@ const Collection = ({
     /** Get rooms for the current collection (if any). */
     useEffect(() => {
         if (collection) handleRoomRequest(getRooms({ 'collection_id': collection.id }));
-    },[collections, collection, addCollection, addRoom]);
+    },[collections, collection]);
 
     /** Filters the collection rooms by room_id. */
     const filterByRoom = (event, data) => {
