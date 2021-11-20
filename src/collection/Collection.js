@@ -39,10 +39,7 @@ const Collection = ({
     deleteCollection, 
     userCollectionCount, 
     collection, 
-    setCollection,
-    handleAdd, 
-    handleDelete, 
-    handleRequest}) => {
+    setCollection }) => {
 
     const [ error, rooms, setRooms, handleRoomRequest ] = useRooms();
     const [addCollection, setAddCollection] = useState(false);
@@ -377,8 +374,6 @@ const Collection = ({
                                                 handleRoomRequest={handleRoomRequest}
                                                 getRooms={getRooms}
                                                 deleteRoom={deleteRoom}
-                                                handleAdd={handleAdd}
-                                                handleDelete={handleDelete} 
                                                 color={colors[i+1] }  
                                                 room={room} 
                                             />

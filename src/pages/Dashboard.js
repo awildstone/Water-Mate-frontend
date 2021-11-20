@@ -14,12 +14,7 @@ import Loading from '../alerts/Loading';
 import { getCollections, deleteCollection } from '../collection/useCollections';
 
 
-const Dashboard = ({ 
-    collections, 
-    handleCollectionRequest, 
-    handleAdd, 
-    handleEdit, 
-    handleDelete }) => {
+const Dashboard = ({ collections, handleCollectionRequest }) => {
         
     const [isLoading, setIsLoading] = useState(true);
     const [collection, setCollection] = useState(null);
@@ -118,9 +113,6 @@ const Dashboard = ({
                 userCollectionCount={collections.collections.length}
                 collection={collection}
                 setCollection={setCollection}
-                handleAdd={handleAdd}
-                handleEdit={handleEdit}
-                handleDelete={handleDelete}
             />
         );
     }

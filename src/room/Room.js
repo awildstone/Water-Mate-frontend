@@ -23,15 +23,8 @@ import Paginator from '../Paginator';
 import LightSourceItem from '../lightsource/LightSourceItem';
 import PlantItem from '../plant/PlantItem';
 
-const Room = ({ 
-    handleRoomRequest, 
-    deleteRoom, 
-    getRooms, 
-    color, 
-    room, 
-    handleAdd, 
-    handleDelete }) => {
-        
+const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
+    
     const [error, plants, setPlants, handlePlantRequest] = usePlants();
     const [lights, setLights] = useState([]);
     const [editRoom, setEditRoom] = useState(false);
@@ -177,13 +170,12 @@ const Room = ({
                                                 aria-describedby="modal-modal-description"
                                             >
                                                 <Box sx={modalStyle}>
-                                                <AddLightSource 
-                                                    close={handleClose}
-                                                    setAddLight={setAddLight} 
-                                                    handleAdd={handleAdd} 
-                                                    roomId={room.id} 
-                                                    current={lights} 
-                                                />
+                                                    <AddLightSource 
+                                                        close={handleClose}
+                                                        setAddLight={setAddLight}
+                                                        roomId={room.id} 
+                                                        current={lights} 
+                                                    />
                                                 </Box>
                                             </Modal>
 
@@ -203,7 +195,6 @@ const Room = ({
                                                 deleteLight={deleteLight}
                                                 setDeleteLight={setDeleteLight}
                                                 handleClose={handleClose}
-                                                handleDelete={handleDelete}
                                             />
                                         )}) 
                                     :
