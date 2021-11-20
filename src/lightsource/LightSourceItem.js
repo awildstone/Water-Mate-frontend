@@ -4,12 +4,15 @@ import IconButton from '@mui/material/IconButton';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import WarningModal from '../alerts/WarningModal';
+import useLightSource from './useLightSource';
+import { deleteLightSource } from './useLightSource';
 
 
 /** LightSourceItem renders a list item for a room that displays Lightsource data and renders a 
  * WarningModal for deleting the Lightsource. */
 
-const LightSourceItem = ({ light, handleOpen, deleteLight, setDeleteLight, handleClose, handleDelete }) => {
+const LightSourceItem = ({ light, handleOpen, deleteLight, setDeleteLight, handleClose }) => {
+    const [ error, message, setMessage, handleLightSourceRequest ] = useLightSource();
     return (
         <ListItem>
             <Tooltip title="Remove Light Source">
@@ -31,7 +34,8 @@ const LightSourceItem = ({ light, handleOpen, deleteLight, setDeleteLight, handl
                 open={deleteLight}
                 close={setDeleteLight}
                 handleClose={handleClose}
-                handleDelete={handleDelete}
+                handleDelete={handleLightSourceRequest}
+                request={deleteLightSource}
                 resource={'light'}
                 id={light.id}
             />

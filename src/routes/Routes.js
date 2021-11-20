@@ -16,16 +16,13 @@ const Routes = ({
     handleCollectionRequest,
     handleRequest,
     userPlantCount,
-    getPlants,
     getPlantsToWater, 
-    getPlant, 
     login, 
     signup, 
-    handleAdd, 
     handleEdit, 
     handleDelete,
     handleUpdateSchedule,
-    getHistory}) => {
+    getHistory }) => {
 
     return (
         <Switch>
@@ -53,9 +50,6 @@ const Routes = ({
                 <Dashboard
                     collections={collections}
                     handleCollectionRequest={handleCollectionRequest}
-                    handleAdd={handleAdd} 
-                    handleEdit={handleEdit} 
-                    handleDelete={handleDelete} 
                 />
             </ProtectedRoute>
 
@@ -79,10 +73,8 @@ const Routes = ({
             
             <ProtectedRoute exact path='/plant/:id'>
                 <PlantDetails
-                    // getPlant={getPlant} 
                     collections={collections}
-                    handleEdit={handleEdit} 
-                    handleDelete={handleDelete} 
+                    handleEdit={handleEdit}
                     getHistory={getHistory}
                     handleRequest={handleRequest}
                 />

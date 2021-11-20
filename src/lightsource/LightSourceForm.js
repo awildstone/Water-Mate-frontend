@@ -1,11 +1,11 @@
-import { useState } from 'react';
 import { useFormik } from 'formik';
 import { Button, FormControl, FormLabel, FormGroup, FormControlLabel, Checkbox, FormHelperText, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
+import useLightSource from './useLightSource';
+import { addLightSource } from './useLightSource';
 
-const LightSourceForm = ({ close, setAddLight, handleAdd, roomId, current }) => {
-    const [ error, setError ] = useState(null);
-    
+const LightSourceForm = ({ close, setAddLight, roomId, current }) => {
+    const [ error, message, setMessage, handleLightSourceRequest ] = useLightSource();
     const artificial = current.find((light) => (light.type === 'Artificial')) ? true : false;
     const north = current.find((light) => (light.type === 'North')) ? true : false;
     const northeast = current.find((light) => (light.type === 'Northeast')) ? true : false;
@@ -18,30 +18,19 @@ const LightSourceForm = ({ close, setAddLight, handleAdd, roomId, current }) => 
 
     const formik = useFormik({
         initialValues: {
-            Artificial: artificial ? artificial : false,
-            North: north ? north : false,
-            Northeast: northeast ? northeast : false,
-            Northwest: northwest ? northwest : false,
-            South: south ? south : false,
-            Southeast: southeast ? southeast : false,
-            Southwest: southwest ? southwest : false,
-            East: east ? east : false,
-            West: west ? west : false,
+            Artificial: false,
+            North: false,
+            Northeast: false,
+            Northwest: false,
+            South: false,
+            Southeast: false,
+            Southwest: false,
+            East: false,
+            West: false,
         },
         onSubmit: async (values) => {
-            console.log(values);
-
-            if (Object.values(values).every(value => value === false)) {
-                close('add-light');
-            } else {
-                let result = await handleAdd('light', {...values, roomId})
-
-                if (result.success) {
-                    close('add-light');
-                } else {
-                    setError(result.message);
-                } 
-            }
+            let result = await handleLightSourceRequest(addLightSource({...values, roomId}));
+            if (result.success) setMessage(result.message);
         },
     });
     
@@ -138,14 +127,41 @@ const LightSourceForm = ({ close, setAddLight, handleAdd, roomId, current }) => 
                 </div>
                 <div>
                     { error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : '' }
+                    { message ? <Alert sx={{ mb: 1 }} severity="success">{message}</Alert> : '' }
                 </div>
                 <Stack direction="row" spacing={2} >
-                <Button color="success" sx={{ color: '#fff'}} variant="contained" size="large" type="submit">
-                    Submit
-                </Button>
-                <Button onClick={() => setAddLight(false)} color="info" sx={{ color: '#fff'}} variant="contained" size="large">
-                    Cancel
-                </Button>
+                { message ? 
+                    <Button 
+                        color="success" 
+                        sx={{ color: '#fff'}} 
+                        variant="contained" 
+                        size="large" 
+                        onClick={() => close('add-light')}
+                    >
+                        Close
+                    </Button>
+                    :
+                    <>
+                        <Button 
+                            color="success" 
+                            sx={{ color: '#fff'}} 
+                            variant="contained" 
+                            size="large" 
+                            type="submit"
+                        >
+                            Submit
+                        </Button>
+                        <Button 
+                            onClick={() => setAddLight(false)} 
+                            color="info" 
+                            sx={{ color: '#fff'}} 
+                            variant="contained" 
+                            size="large"
+                        >
+                            Cancel
+                        </Button>
+                    </>
+                }
                 </Stack>
         </form>
     );
