@@ -8,13 +8,14 @@ import Tooltip from '@mui/material/Tooltip';
 import Paginator from '../Paginator';
 import HistoryTable from './HistoryTable';
 import Loading from '../alerts/Loading';
+import useHistory, { getHistory } from './useHistory';
 
-const PlantWaterHistory = ({close, plant, getHistory}) => {
+const PlantWaterHistory = ({close, plant}) => {
+    const [error, history, setHistory, handleHistoryRequest] = useHistory();
     const [isLoading, setIsLoading] = useState(true);
     const [itemsPerPage, setItemsPerPage] = useState(null);
     const [count, setCount] = useState(null);
     const [page, setPage] = useState(1);
-    const [data, setData] = useState(null);
 
     const handlePageChange = (event, value) => {
         setPage(value);
@@ -22,18 +23,18 @@ const PlantWaterHistory = ({close, plant, getHistory}) => {
 
     useEffect(() => {
         const getData = async () => {
-            let paginatedData = await getHistory(plant.id, page);
+            let paginatedData = await handleHistoryRequest(getHistory(plant.id, page));
             if (paginatedData) {
-                setData(paginatedData);
-                setItemsPerPage(paginatedData.itemsPerPage);
-                setCount(paginatedData.count);
+                setHistory(paginatedData.data);
+                setItemsPerPage(paginatedData.data.itemsPerPage);
+                setCount(paginatedData.data.count);
                 setIsLoading(false);
             }
         }
         getData();
     },[page]);
     
-    if (!isLoading) {
+    if (!isLoading && history) {
         return (
             <Container maxWidth="lg">
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', textAlign: 'center', '& > :not(style)': { m: 2, p: 2 } }}>
@@ -41,7 +42,7 @@ const PlantWaterHistory = ({close, plant, getHistory}) => {
                         <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                             {plant.name} History
                         </Typography>
-                        <HistoryTable rows={data.history} />
+                        <HistoryTable rows={history.history} />
                         <Box sx={{ textAlign: 'center', '& > :not(style)': { m: 2 } }} >
                         { count > itemsPerPage ?
                             <Paginator
@@ -56,7 +57,12 @@ const PlantWaterHistory = ({close, plant, getHistory}) => {
                         </Box>
                         <Box sx={{ textAlign: 'left', '& > :not(style)': { m: 2 } }}>
                             <Tooltip title="Back to Plant Details">
-                                <Button onClick={() => close('view-history')} color="info" sx={{ color: '#fff'}}    variant="contained" size="large">
+                                <Button 
+                                    onClick={() => close('view-history')} 
+                                    color="info" sx={{ color: '#fff'}}
+                                    variant="contained" 
+                                    size="large"
+                                >
                                     Close
                                 </Button>
                             </Tooltip>

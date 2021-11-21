@@ -33,7 +33,7 @@ import Loading from '../alerts/Loading';
 import moment from 'moment';
 import usePlants, { getPlant, deletePlant } from './usePlants';
 
-const PlantDetails = ({ collections, getHistory }) => {
+const PlantDetails = ({ collections }) => {
     const { id } = useParams();
     const { plantTypes } = useContext(PlantContext);
     const [ isLoading, setIsLoading ] = useState(true);
@@ -251,9 +251,8 @@ const PlantDetails = ({ collections, getHistory }) => {
                                                 <Box sx={modalStyle}>
                                                     <PlantWaterHistory 
                                                         close={handleClose} 
-                                                        data={plants.plant.water_schedule[0].water_history} 
+                                                        // data={plants.plant.water_schedule[0].water_history}
                                                         plant={plants.plant}
-                                                        getHistory={getHistory} 
                                                     />
                                                 </Box>
                                             </Modal>

@@ -194,19 +194,19 @@ const App = () => {
   //     }
   // }
 
-  async function getHistory(plant_id, page) {
-      try {
-        const history = await axios.get(`${BASE_URL}/plant/history/${plant_id}/${page}/`, { headers: {
-          'content-type': 'application/json',
-          'x-access-token': token
-        }});
-        console.log('GET HISTORY')
-        console.log(history);
-        return history.data;
-      } catch (err) {
-        console.error('Error', err);
-      }
-  }
+  // async function getHistory(plant_id, page) {
+  //     try {
+  //       const history = await axios.get(`${BASE_URL}/plant/history/${plant_id}/${page}/`, { headers: {
+  //         'content-type': 'application/json',
+  //         'x-access-token': token
+  //       }});
+  //       console.log('GET HISTORY')
+  //       console.log(history);
+  //       return history.data;
+  //     } catch (err) {
+  //       console.error('Error', err);
+  //     }
+  // }
 
   async function signup(signupData) {
     const { city, state, country, name, username, email, password } = signupData;
@@ -336,7 +336,6 @@ const App = () => {
             collections={collections}
             handleCollectionRequest={handleCollectionRequest}
             userPlantCount={userPlantCount}
-            getHistory={getHistory}
             getPlantsToWater={getPlantsToWater}
             login={login} 
             signup={signup}
