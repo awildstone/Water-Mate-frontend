@@ -251,7 +251,6 @@ const PlantDetails = ({ collections }) => {
                                                 <Box sx={modalStyle}>
                                                     <PlantWaterHistory 
                                                         close={handleClose} 
-                                                        // data={plants.plant.water_schedule[0].water_history}
                                                         plant={plants.plant}
                                                     />
                                                 </Box>

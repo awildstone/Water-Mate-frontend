@@ -124,7 +124,6 @@ const Collection = ({
                                 handleClose={handleClose}
                                 handleDelete={handleCollectionRequest}
                                 request={deleteCollection}
-                                resource={'collection'}
                                 id={collection.id}
                             />
                         </Typography>
