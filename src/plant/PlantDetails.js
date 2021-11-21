@@ -25,7 +25,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { Avatar } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import EditPlant from './EditPlant';
-import EditWaterSchedule from './EditWaterSchedule';
+import EditWaterSchedule from '../schedule/EditWaterSchedule';
 import PlantWaterHistory from './PlantWaterHistory';
 import WarningModal from '../alerts/WarningModal';
 import PlantContext from '../context/PlantContext';
@@ -33,7 +33,7 @@ import Loading from '../alerts/Loading';
 import moment from 'moment';
 import usePlants, { getPlant, deletePlant } from './usePlants';
 
-const PlantDetails = ({ collections, handleEdit, getHistory }) => {
+const PlantDetails = ({ collections, getHistory }) => {
     const { id } = useParams();
     const { plantTypes } = useContext(PlantContext);
     const [ isLoading, setIsLoading ] = useState(true);
@@ -271,12 +271,16 @@ const PlantDetails = ({ collections, handleEdit, getHistory }) => {
 
                                             <Modal
                                                 open={editSchedule}
-                                                onClose={() => handleClose('edit-schedule')}
+                                                onClose={() => setEditSchedule(false)}
                                                 aria-labelledby="modal-modal-title"
                                                 aria-describedby="modal-modal-description"
                                             >
                                                 <Box sx={modalStyle}>
-                                                    <EditWaterSchedule close={handleClose} handleEdit={handleEdit} plant={plants.plant} />
+                                                    <EditWaterSchedule 
+                                                        close={handleClose}
+                                                        setEditSchedule={setEditSchedule}
+                                                        schedule={plants.plant.water_schedule[0]} 
+                                                    />
                                                 </Box>
                                             </Modal>
 

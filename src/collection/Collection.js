@@ -144,7 +144,7 @@ const Collection = ({
                     justifyContent='space-between' 
                     alignItems='stretch'
                 >
-                    {/* If the collection has rooms, render them. Otherwise render a message instructing the useto add Rooms to their collection. */}
+                    {/* If the collection has rooms, render them. Otherwise render a message instructing the user to add Rooms to their collection. */}
                     { rooms.rooms.length ?
                         rooms.rooms.map((room, i) => {
                             return (
@@ -161,8 +161,8 @@ const Collection = ({
                         :
                         <Box textAlign='center'>
                             <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>No Rooms!</Typography>
-                                <p>Add a room to your Collection.</p>
-                                <p>You can name your room anything you like but it helps if your room nameisdescriptive like: Kitchen, Bedroom, Bathroom, etc.</p>
+                                <p>Add a room to your Collection. You can name your room anything you like but it helps if your room describes the location.</p>
+                                <p>Examples: Kitchen, Bedroom, Bathroom, etc.</p>
                         </Box>
                     }
                 </Grid>

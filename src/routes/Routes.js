@@ -74,7 +74,6 @@ const Routes = ({
             <ProtectedRoute exact path='/plant/:id'>
                 <PlantDetails
                     collections={collections}
-                    handleEdit={handleEdit}
                     getHistory={getHistory}
                     handleRequest={handleRequest}
                 />

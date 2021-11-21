@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { TextField, Button, FormGroup, FormControlLabel,Checkbox, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
+import useSchedule, { editSchedule } from './useSchedule';
 
 const validationSchema = yup.object({
     manual_mode: yup.boolean(),
@@ -22,24 +23,19 @@ const validationSchema = yup.object({
           }), 
 });
 
-const WaterScheduleForm = ({close, handleEdit, plant}) => {
-    const [ error, setError ] = useState(null);
+const WaterScheduleForm = ({close, setEditSchedule, schedule}) => {
+    const [ error, message, setMessage, handleScheduleRequest ] = useSchedule();
 
     const formik = useFormik({
         initialValues: {
-            manual_mode: plant.water_schedule[0].manual_mode,
-            manual_water_interval: plant.water_schedule[0].water_interval,
-            water_interval: plant.water_schedule[0].water_interval,
+            manual_mode: schedule.manual_mode,
+            manual_water_interval: schedule.water_interval,
+            water_interval: schedule.water_interval,
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            console.log(values);
-            let result = await handleEdit('schedule', plant.water_schedule[0].id, values);
-            if(result.success) {
-                close('edit-schedule');
-            } else {
-                setError(result.message);
-            }
+            let result = await handleScheduleRequest(editSchedule(schedule.id, values));
+            if (result.success) setMessage(result.message);
         },
     });
     
@@ -79,14 +75,40 @@ const WaterScheduleForm = ({close, handleEdit, plant}) => {
                 </div>
                 <div>
                     { error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : '' }
+                    { message ? <Alert sx={{ mb: 1 }} severity="success">{message}</Alert> : '' }
                 </div>
                 <Stack direction="row" spacing={2} >
-                <Button color="success" sx={{ color: '#fff'}} variant="contained" size="large" type="submit">
-                    Submit
-                </Button>
-                <Button onClick={() => close('edit-schedule')} color="info" sx={{ color: '#fff'}} variant="contained" size="large">
-                    Cancel
-                </Button>
+                { message ? 
+                    <Button 
+                        color="success" 
+                        sx={{ color: '#fff'}} 
+                        variant="contained" 
+                        size="large" 
+                        onClick={() => close('edit-schedule')}
+                    >
+                        Close
+                    </Button>
+                    :
+                    <>
+                        <Button 
+                            color="success" 
+                            sx={{ color: '#fff'}} 
+                            variant="contained" 
+                            size="large" 
+                            type="submit"
+                        >
+                            Submit
+                        </Button>
+                        <Button 
+                            onClick={() => setEditSchedule(false)} 
+                            color="info" sx={{ color: '#fff'}} 
+                            variant="contained" 
+                            size="large"
+                        >
+                            Cancel
+                        </Button>
+                    </>
+                }
                 </Stack>
         </form>
     );
