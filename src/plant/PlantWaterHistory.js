@@ -43,12 +43,16 @@ const PlantWaterHistory = ({close, plant, getHistory}) => {
                         </Typography>
                         <HistoryTable rows={data.history} />
                         <Box sx={{ textAlign: 'center', '& > :not(style)': { m: 2 } }} >
+                        { count > itemsPerPage ?
                             <Paginator
                                 itemsPerPage={itemsPerPage}
                                 currentPage={page}
                                 pageCount={Math.ceil(count / itemsPerPage)}
                                 handlePageChange={handlePageChange}
                             />
+                            :
+                            ''
+                        }
                         </Box>
                         <Box sx={{ textAlign: 'left', '& > :not(style)': { m: 2 } }}>
                             <Tooltip title="Back to Plant Details">

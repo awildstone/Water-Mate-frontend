@@ -53,9 +53,9 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
         'delete-light': setDeleteLight
     };
 
+    /** Load plant data and set the pagination data in state. */
     async function loadPlantsData() {
         const { data } = await handlePlantRequest(getPlants(page, { 'room_id': room.id }));
-        console.log(data);
         if (data) {
             setItemsPerPage(data.itemsPerPage);
             setCount(data.count);
@@ -253,7 +253,7 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
                                 }
 
                                 {/* If there are more than 5 plants per room, display the plant pagination buttons. */}
-                                { count > 5 ?
+                                { count > itemsPerPage ?
                                     <ListItem>
                                         <Paginator
                                             title={'More Plants'}

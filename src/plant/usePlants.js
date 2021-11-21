@@ -89,15 +89,9 @@ const usePlants = () => {
     const [plants, setPlants] = useState(null);
 
     const handlePlantRequest = async ({ url, method, data={}, headers, params={} }) => {
-        console.log(url);
-        console.log(method);
-        console.log(data);
-        console.log(headers);
-        console.log(params);
-
         try {
             const response = await axios({ url, method, data, headers, params });
-            console.log('usePlants API response:', response);
+            // console.log('usePlants API response:', response);
             if (method !== 'delete') {
                 setError(null);
                 setPlants(response.data);
@@ -106,7 +100,7 @@ const usePlants = () => {
             return { success: true, message, data: response.data };
         } catch (err) {
             const message = err.response.data.msg;
-            console.error('API ERROR:', err);
+            // console.error('API ERROR:', err);
             setError(message);
             return { success: false, message };
         }
