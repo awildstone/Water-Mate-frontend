@@ -5,7 +5,7 @@ import { TextField, Button, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
-
+import useProfile, { editLocation } from './useProfile';
 
 const validationSchema = yup.object({
     city: yup.string()
@@ -16,13 +16,13 @@ const validationSchema = yup.object({
         .min(2, 'Too Short!')
         .max(50, 'Too Long!'),
     country: yup.string()
-        .min(4, 'Too Short!')
+        .min(3, 'Too Short!')
         .max(50, 'Too Long!')
         .required('You must enter your country for an accurate location.'),
 });
 
-const EditLocationForm = ({close, handleEdit, user}) => {
-    const [ error, setError ] = useState(null);
+const LocationForm = ({close, setEditLocation, user}) => {
+    const [error, message, setMessage, handleProfileRequest] = useProfile();
     const [ isLoading, setIsLoading ] = useState(false);
 
     const formik = useFormik({
@@ -33,14 +33,9 @@ const EditLocationForm = ({close, handleEdit, user}) => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            console.log(values);
-            let result = await handleEdit('user/location', user.id, values);
-            if(result.success) {
-                close('edit-location');
-            } else {
-                setError(result.message);
-            }
-            setIsLoading(false);   
+            let result = await handleProfileRequest(editLocation(user.id, values));
+            if (result.success) setMessage(result.message);
+            setIsLoading(false); 
         },
     });
     
@@ -93,28 +88,56 @@ const EditLocationForm = ({close, handleEdit, user}) => {
             </div>
                <div>
                 { error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : '' }
+                { message ? <Alert sx={{ mb: 1 }} severity="success">{message}</Alert> : '' }
             </div>
             <Stack direction="row" spacing={2} >
-            { !isLoading ?
-                    <Button color="success" sx={{ color: '#fff'}} variant="contained" size="large" type="submit">
-                        Submit
-                    </Button>
-                    :
-                    <LoadingButton
-                        loading
-                        loadingPosition="start"
-                        startIcon={<SaveIcon />}
-                        variant="outlined"
-                    >
-                        Saving
-                    </LoadingButton>
-            }
-                <Button onClick={() => close('edit-location')} color="info" sx={{ color: '#fff'}} variant="contained" size="large">
-                    Cancel
+            { message ? 
+                <Button 
+                    color="success" 
+                    sx={{ color: '#fff'}} 
+                    variant="contained" 
+                    size="large" 
+                    onClick={() => close('edit-location')}
+                >
+                    Close
                 </Button>
+                :
+                <>
+                    { !isLoading ?
+                            <Button 
+                                color="success" 
+                                sx={{ color: '#fff'}} 
+                                variant="contained" 
+                                size="large" 
+                                type="submit"
+                            >
+                                Submit
+                            </Button>
+                            :
+                            <LoadingButton
+                                loading
+                                loadingPosition="start"
+                                startIcon={<SaveIcon />}
+                                variant="outlined"
+                            >
+                                Saving
+                            </LoadingButton>
+                    }
+
+                    <Button 
+                        onClick={() => setEditLocation(false)} 
+                        color="info" 
+                        sx={{ color: '#fff'}} 
+                        variant="contained"
+                        size="large"
+                    >
+                        Cancel
+                    </Button>
+                </>
+            }
             </Stack>
         </form>
     );
 }
 
-export default EditLocationForm;
+export default LocationForm;

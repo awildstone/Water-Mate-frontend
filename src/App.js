@@ -285,35 +285,35 @@ const App = () => {
   //   }
   // }
 
-  async function handleEditResource(resource, id, data, file) {
-    const headers = {
-      'content-type': (file ? file : 'application/json'),
-      'x-access-token': token
-    };
-    try {
-      let response = await axios.patch(`${BASE_URL}/${resource}/${id}/`, data, { headers });
-      // if (response) loadCollections();
-      return { success: true }
-    } catch (err) {
-      const message = err.response.data.msg;
-      return { success: false, message };
-    }
-  }
+  // async function handleEditResource(resource, id, data, file) {
+  //   const headers = {
+  //     'content-type': (file ? file : 'application/json'),
+  //     'x-access-token': token
+  //   };
+  //   try {
+  //     let response = await axios.patch(`${BASE_URL}/${resource}/${id}/`, data, { headers });
+  //     // if (response) loadCollections();
+  //     return { success: true }
+  //   } catch (err) {
+  //     const message = err.response.data.msg;
+  //     return { success: false, message };
+  //   }
+  // }
 
-  async function handleDeleteResource(resource, id) {
-    const headers = {
-      'content-type': 'application/json',
-      'x-access-token': token
-    };
-    try {
-      let response = await axios.delete(`${BASE_URL}/${resource}/${id}/`, { headers });
-      // if (response) loadCollections();
-      return { success: true }
-    } catch (err) {
-      const message = err.response.data.msg;
-      return { success: false, message };
-    }
-  }
+  // async function handleDeleteResource(resource, id) {
+  //   const headers = {
+  //     'content-type': 'application/json',
+  //     'x-access-token': token
+  //   };
+  //   try {
+  //     let response = await axios.delete(`${BASE_URL}/${resource}/${id}/`, { headers });
+  //     // if (response) loadCollections();
+  //     return { success: true }
+  //   } catch (err) {
+  //     const message = err.response.data.msg;
+  //     return { success: false, message };
+  //   }
+  // }
 
   function logout() {
     setToken(null);
@@ -327,7 +327,7 @@ const App = () => {
   } 
   return (
     <BrowserRouter>
-      <UserContext.Provider value={{ currentUser, token, collections }}>
+      <UserContext.Provider value={{ currentUser, loadUserData, token, collections }}>
       <PlantContext.Provider value={{ plantTypes }}>
         <ThemeProvider theme={theme}>
           <NavBar logout={logout} />
@@ -339,8 +339,6 @@ const App = () => {
             getPlantsToWater={getPlantsToWater}
             login={login} 
             signup={signup}
-            handleEdit={handleEditResource} 
-            handleDelete={handleDeleteResource}
             handleUpdateSchedule={handleUpdateSchedule}
             />
         </ThemeProvider>

@@ -5,6 +5,7 @@ import { TextField, Button, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
+import useProfile, { editProfile } from './useProfile';
 
 const validationSchema = yup.object({
     name: yup.string()
@@ -24,9 +25,9 @@ const validationSchema = yup.object({
         .required('You must confirm your password.'),
 });
 
-const EditProfileForm = ({close, handleEdit, user }) => {
-    const [ error, setError ] = useState(null);
-    const [ isLoading, setIsLoading ] = useState(false);
+const EditProfileForm = ({close, setEditProfile, user }) => {
+    const [error, message, setMessage, handleProfileRequest] = useProfile();
+    const [isLoading, setIsLoading] = useState(false);
 
     const formik = useFormik({
         initialValues: {
@@ -37,13 +38,8 @@ const EditProfileForm = ({close, handleEdit, user }) => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            console.log(values);
-            let result = await handleEdit('user', user.id, values);
-            if(result.success) {
-                close('edit-profile');
-            } else {
-                setError(result.message);
-            }
+            let result = await handleProfileRequest(editProfile(user.id, values));
+            if (result.success) setMessage(result.message);
             setIsLoading(false);
         },
     });
@@ -114,25 +110,47 @@ const EditProfileForm = ({close, handleEdit, user }) => {
             </div>
             <div>
                 { error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : '' }
+                { message ? <Alert sx={{ mb: 1 }} severity="success">{message}</Alert> : '' }
             </div>
             <Stack direction="row" spacing={2} >
-            { !isLoading ?
-                    <Button color="success" sx={{ color: '#fff'}} variant="contained" size="large" type="submit">
-                        Submit
-                    </Button>
-                    :
-                    <LoadingButton
-                        loading
-                        loadingPosition="start"
-                        startIcon={<SaveIcon />}
-                        variant="outlined"
-                    >
-                        Saving
-                    </LoadingButton>
-            }
-                <Button onClick={() => close('edit-profile')} color="info" sx={{ color: '#fff'}} variant="contained" size="large">
-                    Cancel
+            { message ? 
+                <Button 
+                    color="success" 
+                    sx={{ color: '#fff'}} 
+                    variant="contained" 
+                    size="large" 
+                    onClick={() => close('edit-profile')}
+                >
+                    Close
                 </Button>
+                :
+                <>
+                    { !isLoading ?
+                            <Button color="success" sx={{ color: '#fff'}} variant="contained" size="large" type="submit">
+                                Submit
+                            </Button>
+                            :
+                            <LoadingButton
+                                loading
+                                loadingPosition="start"
+                                startIcon={<SaveIcon />}
+                                variant="outlined"
+                            >
+                                Saving
+                            </LoadingButton>
+                    }
+
+                    <Button 
+                        onClick={() => setEditProfile(false)} 
+                        color="info" 
+                        sx={{ color: '#fff'}} 
+                        variant="contained"
+                        size="large"
+                    >
+                        Cancel
+                    </Button>
+                </>
+            }
             </Stack>
         </form>
     );

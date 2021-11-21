@@ -4,9 +4,9 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import WarningIcon from '@mui/icons-material/Warning';
 import { red } from '@mui/material/colors';
-import EditLocationForm from './EditLocationForm';
+import LocationForm from './LocationForm';
 
-const EditLocation = ({close, handleEdit, user}) => {
+const EditLocation = ({close, setEditLocation, user}) => {
     return(
         <Container maxWidth="md">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 2 } }}>
@@ -15,7 +15,7 @@ const EditLocation = ({close, handleEdit, user}) => {
                         Edit Location
                     </Typography>
                     <p><WarningIcon sx={{ color: red[500] }} /> WARNING! this will change how Water Mate calculates the water schedule for all of your plants.</p>
-                   <EditLocationForm close={close} handleEdit={handleEdit} user={user} />
+                   <LocationForm close={close} setEditLocation={setEditLocation} user={user} />
                 </Paper>
             </Box>
         </Container>

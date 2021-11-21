@@ -2,9 +2,9 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import EditPasswordForm from './EditPasswordForm';
+import PasswordForm from './PasswordForm';
 
-const EditPassword = ({close, handleEdit, user}) => {
+const EditPassword = ({close, setEditPassword, user}) => {
     return(
         <Container maxWidth="md">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 2 } }}>
@@ -13,7 +13,7 @@ const EditPassword = ({close, handleEdit, user}) => {
                         Edit Password
                     </Typography>
                     <p>All fields required.</p>
-                   <EditPasswordForm close={close} handleEdit={handleEdit} user={user} />
+                   <PasswordForm close={close} setEditPassword={setEditPassword} user={user} />
                 </Paper>
             </Box>
         </Container>

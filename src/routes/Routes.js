@@ -19,8 +19,6 @@ const Routes = ({
     getPlantsToWater, 
     login, 
     signup, 
-    handleEdit, 
-    handleDelete,
     handleUpdateSchedule }) => {
 
     return (
@@ -62,12 +60,7 @@ const Routes = ({
             </ProtectedRoute>
 
             <ProtectedRoute exact path='/profile'>
-                <Profile 
-                    collections={collections}
-                    handleEdit={handleEdit}
-                    handleDelete={handleDelete} 
-                    handleRequest={handleRequest}
-                />
+                <Profile collections={collections} />
             </ProtectedRoute>
             
             <ProtectedRoute exact path='/plant/:id'>

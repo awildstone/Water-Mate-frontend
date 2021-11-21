@@ -2,9 +2,9 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import EditProfileForm from './EditProfileForm';
+import ProfileForm from './ProfileForm';
 
-const EditProfile = ({close, handleEdit, user }) => {
+const EditProfile = ({close, setEditProfile, user }) => {
     return(
         <Container maxWidth="md">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 2 } }}>
@@ -13,9 +13,9 @@ const EditProfile = ({close, handleEdit, user }) => {
                         Edit Profile
                     </Typography>
                     <p>All fields required.</p>
-                   <EditProfileForm  
+                   <ProfileForm  
                         close={close}
-                        handleEdit={handleEdit} 
+                        setEditProfile={setEditProfile}
                         user={user} 
                     />
                 </Paper>

@@ -25,13 +25,16 @@ import EditLocation from './EditLocation';
 import WarningModal from '../alerts/WarningModal';
 import UserContext from '../context/UserContext';
 import Loading from '../alerts/Loading';
+import useProfile, { deleteAccount } from './useProfile';
 
-const Profile = ({ collections, handleEdit, handleDelete }) => {
-    const { currentUser } = useContext(UserContext);
+
+const Profile = ({ collections }) => {
+    const { currentUser, loadUserData } = useContext(UserContext);
+    const [error, message, setMessage, handleProfileRequest] = useProfile();
     const [ editProfile, setEditProfile ] = useState(false);
     const [ editPassword, setEditPassword ] = useState(false);
     const [ editLocation, setEditLocation ] = useState(false);
-    const [ deleteAccount, setDeleteAccount ] = useState(false);
+    const [ deleteAccountToggle, setDeleteAccountToggle ] = useState(false);
     
     const modalStyle = {
         position: 'absolute',
@@ -44,7 +47,7 @@ const Profile = ({ collections, handleEdit, handleDelete }) => {
         'edit-profile': setEditProfile,
         'edit-password': setEditPassword,
         'edit-location': setEditLocation,
-        'delete-account': setDeleteAccount
+        'delete-account': setDeleteAccountToggle
     };
 
     const handleOpen = (action) => {
@@ -53,6 +56,7 @@ const Profile = ({ collections, handleEdit, handleDelete }) => {
 
     const handleClose = (action) => {
         map[action](false);
+        loadUserData();
     }
 
     if (currentUser && collections) {
@@ -107,14 +111,14 @@ const Profile = ({ collections, handleEdit, handleDelete }) => {
         
                                     <Modal
                                         open={editProfile}
-                                        onClose={() => handleClose('edit-profile')}
+                                        onClose={() => setEditProfile(false)}
                                         aria-labelledby="modal-modal-title"
                                         aria-describedby="modal-modal-description"
                                     >
                                         <Box sx={modalStyle}>
                                             <EditProfile 
                                                 close={handleClose}
-                                                handleEdit={handleEdit} 
+                                                setEditProfile={setEditProfile}
                                                 user={currentUser} 
                                             />
                                         </Box>
@@ -141,8 +145,8 @@ const Profile = ({ collections, handleEdit, handleDelete }) => {
                                         <Box sx={modalStyle}>
                                             <EditPassword 
                                                 close={handleClose}
+                                                setEditPassword={setEditPassword}
                                                 user={currentUser}
-                                                handleEdit={handleEdit} 
                                             />
                                         </Box>
                                     </Modal>
@@ -189,7 +193,11 @@ const Profile = ({ collections, handleEdit, handleDelete }) => {
                                     aria-describedby="modal-modal-description"
                                 >
                                     <Box sx={modalStyle}>
-                                        <EditLocation close={handleClose} handleEdit={handleEdit} user={currentUser} />
+                                        <EditLocation 
+                                            close={handleClose}
+                                            setEditLocation={setEditLocation}  
+                                            user={currentUser} 
+                                        />
                                     </Box>
                                 </Modal>
         
@@ -230,10 +238,11 @@ const Profile = ({ collections, handleEdit, handleDelete }) => {
                                     title='Delete Account'
                                     type='Account'
                                     action='delete-account'
-                                    open={deleteAccount}
+                                    open={deleteAccountToggle}
+                                    close={setDeleteAccountToggle}
                                     handleClose={handleClose}
-                                    handleDelete={handleDelete}
-                                    resource={'user'}
+                                    handleDelete={handleProfileRequest}
+                                    request={deleteAccount}
                                     id={currentUser.id}
                                     redirect={'/'}
                                 />

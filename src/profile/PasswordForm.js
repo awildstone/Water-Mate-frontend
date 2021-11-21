@@ -5,6 +5,7 @@ import { TextField, Button, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
+import useProfile, { editPassword } from './useProfile';
 
 const validationSchema = yup.object({
     new_password: yup.string()
@@ -24,8 +25,8 @@ const validationSchema = yup.object({
         .required('You must enter your old password.'),
 });
 
-const EditPasswordForm = ({close, handleEdit, user}) => {
-    const [ error, setError ] = useState(null);
+const EditPasswordForm = ({close, setEditPassword, user}) => {
+    const [error, message, setMessage, handleProfileRequest] = useProfile();
     const [ isLoading, setIsLoading ] = useState(false);
 
     const formik = useFormik({
@@ -36,14 +37,9 @@ const EditPasswordForm = ({close, handleEdit, user}) => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            console.log(values);
-            let result = await handleEdit('user/password', user.id, values);
-            if(result.success) {
-                close('edit-password');
-            } else {
-                setError(result.message);
-            }
-            setIsLoading(false);  
+            let result = await handleProfileRequest(editPassword(user.id, values));
+            if (result.success) setMessage(result.message);
+            setIsLoading(false); 
         },
     });
     
@@ -99,25 +95,47 @@ const EditPasswordForm = ({close, handleEdit, user}) => {
             </div>
             <div>
                 { error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : '' }
+                { message ? <Alert sx={{ mb: 1 }} severity="success">{message}</Alert> : '' }
             </div>
             <Stack direction="row" spacing={2} >
-            { !isLoading ?
-                    <Button color="success" sx={{ color: '#fff'}} variant="contained" size="large" type="submit">
-                        Submit
-                    </Button>
-                    :
-                    <LoadingButton
-                        loading
-                        loadingPosition="start"
-                        startIcon={<SaveIcon />}
-                        variant="outlined"
-                    >
-                        Saving
-                    </LoadingButton>
-            }
-                <Button onClick={() => close('edit-password')} color="info" sx={{ color: '#fff'}} variant="contained" size="large">
-                    Cancel
+            { message ? 
+                <Button 
+                    color="success" 
+                    sx={{ color: '#fff'}} 
+                    variant="contained" 
+                    size="large" 
+                    onClick={() => close('edit-password')}
+                >
+                    Close
                 </Button>
+                :
+                <>
+                    { !isLoading ?
+                            <Button color="success" sx={{ color: '#fff'}} variant="contained" size="large" type="submit">
+                                Submit
+                            </Button>
+                            :
+                            <LoadingButton
+                                loading
+                                loadingPosition="start"
+                                startIcon={<SaveIcon />}
+                                variant="outlined"
+                            >
+                                Saving
+                            </LoadingButton>
+                    }
+
+                    <Button 
+                        onClick={() => setEditPassword(false)} 
+                        color="info" 
+                        sx={{ color: '#fff'}} 
+                        variant="contained"
+                        size="large"
+                    >
+                        Cancel
+                    </Button>
+                </>
+            }
             </Stack>
         </form>
     );
