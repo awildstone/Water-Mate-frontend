@@ -30,6 +30,7 @@ const CollectionForm = ({ close, setEditCollection, setAddCollection, collection
             } else {
                 result = await handleCollectionRequest(addCollection(values));
             }
+
             if (result.success) setMessage(result.message);
         },
     });
@@ -61,7 +62,7 @@ const CollectionForm = ({ close, setEditCollection, setAddCollection, collection
                         sx={{ color: '#fff'}} 
                         variant="contained" 
                         size="large" 
-                        onClick={() => collection ? close('edit-collection') : close('add-collection')}
+                        onClick={() => collection ? close('edit-collection', collections.collection) : close('add-collection')}
                     >
                         Close
                     </Button>

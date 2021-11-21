@@ -311,18 +311,18 @@ const WaterManager = ({ userPlantCount, getPlantsToWater, handleUpdateSchedule }
                         }
                     </Grid>
                     <Grid container sx={{ flexGrow: 1, '& > :not(style)': { m: 1 } }} justifyContent="center">
-                        <Grid item xs={12} textAlign="center">
-                                <Typography variant="h6" component="div">
-                                    {count > 1 ? 'View More Plants' : ''}
-                                </Typography>
-                        </Grid>
                         <Grid item>
+                            { count > itemsPerPage ?
                                 <Paginator
+                                    title={'View More Plants'}
                                     itemsPerPage={itemsPerPage}
                                     currentPage={page}
                                     pageCount={Math.ceil(count / itemsPerPage)}
                                     handlePageChange={handlePageChange}
                                 />
+                                :
+                                ''
+                            }
                         </Grid>
                     </Grid>
                 </Box>

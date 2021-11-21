@@ -6,6 +6,7 @@ import { addLightSource } from './useLightSource';
 
 const LightSourceForm = ({ close, setAddLight, roomId, current }) => {
     const [ error, message, setMessage, handleLightSourceRequest ] = useLightSource();
+
     const artificial = current.find((light) => (light.type === 'Artificial')) ? true : false;
     const north = current.find((light) => (light.type === 'North')) ? true : false;
     const northeast = current.find((light) => (light.type === 'Northeast')) ? true : false;
