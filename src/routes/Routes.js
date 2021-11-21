@@ -21,8 +21,7 @@ const Routes = ({
     signup, 
     handleEdit, 
     handleDelete,
-    handleUpdateSchedule,
-    getHistory }) => {
+    handleUpdateSchedule }) => {
 
     return (
         <Switch>
@@ -74,8 +73,6 @@ const Routes = ({
             <ProtectedRoute exact path='/plant/:id'>
                 <PlantDetails
                     collections={collections}
-                    getHistory={getHistory}
-                    handleRequest={handleRequest}
                 />
             </ProtectedRoute>
 
