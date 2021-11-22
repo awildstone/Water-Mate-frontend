@@ -18,6 +18,20 @@ export const editSchedule = (id, data) => ({
     data: data,
 });
 
+/** Request object for watering a plant and updating the plant's schedule. */
+export const waterPlant = (schedule_id, data) => ({
+    url: buildUrl(`/schedule/${schedule_id}/water/`),
+    method: 'post',
+    data: data,
+});
+
+/** Request object for snoozing a plant and updating the plant's schedule. */
+export const snoozePlant = (schedule_id, data) => ({
+    url: buildUrl(`/schedule/${schedule_id}/snooze/`),
+    method: 'post',
+    data: data,
+});
+
 /** useSchedule hook for making API calls for different types of Schedule requests. */
 const useSchedule = () => {
     const [error, setError] = useState(null);

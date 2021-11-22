@@ -19,11 +19,11 @@ import CommentRoundedIcon from '@mui/icons-material/CommentRounded';
 import SpeakerNotesOffRoundedIcon from '@mui/icons-material/SpeakerNotesOffRounded';
 import Fab from '@mui/material/Fab';
 import Alert from '@mui/material/Alert';
+import useSchedule, { waterPlant, snoozePlant } from '../schedule/useSchedule';
 
-
-const PlantCard = ({ plant, waterSchedule, handleUpdateSchedule }) => {
+const PlantCard = ({ plant, waterSchedule, loadPlantsToWater }) => {
+    const [ error, message, setMessage, handleScheduleRequest ] = useSchedule();
     const [ showForm, setShowForm ] = useState(false);
-    const [ error, setError ] = useState(null);
     const [ notes, setNotes ] = useState(null);
     const [ isLoading, setIsLoading ] = useState(false);
 
@@ -33,11 +33,14 @@ const PlantCard = ({ plant, waterSchedule, handleUpdateSchedule }) => {
 
     const updatePlantSchedule = async (action, schedule_id) => {
       setIsLoading(true);
-      let result = await handleUpdateSchedule(action, schedule_id, notes);
-      if(!result.success) {
-        setError(result.message);
+      if (action === 'water') {
+        await handleScheduleRequest(waterPlant(schedule_id, notes));
+      }
+      if (action === 'snooze') {
+        await handleScheduleRequest(snoozePlant(schedule_id, notes));
       }
       setIsLoading(false);
+      loadPlantsToWater();
     }
 
     return (
@@ -68,7 +71,12 @@ const PlantCard = ({ plant, waterSchedule, handleUpdateSchedule }) => {
                   { !isLoading ?
                     <>
                       <Tooltip title="Water Plant">
-                        <Fab onClick={() => updatePlantSchedule('water', waterSchedule.id)} size="small" color="secondary"  aria-label="Water Plant">
+                        <Fab 
+                          onClick={() => updatePlantSchedule('water', waterSchedule.id)} 
+                          size="small" 
+                          color="secondary" 
+                          aria-label="Water Plant"
+                        >
                           <InvertColorsIcon />
                         </Fab>
                       </Tooltip>
@@ -80,7 +88,12 @@ const PlantCard = ({ plant, waterSchedule, handleUpdateSchedule }) => {
                       </Tooltip>
 
                       <Tooltip title="Snooze Plant">
-                      <Fab onClick={() => updatePlantSchedule('snooze', waterSchedule.id)} size="small" color="secondary"   aria-label="Snooze Plant">
+                      <Fab 
+                        onClick={() => updatePlantSchedule('snooze', waterSchedule.id)} 
+                        size="small" 
+                        color="secondary"
+                        aria-label="Snooze Plant"
+                      >
                         <SnoozeIcon />
                         </Fab>
                       </Tooltip>
@@ -93,7 +106,7 @@ const PlantCard = ({ plant, waterSchedule, handleUpdateSchedule }) => {
                           startIcon={<SaveIcon />}
                           variant="outlined"
                       >
-                          Updating
+                        Updating
                       </LoadingButton>
                   }
 

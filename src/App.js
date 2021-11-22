@@ -169,16 +169,16 @@ const App = () => {
   //     }
   // }
 
-  async function getPlantsToWater(page, query) {
-      try {
-        const plantsToWaterData = await handleGetFilteredResources(`plant/water-schedule/${page}`, query);
-        console.log('GET PLANTS TO WATER')
-        console.log(plantsToWaterData);
-        return plantsToWaterData
-      } catch (err) {
-        console.error('Error', err);
-      }
-  }
+  // async function getPlantsToWater(page, query) {
+  //     try {
+  //       const plantsToWaterData = await handleGetFilteredResources(`plant/water-schedule/${page}`, query);
+  //       console.log('GET PLANTS TO WATER')
+  //       console.log(plantsToWaterData);
+  //       return plantsToWaterData
+  //     } catch (err) {
+  //       console.error('Error', err);
+  //     }
+  // }
 
   // async function getPlant(id) {
   //     try {
@@ -248,27 +248,27 @@ const App = () => {
       }
   }
 
-  async function handleGetFilteredResources(resource, query) {
-    const headers = {
-      'content-type': 'application/json',
-      'x-access-token': token
-    };
+  // async function handleGetFilteredResources(resource, query) {
+  //   const headers = {
+  //     'content-type': 'application/json',
+  //     'x-access-token': token
+  //   };
 
-    const params = query ? query : '';
+  //   const params = query ? query : '';
 
-    try {
-      let response = await axios({
-        method: 'get',
-        url: `${BASE_URL}/${resource}/`,
-        headers: headers,
-        params: params
-      });
-      return response.data
-    } catch (err) {
-      const message = err.response.data.msg;
-      return { success: false, message };
-    }
-  }
+  //   try {
+  //     let response = await axios({
+  //       method: 'get',
+  //       url: `${BASE_URL}/${resource}/`,
+  //       headers: headers,
+  //       params: params
+  //     });
+  //     return response.data
+  //   } catch (err) {
+  //     const message = err.response.data.msg;
+  //     return { success: false, message };
+  //   }
+  // }
 
   // async function handleAddResource(resource, data, file) {
   //   const headers = {
@@ -320,6 +320,7 @@ const App = () => {
     setCurrentUser(null);
     setCollections(null);
     setPlantTypes(null);
+    setUserPlantCount(null);
   }
 
   if (isLoading) {
@@ -327,7 +328,7 @@ const App = () => {
   } 
   return (
     <BrowserRouter>
-      <UserContext.Provider value={{ currentUser, loadUserData, token, collections }}>
+      <UserContext.Provider value={{ currentUser, loadUserData, userPlantCount, collections }}>
       <PlantContext.Provider value={{ plantTypes }}>
         <ThemeProvider theme={theme}>
           <NavBar logout={logout} />
@@ -335,12 +336,9 @@ const App = () => {
           <Routes
             collections={collections}
             handleCollectionRequest={handleCollectionRequest}
-            userPlantCount={userPlantCount}
-            getPlantsToWater={getPlantsToWater}
             login={login} 
             signup={signup}
-            handleUpdateSchedule={handleUpdateSchedule}
-            />
+          />
         </ThemeProvider>
         </PlantContext.Provider>
       </UserContext.Provider>
