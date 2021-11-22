@@ -24,20 +24,6 @@ export const getPlant = (plant_id) => ({
     headers: JSON,
 });
 
-/** Request object for getting all plant type data. */
-export const getPlantTypes = () => ({
-    url: buildUrl('/plant/types/'),
-    method: 'get',
-    headers: JSON,
-});
-
-/** Request object for getting plant count for current user. */
-export const getPlantCount = (user_id) => ({
-    url: buildUrl(`/plant/count/${user_id}/`),
-    method: 'get',
-    headers: JSON,
-});
-
 /** Request object for getting paginated plant data with a query. */
 export const getPlants = (page, params) => ({
     url: buildUrl(`/plant/page/${page}/`),
@@ -46,18 +32,11 @@ export const getPlants = (page, params) => ({
     params: params,
 });
 
-/** Request object for getting all Plants to Water data paginated with or without query. */
-export const getPaginatedPlants = (page, params) => ({
+/** Request object for getting all Plants to Water data paginated with query filter. */
+export const getPlantsToWater = (page, params) => ({
     url: buildUrl(`/plant/water-schedule/${page}/`),
     method: 'get',
     params: params,
-    headers: JSON,
-});
-
-/** Request object for getting all plant history paginated. */
-export const getPaginatedPlantHistory = (page, plant_id) => ({
-    url: buildUrl(`/plant/history/${plant_id}/${page}/`),
-    method: 'get',
     headers: JSON,
 });
 
@@ -91,7 +70,6 @@ const usePlants = () => {
     const handlePlantRequest = async ({ url, method, data={}, headers, params={} }) => {
         try {
             const response = await axios({ url, method, data, headers, params });
-            // console.log('usePlants API response:', response);
             if (method !== 'delete') {
                 setError(null);
                 setPlants(response.data);
@@ -100,7 +78,6 @@ const usePlants = () => {
             return { success: true, message, data: response.data };
         } catch (err) {
             const message = err.response.data.msg;
-            // console.error('API ERROR:', err);
             setError(message);
             return { success: false, message };
         }

@@ -11,16 +11,7 @@ import Dashboard from '../pages/Dashboard';
 import ProtectedRoute from './ProtectedRoute';
 
 
-const Routes = ({
-    collections,
-    handleCollectionRequest,
-    handleRequest,
-    userPlantCount,
-    getPlantsToWater, 
-    login, 
-    signup, 
-    handleUpdateSchedule }) => {
-
+const Routes = ({ collections, handleCollectionRequest, login, signup }) => {
     return (
         <Switch>
             <Route exact path='/'>
@@ -51,12 +42,7 @@ const Routes = ({
             </ProtectedRoute>
 
             <ProtectedRoute exact path='/water-manager'>
-                <WaterManager 
-                    userPlantCount={userPlantCount}
-                    getPlantsToWater={getPlantsToWater} 
-                    handleUpdateSchedule={handleUpdateSchedule}
-                    handleRequest={handleRequest}
-                />
+                <WaterManager />
             </ProtectedRoute>
 
             <ProtectedRoute exact path='/profile'>

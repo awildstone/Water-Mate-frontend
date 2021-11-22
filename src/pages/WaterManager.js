@@ -24,13 +24,14 @@ import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import Loading from '../alerts/Loading';
 import Paginator from '../Paginator';
 import PlantContext from '../context/PlantContext';
+import usePlants, { getPlantsToWater} from '../plant/usePlants';
 
 
-const WaterManager = ({ userPlantCount, getPlantsToWater, handleUpdateSchedule }) => {
+const WaterManager = () => {
     const [ isLoading, setIsLoading ] = useState(true);
-    const { currentUser } = useContext(UserContext);
+    const { currentUser, userPlantCount } = useContext(UserContext);
     const { plantTypes } = useContext(PlantContext);
-    const [ plantsToWater, setplantsToWater ] = useState(null);
+    const [ error, plants, setPlants, handlePlantRequest ] = usePlants();
     const [ plantRooms, setPlantRooms ] = useState(null);
     const [ anchorSort, setAnchorSort ] = useState(null);
     const [ anchorFilter, setAnchorFilter ] = useState(null);
@@ -44,7 +45,7 @@ const WaterManager = ({ userPlantCount, getPlantsToWater, handleUpdateSchedule }
     /** Gets the plants to water, gets plants any time page or currentUser changes. */
     useEffect(() => {
         if (currentUser) {
-            handleGetPlantsToWater();
+            loadPlantsToWater();
         }
         setIsLoading(false);
     },[page, currentUser]);
@@ -57,27 +58,29 @@ const WaterManager = ({ userPlantCount, getPlantsToWater, handleUpdateSchedule }
     /** Gets a filtered list of all plants that are ready to water. Filters by user_id or room_id.
      * Sets the plantsToWater, pagination data, and unique list of plants(filtered by room.id) in state.
      */
-    async function handleGetPlantsToWater(room_id=null) {
-        let plants;
+    async function loadPlantsToWater(room_id=null) {
+        let plantData;
         if (room_id) {
-            plants = await getPlantsToWater(page, {'room_id': room_id });
+            //get all plants to water for current user filtered by room
+            plantData = await handlePlantRequest(getPlantsToWater(page, {'room_id': room_id }));
         } else {
-            plants = await getPlantsToWater(page, {'user_id': currentUser.id });
+            //get all plants to water for the current user
+            plantData = await handlePlantRequest(getPlantsToWater(page, {'user_id': currentUser.id }));
         }
-        
-        if (plants) {
-            setplantsToWater(plants.plants);
-            setItemsPerPage(plants.itemsPerPage);
-            setCount(plants.count);
-            filterPlantRooms(plants.plants);
+
+        if (plantData) {
+            setPlants(plantData.data.plants);
+            setItemsPerPage(plantData.data.itemsPerPage);
+            setCount(plantData.data.count);
+            filterPlantRooms(plantData.data.plants);
         } 
     }
 
     /** Generates a unique list of plant objects by room.id (for an array of unique rooms).
      * Assumes that only the first room.id instance should be part of the array. */
-    const filterPlantRooms = (plants) => {
+    const filterPlantRooms = (plantData) => {
         let flag = {};
-        let uniqueRooms = plants.filter((plant) => {
+        let uniqueRooms = plantData.filter((plant) => {
             if (flag[plant.room.id]) {
                 return false;
             }
@@ -109,18 +112,18 @@ const WaterManager = ({ userPlantCount, getPlantsToWater, handleUpdateSchedule }
 
     /** Sorts the current list of plants by the last water date. */
     const sortByDate = () => {
-        plantsToWater.sort((a, b) => {
+        plants.sort((a, b) => {
             return new Date(a.water_schedule[0].water_date + 'Z') - new Date(b.water_schedule[0].water_date + 'Z');
         });
-        setplantsToWater(plantsToWater);
+        setPlants(plants);
     };
 
     /** Sorts the current list of plants by plant type. */
     const sortByType = () => {
-        plantsToWater.sort((a, b) => {
+        plants.sort((a, b) => {
             return a.type_id - b.type_id;
         });
-        setplantsToWater(plantsToWater);
+        setPlants(plants);
     };
 
     /** Sorts the current list of plants by the urgency to water.
@@ -129,7 +132,7 @@ const WaterManager = ({ userPlantCount, getPlantsToWater, handleUpdateSchedule }
      * The last water date for the plant is subtracted from the calculated oldest possible date to determine how much time has passed since the plant was last watered. Plants that have higher time past the reccomended date are highest urgency. Plants with a negative difference are within the threshold and low urgency for watering.
      */
     const sortByUrgency = () => {
-        plantsToWater.sort((a, b) => {
+        plants.sort((a, b) => {
             let dateA = new Date(a.water_schedule[0].water_date + 'Z');
             let dateB = new Date(b.water_schedule[0].water_date + 'Z');
             let todayA = new Date();
@@ -152,7 +155,7 @@ const WaterManager = ({ userPlantCount, getPlantsToWater, handleUpdateSchedule }
 
             return timeDifferenceB - timeDifferenceA
         });
-        setplantsToWater(plantsToWater);
+        setPlants(plants);
     }
 
     /** Gets a paginated list of plants that are ready to water filtered by the room the plants reside in. Resets to paginated list of all plants ready to water for "Show All" selection. */
@@ -162,9 +165,9 @@ const WaterManager = ({ userPlantCount, getPlantsToWater, handleUpdateSchedule }
             const split = action.split(' ');
             const len = split.length;
             const room_id = split[len-1].toString();
-            handleGetPlantsToWater(room_id);
+            loadPlantsToWater(room_id);
         } else {
-            handleGetPlantsToWater();
+            loadPlantsToWater();
         }
     };
 
@@ -287,15 +290,15 @@ const WaterManager = ({ userPlantCount, getPlantsToWater, handleUpdateSchedule }
                             </Paper>
                         </Grid>
                         
-                        { plantsToWater.length ?
+                        { plants.length ?
 
-                            plantsToWater.map((plant) => {
+                            plants.map((plant) => {
                                 return (
                                     <Grid key={plant.id} item xs={12} sm={6} md={3} sx={{ display: 'flex', alignItems: 'stretch' }}>
                                         <PlantCard 
                                             plant={plant}
                                             waterSchedule={plant.water_schedule[0]}
-                                            handleUpdateSchedule={handleUpdateSchedule}
+                                            loadPlantsToWater={loadPlantsToWater}
                                         />
                                     </Grid>
                                 )
@@ -330,7 +333,7 @@ const WaterManager = ({ userPlantCount, getPlantsToWater, handleUpdateSchedule }
         );
     }
 
-    if (isLoading || !currentUser || !plantsToWater || !plantRooms) {
+    if (isLoading || !currentUser || !plants || !plantRooms) {
         return <Loading />
     } else {
         if (userPlantCount > 0) {
