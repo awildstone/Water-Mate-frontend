@@ -175,7 +175,7 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                     <Paper>
                         <Grid
                             container
-                            mb={8}
+                            mb={4}
                             direction='row'
                             justifyContent='space-evenly'
                             rowSpacing={3} 

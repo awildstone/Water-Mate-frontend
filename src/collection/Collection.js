@@ -140,7 +140,13 @@ const Collection = ({
                     { rooms.rooms.length ?
                         rooms.rooms.map((room, i) => {
                             return (
-                                <Grid key={room.id} item sm={12} md={6} sx={{ display: 'flex', alignItems:'stretch',    width: '100%' }} >
+                                <Grid 
+                                    key={room.id} 
+                                    item 
+                                    sm={12} 
+                                    md={6} 
+                                    sx={{ display: 'flex', alignItems:'stretch', width: '100%' }} 
+                                >
                                     <Room
                                         handleRoomRequest={handleRoomRequest}
                                         getRooms={getRooms}
@@ -151,11 +157,17 @@ const Collection = ({
                                 </Grid>
                             )})
                         :
-                        <Box textAlign='center'>
-                            <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>No Rooms!</Typography>
+                        <Grid 
+                            item
+                            xs={12} 
+                            alignContent='center'
+                        >
+                            <Box textAlign='center'>
+                                <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>No Rooms!</Typography>
                                 <p>Add a room to your Collection. You can name your room anything you like but it helps if your room describes the location.</p>
                                 <p>Examples: Kitchen, Bedroom, Bathroom, etc.</p>
-                        </Box>
+                            </Box>
+                        </Grid>
                     }
                 </Grid>
             </>
