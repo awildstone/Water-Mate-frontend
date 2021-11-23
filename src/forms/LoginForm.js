@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { Container, TextField, Button } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
+import useAuth, {loginUser} from '../hooks/useAuth';
 
 const validationSchema = yup.object({
     username: yup.string()
@@ -16,9 +16,9 @@ const validationSchema = yup.object({
         .required('You must enter a password.'),
 });
 
-const LoginForm = ({login}) => {
+const LoginForm = ({setToken}) => {
     const history = useHistory();
-    const [ error, setError ] = useState(null);
+    const [error, handleAuthRequest] = useAuth();
 
     const formik = useFormik({
         initialValues: {
@@ -27,11 +27,10 @@ const LoginForm = ({login}) => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            let result = await login(values);
-            if(result.success) {
+            let result = await handleAuthRequest(loginUser({'username': values.username, 'password': values.password}));
+            if (result.success) {
+                setToken(result.userToken);
                 history.push('/water-manager');
-            } else {
-                setError(result.message);
             }
         },
     });

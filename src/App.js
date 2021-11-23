@@ -56,47 +56,25 @@ const App = () => {
     if (token) {
       loadPlantData();
       loadUserData();
-      // loadCollections();
       handleCollectionRequest(getCollections());
     }
     setIsLoading(false);
   }, [token]);
 
-  // async function handleRequest(request) {
-  //   const data = request.data ? request.data : {};
-  //   const params = request.params ? request.params : {};
-  //   const method = request.method;
-  //   const url = request.url;
-  //   const headers = request.headers ? request.headers : {};
-  //   try {
-  //     let response = await axios({ method, url, data, headers, params});
-  //     return { success: true, data: response.data }
-  //   } catch (err) {
-  //     const message = err.response.data.msg;
-  //     console.error('API ERROR:', err);
-  //     return { success: false, message };
-  //   }
-  // };
-
   async function loadUserData() {
-      try {
-        const payload = jwt.decode(token);
-        const userId = payload['wm_user_id'];
+    try {
+      const payload = jwt.decode(token);
+      const userId = payload['wm_user_id'];
+      const userData = await axios.get(`${BASE_URL}/user/${userId}/`, { headers: {
+        'content-type': 'application/json',
+        'x-access-token': token
+      }});
 
-        const userData = await axios.get(`${BASE_URL}/user/${userId}/`, { headers: {
-          'content-type': 'application/json',
-          'x-access-token': token
-        }});
-
-        console.log('LOAD USER DATA')
-        console.log(userData);
-        setCurrentUser(userData.data.user);
-        loadUserPlantCount(userData.data.user.id);
-
-      } catch (err) {
-        console.error('Error', err);
-        setCurrentUser(null);
-      }
+      setCurrentUser(userData.data.user);
+      loadUserPlantCount(userData.data.user.id);
+    } catch (err) {
+      setCurrentUser(null);
+    }
   }
 
   async function loadUserPlantCount(userId) {
@@ -105,31 +83,12 @@ const App = () => {
         'content-type': 'application/json',
         'x-access-token': token
       }});
-      console.log('GET USER PLANT COUNT')
-      console.log(plantCount.data.user_plant_count);
-      setUserPlantCount(plantCount.data.user_plant_count);
 
+      setUserPlantCount(plantCount.data.user_plant_count);
     } catch (err) {
-      console.error('Error', err);
       setUserPlantCount(null);
     }
   }
-
-  // async function loadCollections() {
-  //     try {
-  //       let collectionsData = await handleGetFilteredResources('collection');
-  //       setCollections(collectionsData.collections);
-  //       setUserCollectionCount(collectionsData.collections.length);
-
-  //       console.log('LOAD COLLECTIONS DATA & COUNT');
-  //       console.log(collectionsData);
-  //       console.log(collectionsData.collections.length);
-
-  //       return collectionsData;
-  //     } catch (err) {
-  //       console.error('Error', err);
-  //     }
-  // }
 
   async function loadPlantData() {
     try {
@@ -137,183 +96,12 @@ const App = () => {
         'content-type': 'application/json',
         'x-access-token': token
       }});
-      console.log('LOAD PLANT TYPES');
-      console.log(plantTypes);
+    
       setPlantTypes(plantTypes.data.plant_types);
-
     } catch (err) {
-      console.error('Error', err);
+      setPlantTypes(null);
     }
-}
-
-  // async function getRooms(query) {
-  //     try {
-  //       const roomsData = await handleGetFilteredResources('room', query);
-  //       console.log('LOAD ROOMS DATA')
-  //       console.log(roomsData);
-  //       return roomsData.rooms
-  //     } catch (err) {
-  //       console.error('Error', err);
-  //       return []
-  //     }
-  // }
-
-  // async function getPlants(query) {
-  //     try {
-  //       const plantsData = await handleGetFilteredResources('plant', query);
-  //       console.log('LOAD PLANTS DATA')
-  //       console.log(plantsData);
-  //       return plantsData.plants
-  //     } catch (err) {
-  //       console.error('Error', err);
-  //     }
-  // }
-
-  // async function getPlantsToWater(page, query) {
-  //     try {
-  //       const plantsToWaterData = await handleGetFilteredResources(`plant/water-schedule/${page}`, query);
-  //       console.log('GET PLANTS TO WATER')
-  //       console.log(plantsToWaterData);
-  //       return plantsToWaterData
-  //     } catch (err) {
-  //       console.error('Error', err);
-  //     }
-  // }
-
-  // async function getPlant(id) {
-  //     try {
-  //       const plantData = await axios.get(`${BASE_URL}/plant/${id}/`, { headers: {
-  //         'content-type': 'application/json',
-  //         'x-access-token': token
-  //       }});
-  //       console.log('GET PLANT DATA')
-  //       console.log(plantData);
-  //       return plantData.data.plant
-  //     } catch (err) {
-  //       console.error('Error', err);
-  //     }
-  // }
-
-  // async function getHistory(plant_id, page) {
-  //     try {
-  //       const history = await axios.get(`${BASE_URL}/plant/history/${plant_id}/${page}/`, { headers: {
-  //         'content-type': 'application/json',
-  //         'x-access-token': token
-  //       }});
-  //       console.log('GET HISTORY')
-  //       console.log(history);
-  //       return history.data;
-  //     } catch (err) {
-  //       console.error('Error', err);
-  //     }
-  // }
-
-  async function signup(signupData) {
-    const { city, state, country, name, username, email, password } = signupData;
-    try {
-      let userToken = await axios.post(`${BASE_URL}/signup/`, { city, state, country, name, username, email, password });
-      setToken(userToken.data.token);
-      return { success: true }
-    } catch (err) {
-      const message = err.response.data.msg;
-      return { success: false, message };
-    }
-  };
-
-  async function login(loginData) {
-    const { username, password } = loginData;
-    try {
-      let userToken = await axios.post(`${BASE_URL}/login/`, { username, password });
-      setToken(userToken.data.token);
-      return { success: true }
-    } catch (err) {
-      const message = err.response.data.msg;
-      return { success: false, message };
-    }
-  };
-
-  async function handleUpdateSchedule(action, schedule_id, data) {
-    const headers = {
-      'content-type': 'application/json',
-      'x-access-token': token
-    };
-
-      try {
-        let response = await axios.post(`${BASE_URL}/schedule/${schedule_id}/${action}/`, data, { headers });
-        if (response) loadUserData();
-        return { success: true }
-      } catch (err) {
-        const message = err.response.data.msg;
-        return { success: false, message };
-      }
   }
-
-  // async function handleGetFilteredResources(resource, query) {
-  //   const headers = {
-  //     'content-type': 'application/json',
-  //     'x-access-token': token
-  //   };
-
-  //   const params = query ? query : '';
-
-  //   try {
-  //     let response = await axios({
-  //       method: 'get',
-  //       url: `${BASE_URL}/${resource}/`,
-  //       headers: headers,
-  //       params: params
-  //     });
-  //     return response.data
-  //   } catch (err) {
-  //     const message = err.response.data.msg;
-  //     return { success: false, message };
-  //   }
-  // }
-
-  // async function handleAddResource(resource, data, file) {
-  //   const headers = {
-  //     'content-type': (file ? file : 'application/json'),
-  //     'x-access-token': token
-  //   };
-  //   try {
-  //     let response = await axios.post(`${BASE_URL}/${resource}/`, data, { headers });
-  //     // if (response) loadCollections();
-  //     return { success: true }
-  //   } catch (err) {
-  //     const message = err.response.data.msg;
-  //     return { success: false, message };
-  //   }
-  // }
-
-  // async function handleEditResource(resource, id, data, file) {
-  //   const headers = {
-  //     'content-type': (file ? file : 'application/json'),
-  //     'x-access-token': token
-  //   };
-  //   try {
-  //     let response = await axios.patch(`${BASE_URL}/${resource}/${id}/`, data, { headers });
-  //     // if (response) loadCollections();
-  //     return { success: true }
-  //   } catch (err) {
-  //     const message = err.response.data.msg;
-  //     return { success: false, message };
-  //   }
-  // }
-
-  // async function handleDeleteResource(resource, id) {
-  //   const headers = {
-  //     'content-type': 'application/json',
-  //     'x-access-token': token
-  //   };
-  //   try {
-  //     let response = await axios.delete(`${BASE_URL}/${resource}/${id}/`, { headers });
-  //     // if (response) loadCollections();
-  //     return { success: true }
-  //   } catch (err) {
-  //     const message = err.response.data.msg;
-  //     return { success: false, message };
-  //   }
-  // }
 
   function logout() {
     setToken(null);
@@ -336,8 +124,7 @@ const App = () => {
           <Routes
             collections={collections}
             handleCollectionRequest={handleCollectionRequest}
-            login={login} 
-            signup={signup}
+            setToken={setToken}
           />
         </ThemeProvider>
         </PlantContext.Provider>

@@ -11,7 +11,7 @@ import Dashboard from '../pages/Dashboard';
 import ProtectedRoute from './ProtectedRoute';
 
 
-const Routes = ({ collections, handleCollectionRequest, login, signup }) => {
+const Routes = ({ collections, handleCollectionRequest, setToken }) => {
     return (
         <Switch>
             <Route exact path='/'>
@@ -19,11 +19,11 @@ const Routes = ({ collections, handleCollectionRequest, login, signup }) => {
             </Route>
 
             <Route exact path='/login/'>
-                <Login login={login} />
+                <Login setToken={setToken} />
             </Route>
 
             <Route exact path='/signup/'>
-                <Signup signup={signup} />
+                <Signup setToken={setToken} />
             </Route>
 
             <Route exact path='/about/'>

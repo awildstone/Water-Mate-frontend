@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { Container, TextField, Button } from '@mui/material';
+import useAuth, {signupUser} from '../hooks/useAuth';
 
 const validationSchema = yup.object({
     city: yup.string()
@@ -14,7 +14,7 @@ const validationSchema = yup.object({
         .min(2, 'Too Short!')
         .max(50, 'Too Long!'),
     country: yup.string()
-        .min(2, 'Too Short!')
+        .min(3, 'Too Short!')
         .max(50, 'Too Long!')
         .required('You must enter your country for an accurate location.'),
     name: yup.string()
@@ -44,9 +44,9 @@ const validationSchema = yup.object({
         .required('You must confirm your password.'),
 });
 
-const SignupForm = ({signup}) => {
+const SignupForm = ({signup, setToken}) => {
     const history = useHistory();
-    const [ error, setError ] = useState(null);
+    const [error, handleAuthRequest] = useAuth();
 
     const formik = useFormik({
         initialValues: {
@@ -61,12 +61,11 @@ const SignupForm = ({signup}) => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            console.log(values);
-            let result = await signup(values);
-            if(result.success) {
+            const { city, state, country, name, username, email, password } = values;
+            let result = await handleAuthRequest(signupUser({city, state, country, name, username, email, password}));
+            if (result.success) {
+                setToken(result.userToken);
                 history.push('/get-started');
-            } else {
-                setError(result.message);
             }
         },
     });

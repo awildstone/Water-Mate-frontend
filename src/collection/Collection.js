@@ -34,26 +34,19 @@ const Collection = ({
         transform: 'translate(-50%, -50%)',
     };
 
-    // /** Mapped list of actions and setters for toggling modal open/closed state. */
+    /** Mapped list of actions and setters for toggling modal open/closed state. */
     const map = {
         'edit-collection': setEditCollection,
         'delete-collection': setDeleteCollectionToggle
     };
 
-    /** Colors for rooms. */
-    const colors = {
-        1: '#ffecc1',
-        2: '#BEDABA',
-        3: '#ffe7e0',
-        4: '#E1F6F6',
-        5: '#ffecc1',
-        6: '#BEDABA',
-        7: '#ffe7e0',
-        8: '#E1F6F6',
-        9: '#ffecc1',
-        10: '#BEDABA',
-        11: '#ffe7e0',
-        12: '#E1F6F6',
+    /** Get a color for a room. 
+     * Recycles through 4 colors, assigning each room a color in the same order. */
+    let colors = ['#ffecc1', '#BEDABA', '#ffe7e0', '#E1F6F6'];
+    const getColor = () => {
+        if (colors.length === 0) colors = ['#ffecc1', '#BEDABA', '#ffe7e0', '#E1F6F6'];
+        const color = colors.shift();
+        return color;
     }
     
     /** Handles action to open a form modal. */
@@ -152,8 +145,8 @@ const Collection = ({
                                         handleRoomRequest={handleRoomRequest}
                                         getRooms={getRooms}
                                         deleteRoom={deleteRoom}
-                                        color={colors[i+1] }  
-                                        room={room} 
+                                        color={getColor()}
+                                        room={room}
                                     />
                                 </Grid>
                             )})
