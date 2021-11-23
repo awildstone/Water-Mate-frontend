@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useCallback } from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -42,12 +42,6 @@ const WaterManager = () => {
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(null);
 
-    /** Gets the plants to water, gets plants any time page or currentUser changes. */
-    useEffect(() => {
-        if (currentUser && token) loadPlantsToWater();
-        setIsLoading(false);
-    },[page, currentUser]);
-
     /** Handles updating the current page in pagination. */
     const handlePageChange = (event, value) => {
         setPage(value);
@@ -56,7 +50,7 @@ const WaterManager = () => {
     /** Gets a filtered list of all plants that are ready to water. Filters by user_id or room_id.
      * Sets the plantsToWater, pagination data, and unique list of plants(filtered by room.id) in state.
      */
-    async function loadPlantsToWater(room_id=null) {
+    const loadPlantsToWater = useCallback(async (room_id=null) => {
         let plantData;
         if (room_id) {
             plantData = await handlePlantRequest(getPlantsToWater(token, page, {'room_id': room_id }));
@@ -69,7 +63,13 @@ const WaterManager = () => {
             setCount(plantData.data.count);
             filterPlantRooms(plantData.data.plants);
         } 
-    }
+    }, [currentUser, token, handlePlantRequest, page, setPlants]);
+
+    /** Gets the plants to water, gets plants any time page or currentUser changes. */
+    useEffect(() => {
+        if (currentUser && token) loadPlantsToWater();
+        setIsLoading(false);
+    },[page, currentUser, token, loadPlantsToWater]);
 
     /** Generates a unique list of plant objects by room.id (for an array of unique rooms).
      * Assumes that only the first room.id instance should be part of the array. */

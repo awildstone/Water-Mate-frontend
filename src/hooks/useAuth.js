@@ -26,8 +26,7 @@ const useAuth = () => {
         try {
             const response = await axios({ url, method, data, headers});
             setError(null);
-            const userToken = response.data.token;
-            return { success: true, userToken };
+            return { success: true, token: response.data.token };
         } catch (err) {
             const message = err.response.data.msg;
             setError(message);

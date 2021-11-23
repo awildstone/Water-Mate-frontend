@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../App';
 
@@ -6,7 +6,7 @@ import { BASE_URL } from '../App';
 const usePlantTypes = () => {
     const [ plantTypes, setPlantTypes ] = useState(null);
 
-    const handleGetPlantTypes = async (token) => {
+    const handleGetPlantTypes = useCallback(async (token) => {
         const headers = { 'content-type': 'application/json', 'x-access-token': token };
         const url = `${BASE_URL}/plant/types/`;
         const method = 'get';
@@ -17,7 +17,7 @@ const usePlantTypes = () => {
         } catch (err) {
             setPlantTypes(null)
         }
-    }
+    }, []);
 
     return [plantTypes, setPlantTypes, handleGetPlantTypes];
 }

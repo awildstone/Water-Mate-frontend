@@ -64,7 +64,7 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
             handleCollectionRequest(getCollections());
         }
         setIsLoading(false);
-    },[collections, addCollection]);
+    },[collections, addCollection, handleCollectionRequest, handleRoomRequest]);
 
     /** Filters the collection rooms by room_id. */
     const filterByRoom = (event, data) => {

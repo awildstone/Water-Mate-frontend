@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -63,7 +63,7 @@ const PlantDetails = ({ collections }) => {
     };
 
     /** Gets current plant data and uses current plant data to set light, plantType and collection state. */
-    async function getPlantData() {
+    const getPlantData = useCallback(async() => {
         let { data } = await handlePlantRequest(getPlant(id));
         if (data) {
             setLight(data.plant.room.lightsources);
@@ -73,13 +73,13 @@ const PlantDetails = ({ collections }) => {
             const collection = collections.collections.filter(collection => collection.id === collection_id);
             setCollection(collection[0]);
         }
-    }
+    }, [collections, handlePlantRequest, id, plantTypes]);
 
     /** Get & Set plant data in state. */
     useEffect(() => {
         if (id && plantTypes && collections) getPlantData();
         setIsLoading(false); 
-    },[id, plantTypes, collections]);
+    },[id, plantTypes, collections, getPlantData]);
 
     /** Handles action to open a form modal. */
     const handleOpen = (action) => {

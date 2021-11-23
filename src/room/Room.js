@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -54,19 +54,19 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
     };
 
     /** Load plant data and set the pagination data in state. */
-    async function loadPlantsData() {
+    const loadPlantsData = useCallback(async () => {
         const { data } = await handlePlantRequest(getPlants(page, { 'room_id': room.id }));
         if (data) {
             setItemsPerPage(data.itemsPerPage);
             setCount(data.count);
         }
-    }
+    }, [page, room, handlePlantRequest]);
 
     /** Get plants for the room (if any) */
     useEffect(() => {
         setLights(room.lightsources);
         loadPlantsData();
-    },[page, room]);
+    },[page, room, loadPlantsData]);
 
     /** Handles action to open a form modal. */
     const handleOpen = (action) => {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../App';
 
@@ -67,7 +67,7 @@ const usePlants = () => {
     const [error, setError] = useState(null);
     const [plants, setPlants] = useState(null);
 
-    const handlePlantRequest = async ({ url, method, data={}, headers, params={} }) => {
+    const handlePlantRequest = useCallback(async ({ url, method, data={}, headers, params={} }) => {
         try {
             const response = await axios({ url, method, data, headers, params });
             if (method !== 'delete') {
@@ -81,7 +81,7 @@ const usePlants = () => {
             setError(message);
             return { success: false, message };
         }
-    }
+    }, []);
 
     return [ error, plants, setPlants, handlePlantRequest ];
 }

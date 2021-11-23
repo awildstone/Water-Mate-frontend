@@ -64,7 +64,7 @@ const SignupForm = ({signup, setToken}) => {
             const { city, state, country, name, username, email, password } = values;
             let result = await handleAuthRequest(signupUser({city, state, country, name, username, email, password}));
             if (result.success) {
-                setToken(result.userToken);
+                setToken(result.token);
                 history.push('/get-started');
             }
         },
