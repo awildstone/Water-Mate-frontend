@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './App.css';
@@ -53,6 +53,11 @@ const App = () => {
   const [ error, collections, setCollections, handleCollectionRequest ] = useCollections();
   const [userPlantCount, setUserPlantCount, handleGetPlantCount] = usePlantCount();
 
+  const loadUserData = useCallback(async() => {
+    const { id } = await handleGetUserData(token);
+    handleGetPlantCount(id, token);
+  }, [handleGetUserData, handleGetPlantCount, token]);
+
   useEffect(() => {
     if (token) {
       loadUserData();
@@ -60,12 +65,7 @@ const App = () => {
       handleCollectionRequest(getCollections(token));
     }
     setIsLoading(false);
-  }, [token]);
-
-  async function loadUserData() {
-    const { id } = await handleGetUserData(token);
-    handleGetPlantCount(id, token);
-  }
+  }, [token, handleCollectionRequest, handleGetPlantTypes, loadUserData]);
 
   function logout() {
     setToken(null);

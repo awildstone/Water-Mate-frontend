@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../App';
 
@@ -43,7 +43,7 @@ const useCollections = () => {
     const [error, setError] = useState(null);
     const [collections, setCollections] = useState(null);
 
-    const handleCollectionRequest = async ({ url, method, data={}, token }) => {
+    const handleCollectionRequest = useCallback(async ({ url, method, data={}, token }) => {
         const headers = { 'content-type': 'application/json', 'x-access-token': token ? token : TOKEN };
         try {
             const response = await axios({ url, method, data, headers});
@@ -58,7 +58,7 @@ const useCollections = () => {
             setError(message);
             return { success: false, message };
         }
-    }
+    }, []);
 
     return [ error, collections, setCollections, handleCollectionRequest ];
 }

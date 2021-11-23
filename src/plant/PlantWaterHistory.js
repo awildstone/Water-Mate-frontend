@@ -32,7 +32,7 @@ const PlantWaterHistory = ({close, plant}) => {
             }
         }
         getData();
-    },[page]);
+    },[page, handleHistoryRequest, plant, setHistory]);
     
     if (!isLoading && history) {
         return (

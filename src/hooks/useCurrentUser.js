@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../App';
 import jwt from 'jsonwebtoken';
@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';
 const useCurrentUser = () => {
     const [ currentUser, setCurrentUser ] = useState(null);
 
-    const handleGetUserData = async (token) => {
+    const handleGetUserData = useCallback(async (token) => {
         const payload = jwt.decode(token);
         const userId = payload['wm_user_id'];
         const headers = { 'content-type': 'application/json', 'x-access-token': token };
@@ -21,7 +21,7 @@ const useCurrentUser = () => {
         } catch (err) {
             setCurrentUser(null)
         }
-    }
+    }, []);
 
     return [currentUser, setCurrentUser, handleGetUserData];
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../App';
 
@@ -25,7 +25,7 @@ const useHistory = () => {
     const [error, setError] = useState(null);
     const [history, setHistory] = useState(null);
 
-    const handleHistoryRequest = async ({ url, method, data={}, headers, params={} }) => {
+    const handleHistoryRequest = useCallback(async ({ url, method, data={}, headers, params={} }) => {
         try {
             const response = await axios({ url, method, data, headers, params });
             setError(null);
@@ -37,7 +37,7 @@ const useHistory = () => {
             setError(message);
             return { success: false, message };
         }
-    }
+    }, []);
 
     return [ error, history, setHistory, handleHistoryRequest ];
 }

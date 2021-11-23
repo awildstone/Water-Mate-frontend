@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../App';
 
@@ -42,7 +42,7 @@ const useRooms = () => {
     const [error, setError] = useState(null);
     const [rooms, setRooms] = useState(null);
 
-    const handleRoomRequest = async ({ url, method, data={}, params={} }) => {
+    const handleRoomRequest = useCallback(async ({ url, method, data={}, params={} }) => {
         const headers = { 'content-type': 'application/json', 'x-access-token': TOKEN };
         try {
             const response = await axios({ url, method, data, headers, params});
@@ -59,7 +59,7 @@ const useRooms = () => {
             setError(message);
             return { success: false, message };
         }
-    }
+    }, []);
 
     return [ error, rooms, setRooms, handleRoomRequest ];
 }

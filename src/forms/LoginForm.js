@@ -29,7 +29,7 @@ const LoginForm = ({setToken}) => {
         onSubmit: async (values) => {
             let result = await handleAuthRequest(loginUser({'username': values.username, 'password': values.password}));
             if (result.success) {
-                setToken(result.userToken);
+                setToken(result.token);
                 history.push('/water-manager');
             }
         },
