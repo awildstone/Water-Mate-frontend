@@ -12,9 +12,10 @@ const TOKEN = window.localStorage.getItem(TOKEN_ID) || null;
 const buildUrl = (path) => `${BASE_URL}${path}`;
 
 /** Request object for getting all Collection data. */
-export const getCollections = () => ({
+export const getCollections = (token=null) => ({
     url: buildUrl('/collection/'),
     method: 'get',
+    token: token,
 });
 
 /** Request object for adding a new Collection. */
@@ -42,8 +43,8 @@ const useCollections = () => {
     const [error, setError] = useState(null);
     const [collections, setCollections] = useState(null);
 
-    const handleCollectionRequest = async ({ url, method, data={} }) => {
-        const headers = { 'content-type': 'application/json', 'x-access-token': TOKEN };
+    const handleCollectionRequest = async ({ url, method, data={}, token }) => {
+        const headers = { 'content-type': 'application/json', 'x-access-token': token ? token : TOKEN };
         try {
             const response = await axios({ url, method, data, headers});
             if (method !== 'delete') {

@@ -5,14 +5,15 @@ import './App.css';
 import NavBar from './navigation/NavBar';
 import Routes from './routes/Routes';
 import { styled } from '@mui/material/styles';
-import jwt from 'jsonwebtoken';
 import useLocalStorage from './hooks/useLocalStorage';
-import axios from 'axios';
 import UserContext from './context/UserContext';
 import PlantContext from './context/PlantContext';
 import Loading from './alerts/Loading';
 import useCollections from './collection/useCollections';
 import { getCollections } from './collection/useCollections';
+import usePlantCount from './hooks/usePlantCount';
+import useCurrentUser from './hooks/useCurrentUser';
+import usePlantTypes from './hooks/usePlantTypes';
 
 export const TOKEN_ID = 'watermate-user';
 export const BASE_URL = process.env.APP_BASE_URL || 'http://127.0.0.1:5000';
@@ -47,60 +48,23 @@ const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 const App = () => {
   const [ token, setToken ] = useLocalStorage(TOKEN_ID);
   const [ isLoading, setIsLoading ] = useState(true);
-  const [ plantTypes, setPlantTypes ] = useState(null);
-  const [ currentUser, setCurrentUser ] = useState(null);
+  const [plantTypes, setPlantTypes, handleGetPlantTypes] = usePlantTypes();
+  const [currentUser, setCurrentUser, handleGetUserData] = useCurrentUser();
   const [ error, collections, setCollections, handleCollectionRequest ] = useCollections();
-  const [ userPlantCount, setUserPlantCount ] = useState(null);
+  const [userPlantCount, setUserPlantCount, handleGetPlantCount] = usePlantCount();
 
   useEffect(() => {
     if (token) {
-      loadPlantData();
       loadUserData();
-      handleCollectionRequest(getCollections());
+      handleGetPlantTypes(token);
+      handleCollectionRequest(getCollections(token));
     }
     setIsLoading(false);
   }, [token]);
 
   async function loadUserData() {
-    try {
-      const payload = jwt.decode(token);
-      const userId = payload['wm_user_id'];
-      const userData = await axios.get(`${BASE_URL}/user/${userId}/`, { headers: {
-        'content-type': 'application/json',
-        'x-access-token': token
-      }});
-
-      setCurrentUser(userData.data.user);
-      loadUserPlantCount(userData.data.user.id);
-    } catch (err) {
-      setCurrentUser(null);
-    }
-  }
-
-  async function loadUserPlantCount(userId) {
-    try {
-      const plantCount = await axios.get(`${BASE_URL}/plant/count/${userId}/`, { headers: {
-        'content-type': 'application/json',
-        'x-access-token': token
-      }});
-
-      setUserPlantCount(plantCount.data.user_plant_count);
-    } catch (err) {
-      setUserPlantCount(null);
-    }
-  }
-
-  async function loadPlantData() {
-    try {
-      const plantTypes = await axios.get(`${BASE_URL}/plant/types/`, { headers: {
-        'content-type': 'application/json',
-        'x-access-token': token
-      }});
-    
-      setPlantTypes(plantTypes.data.plant_types);
-    } catch (err) {
-      setPlantTypes(null);
-    }
+    const { id } = await handleGetUserData(token);
+    handleGetPlantCount(id, token);
   }
 
   function logout() {
@@ -116,7 +80,7 @@ const App = () => {
   } 
   return (
     <BrowserRouter>
-      <UserContext.Provider value={{ currentUser, loadUserData, userPlantCount, collections }}>
+      <UserContext.Provider value={{ currentUser, token, loadUserData, userPlantCount }}>
       <PlantContext.Provider value={{ plantTypes }}>
         <ThemeProvider theme={theme}>
           <NavBar logout={logout} />
