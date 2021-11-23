@@ -33,11 +33,11 @@ export const getPlants = (page, params) => ({
 });
 
 /** Request object for getting all Plants to Water data paginated with query filter. */
-export const getPlantsToWater = (page, params) => ({
+export const getPlantsToWater = (token, page, params) => ({
     url: buildUrl(`/plant/water-schedule/${page}/`),
     method: 'get',
     params: params,
-    headers: JSON,
+    headers: { 'content-type': 'application/json', 'x-access-token': token },
 });
 
 /** Request object for adding a new Plant. */

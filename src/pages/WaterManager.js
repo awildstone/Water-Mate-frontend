@@ -12,6 +12,7 @@ import Menu from '@mui/material/Menu';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
+import Link from '@mui/material/Link';
 import FilterListRoundedIcon from '@mui/icons-material/FilterListRounded';
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
 import ListItemText from '@mui/material/ListItemText';
@@ -26,10 +27,9 @@ import Paginator from '../Paginator';
 import PlantContext from '../context/PlantContext';
 import usePlants, { getPlantsToWater} from '../plant/usePlants';
 
-
 const WaterManager = () => {
     const [ isLoading, setIsLoading ] = useState(true);
-    const { currentUser, userPlantCount } = useContext(UserContext);
+    const { currentUser, token, userPlantCount } = useContext(UserContext);
     const { plantTypes } = useContext(PlantContext);
     const [ error, plants, setPlants, handlePlantRequest ] = usePlants();
     const [ plantRooms, setPlantRooms ] = useState(null);
@@ -44,9 +44,7 @@ const WaterManager = () => {
 
     /** Gets the plants to water, gets plants any time page or currentUser changes. */
     useEffect(() => {
-        if (currentUser) {
-            loadPlantsToWater();
-        }
+        if (currentUser && token) loadPlantsToWater();
         setIsLoading(false);
     },[page, currentUser]);
 
@@ -61,13 +59,10 @@ const WaterManager = () => {
     async function loadPlantsToWater(room_id=null) {
         let plantData;
         if (room_id) {
-            //get all plants to water for current user filtered by room
-            plantData = await handlePlantRequest(getPlantsToWater(page, {'room_id': room_id }));
+            plantData = await handlePlantRequest(getPlantsToWater(token, page, {'room_id': room_id }));
         } else {
-            //get all plants to water for the current user
-            plantData = await handlePlantRequest(getPlantsToWater(page, {'user_id': currentUser.id }));
+            plantData = await handlePlantRequest(getPlantsToWater(token, page, {'user_id': currentUser.id }));
         }
-
         if (plantData) {
             setPlants(plantData.data.plants);
             setItemsPerPage(plantData.data.itemsPerPage);
@@ -181,7 +176,7 @@ const WaterManager = () => {
                             <Typography variant="h2" component="div">
                                 No Plants!?
                             </Typography>
-                            <p>You don't have any plants in your collection yet! Head over to the <a href="/dashboard">Dashboard</a> to add your plants.</p>
+                            <p>You don't have any plants in your collection yet! Head over to the <Link underline="none" color={'#1CBC9B'} href="/dashboard">Dashboard</Link> to add your plants.</p>
                             <img src='/images/houseplant_lineup_sm.png' width='100%' alt='Lineup of houseplants' />
                             </Paper> 
                         </Grid>
@@ -290,6 +285,7 @@ const WaterManager = () => {
                             </Paper>
                         </Grid>
                         
+                        {/* If there are plants to water display them, otherwise let the user know there are no plants to water today. */}
                         { plants.length ?
 
                             plants.map((plant) => {
@@ -333,7 +329,7 @@ const WaterManager = () => {
         );
     }
 
-    if (isLoading || !currentUser || !plants || !plantRooms) {
+    if (isLoading || !currentUser || !plants || !plantRooms || userPlantCount === null) {
         return <Loading />
     } else {
         if (userPlantCount > 0) {
