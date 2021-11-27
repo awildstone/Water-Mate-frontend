@@ -28,6 +28,7 @@ import { getCollections } from '../collection/useCollections';
 import useRooms from '../room/useRooms';
 import { getRooms } from '../room/useRooms';
 import UserContext from '../context/UserContext';
+import { modalStyle } from '../utils';
 
 const Dashboard = ({ collections, handleCollectionRequest }) => {
 
@@ -42,31 +43,25 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
     const openRoomMenu = Boolean(filterRoom);
     const openCollectionMenu = Boolean(viewCollection);
 
-    /** Styling for Modals. */
-    const modalStyle = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-    };
-
     /** Mapping of actions and state setters. */
     const map = {
         'add-collection': setAddCollection,
         'add-room': setaddRoom,
+        'view-collection': setViewCollection,
+        'view-room': setFilterRoom
     };
 
     /** Set the current collection (if any) in state. */
     useEffect(() => {
         if (collections && token) {
             setCollection(collections.collections[0]);
-            if (collections.collections.length) handleRoomRequest(getRooms(token, { 'collection_id': collections.collections[0].id }));
-            
-        } else {
-            handleCollectionRequest(getCollections(token));
+            if (collections.collections.length) {
+                //only attempt to load rooms if a collection exists
+                handleRoomRequest(getRooms(token, { 'collection_id': collections.collections[0].id }));
+            }
         }
         setIsLoading(false);
-    },[token, collections, addCollection, handleCollectionRequest, handleRoomRequest]);
+    },[token, collections, addCollection, handleRoomRequest]);
 
     /** Filters the collection rooms by room_id. */
     const filterByRoom = (event, data) => {
@@ -77,26 +72,21 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
         setRooms({ rooms: filtered });
     };
 
-    /** Handles the opening of filter room menu. */
-    const handleClickRoomMenu = (event) => {
-        setFilterRoom(event.currentTarget);
-    };
-
-    /** Handles the opening of filter collection menu. */
-    const handleClickCollectionMenu = (event) => {
-        setViewCollection(event.currentTarget);
+    /** Handles opening filter menu selection by the user. */
+    const handleOpenMenu = (event, action) => {
+        map[action](event.currentTarget);
     }
 
     /** Handles closing filter menus & captures the selection by the user. */
     const handleCloseMenu = (event, criteria, data) => {
-        if (criteria === 'collection') {
+        if (criteria === 'show-collection') {
             setCollection(data);
             handleRoomRequest(getRooms(token, { 'collection_id': data.id }));
             setViewCollection(null);
-        } else if (criteria === 'room') {
+        } else if (criteria === 'show-room') {
             filterByRoom(event, data);
             setFilterRoom(null);
-        } else if (criteria === 'filter') {
+        } else if (criteria === 'show-all-rooms') {
             handleRoomRequest(getRooms(token, { 'collection_id': collection.id }));
             setFilterRoom(null);
         }
@@ -188,6 +178,7 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                                 <Tooltip title="Add Collection">
                                     <Fab 
                                         onClick={() => handleOpen('add-collection')}
+                                        size="small"
                                         variant="extended" 
                                         color="secondary"
                                     >
@@ -217,7 +208,8 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                                     <Grid item>
                                         <Tooltip title="View Other Collections">
                                             <Fab 
-                                                onClick={handleClickCollectionMenu}
+                                                onClick={(e) => handleOpenMenu(e, 'view-collection')}
+                                                size="small"
                                                 variant="extended" 
                                                 color="secondary"
                                             >
@@ -239,7 +231,7 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                                                 return (
                                                     <MenuItem 
                                                         key={i+1} 
-                                                        onClick={(e) => handleCloseMenu(e, 'collection', collection)}
+                                                        onClick={(e) => handleCloseMenu(e, 'show-collection', collection)}
                                                     >
                                                         <ListItemIcon>
                                                             <CollectionsRoundedIcon fontSize="small" />
@@ -264,6 +256,7 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                                         <Tooltip title="Add Room">
                                             <Fab
                                                 onClick={() => handleOpen('add-room')}
+                                                size="small"
                                                 variant="extended" 
                                                 color="secondary"
                                             >
@@ -298,7 +291,8 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                                     <Grid item>
                                         <Tooltip title="Filter by Room">
                                             <Fab 
-                                                onClick={handleClickRoomMenu}
+                                                onClick={(e) => handleOpenMenu(e, 'view-room')}
+                                                size="small"
                                                 variant="extended" 
                                                 color="secondary"
                                             >
@@ -315,7 +309,7 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                                             MenuListProps={{'aria-labelledby': 'filter-room-button',}}
                                         >
                                             <MenuList>
-                                                  <MenuItem onClick={(e) => handleCloseMenu(e, 'filter', rooms)}>
+                                                  <MenuItem onClick={(e) => handleCloseMenu(e, 'show-all-rooms', rooms)}>
                                                     <ListItemIcon>
                                                       <GridViewRoundedIcon fontSize="small" />
                                                     </ListItemIcon>
@@ -325,7 +319,7 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                                                   { rooms ?
                                                     rooms.rooms.map((room, i) => {
                                                     return (
-                                                        <MenuItem key={i+1} onClick={(e) => handleCloseMenu(e, 'room', rooms)}>
+                                                        <MenuItem key={i+1} onClick={(e) => handleCloseMenu(e, 'show-room', rooms)}>
                                                             <ListItemIcon>
                                                                 <BedroomChildRoundedIcon fontSize="small" />
                                                             </ListItemIcon>

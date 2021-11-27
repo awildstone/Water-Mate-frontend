@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import axios from 'axios';
-import { BASE_URL } from '../App';
+import { BASE_URL } from '../utils';
 import jwt from 'jsonwebtoken';
 
 /** useCurrentUser hook for getting the current user data. */

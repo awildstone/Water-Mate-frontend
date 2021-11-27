@@ -15,25 +15,18 @@ import { getRooms, deleteRoom } from '../room/useRooms';
 import LoadingCollection from '../alerts/LoadingCollection';
 import { getCollections, deleteCollection } from './useCollections';
 import UserContext from '../context/UserContext';
+import { modalStyle } from '../utils';
 
 const Collection = ({ 
     handleCollectionRequest, 
     collection,
-    // setCollection, 
+    // setCollection,
     rooms,
     handleRoomRequest }) => {
     
     const { token } = useContext(UserContext);
     const [editCollection, setEditCollection] = useState(false);
     const [deleteCollectionToggle, setDeleteCollectionToggle] = useState(false);
-
-    /** Styling for modals. */
-    const modalStyle = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-    };
 
     /** Mapped list of actions and setters for toggling modal open/closed state. */
     const map = {

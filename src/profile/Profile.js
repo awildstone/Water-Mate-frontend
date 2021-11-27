@@ -26,6 +26,7 @@ import WarningModal from '../alerts/WarningModal';
 import UserContext from '../context/UserContext';
 import Loading from '../alerts/Loading';
 import useProfile, { deleteAccount } from './useProfile';
+import { modalStyle } from '../utils';
 
 
 const Profile = ({ collections }) => {
@@ -35,14 +36,8 @@ const Profile = ({ collections }) => {
     const [ editPassword, setEditPassword ] = useState(false);
     const [ editLocation, setEditLocation ] = useState(false);
     const [ deleteAccountToggle, setDeleteAccountToggle ] = useState(false);
-    
-    const modalStyle = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-    };
 
+    /** Mapping of actions and state setters. */
     let map = {
         'edit-profile': setEditProfile,
         'edit-password': setEditPassword,
@@ -50,10 +45,12 @@ const Profile = ({ collections }) => {
         'delete-account': setDeleteAccountToggle
     };
 
+    /** Handles action to open a form modal. */
     const handleOpen = (action) => {
         map[action](true);
     } 
 
+    /** Handles action to close a form modal. */
     const handleClose = (action) => {
         map[action](false);
         loadUserData();

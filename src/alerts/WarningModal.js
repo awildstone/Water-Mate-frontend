@@ -14,6 +14,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import Alert from '@mui/material/Alert';
 import { useHistory } from 'react-router-dom';
 import UserContext from '../context/UserContext';
+import { modalStyle } from '../utils';
 
 const WarningModal = ({ 
     title, 
@@ -32,7 +33,8 @@ const WarningModal = ({
     const [ error, setError ] = useState(null);
     const history = useHistory();
     const { token } = useContext(UserContext);
-
+    
+    /** Toggles checkbox state & sets confirmation state conditionally. */
     const handleCheck = () => {
         setIsChecked(!isChecked);
 
@@ -43,12 +45,13 @@ const WarningModal = ({
         }
     }
 
-    const modalStyle = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-    };
+    /** Handles action for cancel button, clearing checkbox, error & confirmation state and calls close function. */
+    const handleCancel = () => {
+        setIsConfirmed(false);
+        setIsChecked(false);
+        setError(null);
+        close(false);
+    }
 
     return (
         <Box sx={modalStyle}>
@@ -75,7 +78,7 @@ const WarningModal = ({
                 <DialogActions>
                     <Button
                         variant="contained"
-                        onClick={() => close(false)}
+                        onClick={handleCancel}
                         color="info"
                     >
                         Cancel

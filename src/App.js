@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { TOKEN_ID } from './utils';
 import './App.css';
 import NavBar from './navigation/NavBar';
 import Routes from './routes/Routes';
@@ -13,9 +14,6 @@ import useCollections, { getCollections } from './collection/useCollections';
 import usePlantCount from './hooks/usePlantCount';
 import useCurrentUser from './hooks/useCurrentUser';
 import usePlantTypes from './hooks/usePlantTypes';
-
-export const TOKEN_ID = 'watermate-user';
-export const BASE_URL = process.env.APP_BASE_URL || 'http://127.0.0.1:5000';
 
 /** Theme colors for App */
 const theme = createTheme({
@@ -54,8 +52,8 @@ const App = () => {
 
   const loadUserData = useCallback(async () => {
     const { id } = await handleGetUserData(token);
-    handleGetPlantCount(token, id);
-  }, [handleGetUserData, handleGetPlantCount, token]);
+    if (userPlantCount === null) handleGetPlantCount(token, id);
+  }, [handleGetUserData, userPlantCount, handleGetPlantCount, token]);
 
   useEffect(() => {
     if (token) {
