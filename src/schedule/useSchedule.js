@@ -1,7 +1,6 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import { BASE_URL } from '../App';
-import UserContext from '../context/UserContext';
+import { BASE_URL } from '../utils';
 
 /** Method to build a URL for requests. */
 const buildUrl = (path) => `${BASE_URL}${path}`;
@@ -32,7 +31,6 @@ export const snoozePlant = (token, schedule_id, data) => ({
 
 /** useSchedule hook for making API calls for different types of Schedule requests. */
 const useSchedule = () => {
-    const { token } = useContext(UserContext);
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null);
 

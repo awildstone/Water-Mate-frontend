@@ -1,7 +1,7 @@
 import { useState, useCallback, useContext } from 'react';
 import axios from 'axios';
 import UserContext from '../context/UserContext';
-import { BASE_URL } from '../App';
+import { BASE_URL } from '../utils';
 
 /** Method to build a URL for requests. */
 const buildUrl = (path) => `${BASE_URL}${path}`;

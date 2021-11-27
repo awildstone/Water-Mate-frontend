@@ -37,6 +37,11 @@ const LightSourceForm = ({ close, setAddLight, roomId, current }) => {
             if (result.success) setMessage(result.message);
         },
     });
+
+    const handleCancel = () => {
+        setMessage(null);
+        setAddLight(false);
+    }
     
     return (
         <form onSubmit={formik.handleSubmit} autoComplete="off">
@@ -156,7 +161,7 @@ const LightSourceForm = ({ close, setAddLight, roomId, current }) => {
                             Submit
                         </Button>
                         <Button 
-                            onClick={() => setAddLight(false)} 
+                            onClick={handleCancel} 
                             color="info" 
                             sx={{ color: '#fff'}} 
                             variant="contained" 

@@ -33,6 +33,7 @@ import UserContext from '../context/UserContext';
 import Loading from '../alerts/Loading';
 import moment from 'moment';
 import usePlants, { getPlant, deletePlant } from './usePlants';
+import { modalStyle } from '../utils';
 
 const PlantDetails = ({ collections }) => {
     const { id } = useParams();
@@ -47,14 +48,6 @@ const PlantDetails = ({ collections }) => {
     const [ editSchedule, setEditSchedule ] = useState(false);
     const [ viewHistory, setViewHistory ] = useState(false);
     const [ deletePlantToggle, setDeletePlantToggle ] = useState(false);
-
-    /** Styling for modals. */
-    const modalStyle = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-    };
 
     /** Mapped list of actions and setters for toggling modal open/closed state. */
     let map = {

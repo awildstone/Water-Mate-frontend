@@ -1,4 +1,5 @@
 import { Redirect, Route } from 'react-router-dom';
+import { TOKEN_ID } from '../utils';
 
 /**
  * Renders ProtectedRoute component.
@@ -11,7 +12,6 @@ import { Redirect, Route } from 'react-router-dom';
  */
 
 const ProtectedRoute = ({ children, ...otherProps }) => {
-    const TOKEN_ID = 'watermate-user';
     if (window.localStorage.getItem(TOKEN_ID)) {
         return (
             <Route {...otherProps}>

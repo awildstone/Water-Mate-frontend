@@ -23,6 +23,7 @@ import Paginator from '../Paginator';
 import LightSourceItem from '../lightsource/LightSourceItem';
 import PlantItem from '../plant/PlantItem';
 import UserContext from '../context/UserContext';
+import { modalStyle } from '../utils';
 
 const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
     
@@ -37,14 +38,6 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
     const [itemsPerPage, setItemsPerPage] = useState(null);
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(null);
-
-    /** Styling for modals. */
-    const modalStyle = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-    };
 
     /** Mapped list of actions and setters for toggling modal open/closed state. */
     let map = {
