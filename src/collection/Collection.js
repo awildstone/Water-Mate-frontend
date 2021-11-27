@@ -20,7 +20,6 @@ import { modalStyle } from '../utils';
 const Collection = ({ 
     handleCollectionRequest, 
     collection,
-    // setCollection,
     rooms,
     handleRoomRequest }) => {
     

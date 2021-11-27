@@ -8,7 +8,7 @@ export const modalStyle = {
     transform: 'translate(-50%, -50%)',
 };
 
-/** Token Key for user token. */
+/** Storage key for user token. */
 export const TOKEN_ID = 'watermate-user';
 
 /** Base URL for API calls. */

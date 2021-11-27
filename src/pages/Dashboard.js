@@ -343,7 +343,6 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                         <Collection
                             handleCollectionRequest={handleCollectionRequest}
                             collection={collection}
-                            // setCollection={setCollection}
                             rooms={rooms}
                             handleRoomRequest={handleRoomRequest}
                         />
