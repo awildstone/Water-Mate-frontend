@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -11,18 +11,19 @@ import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import Room from '../room/Room';
 import EditCollection from '../collection/EditCollection';
 import WarningModal from '../alerts/WarningModal';
-import Loading from '../alerts/Loading';
 import { getRooms, deleteRoom } from '../room/useRooms';
+import LoadingCollection from '../alerts/LoadingCollection';
+import { getCollections, deleteCollection } from './useCollections';
+import UserContext from '../context/UserContext';
 
 const Collection = ({ 
     handleCollectionRequest, 
-    getCollections, 
-    deleteCollection, 
     collection,
-    setCollection, 
+    // setCollection, 
     rooms,
     handleRoomRequest }) => {
-
+    
+    const { token } = useContext(UserContext);
     const [editCollection, setEditCollection] = useState(false);
     const [deleteCollectionToggle, setDeleteCollectionToggle] = useState(false);
 
@@ -57,13 +58,15 @@ const Collection = ({
     /** Handles action to close a form modal. */
     const handleClose = (action, data=null) => {
         map[action](false);
-        if (action === 'edit-collection') {
-            setCollection(data);
-        }
-        if (action === 'delete-collection') handleCollectionRequest(getCollections());
+        handleCollectionRequest(getCollections(token));
+        // if (action === 'edit-collection') {
+        //     handleCollectionRequest(getCollections(token));
+        //     setCollection(data);
+        // }
+        // if (action === 'delete-collection') handleCollectionRequest(getCollections(token));
     }
 
-    if (collection && rooms) {
+    if (collection && rooms && token) {
         return (
             <>
                 <Grid 
@@ -95,7 +98,7 @@ const Collection = ({
                                     <EditCollection 
                                         close={handleClose} 
                                         setEditCollection={setEditCollection} 
-                                        collection={collection} 
+                                        collectionData={collection} 
                                     />
                                 </Box>
                             </Modal>
@@ -173,7 +176,7 @@ const Collection = ({
             </>
         );
     }
-    return <Loading />
+    return <LoadingCollection />
 };
 
 export default Collection;

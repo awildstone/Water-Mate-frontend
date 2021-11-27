@@ -9,8 +9,7 @@ import useLocalStorage from './hooks/useLocalStorage';
 import UserContext from './context/UserContext';
 import PlantContext from './context/PlantContext';
 import Loading from './alerts/Loading';
-import useCollections from './collection/useCollections';
-import { getCollections } from './collection/useCollections';
+import useCollections, { getCollections } from './collection/useCollections';
 import usePlantCount from './hooks/usePlantCount';
 import useCurrentUser from './hooks/useCurrentUser';
 import usePlantTypes from './hooks/usePlantTypes';
@@ -53,9 +52,9 @@ const App = () => {
   const [ error, collections, setCollections, handleCollectionRequest ] = useCollections();
   const [userPlantCount, setUserPlantCount, handleGetPlantCount] = usePlantCount();
 
-  const loadUserData = useCallback(async() => {
+  const loadUserData = useCallback(async () => {
     const { id } = await handleGetUserData(token);
-    handleGetPlantCount(id, token);
+    handleGetPlantCount(token, id);
   }, [handleGetUserData, handleGetPlantCount, token]);
 
   useEffect(() => {

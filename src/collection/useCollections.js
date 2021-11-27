@@ -2,40 +2,37 @@ import { useState, useCallback } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../App';
 
-/** Token key for localStorage. */
-const TOKEN_ID = 'watermate-user';
-
-/** Current user auth token. */
-const TOKEN = window.localStorage.getItem(TOKEN_ID) || null;
-
 /** Method to build a URL for requests. */
 const buildUrl = (path) => `${BASE_URL}${path}`;
 
 /** Request object for getting all Collection data. */
-export const getCollections = (token=null) => ({
+export const getCollections = (token) => ({
     url: buildUrl('/collection/'),
     method: 'get',
-    token: token,
+    token,
 });
 
 /** Request object for adding a new Collection. */
-export const addCollection = (data) => ({
+export const addCollection = (token, data) => ({
     url: buildUrl('/collection/'),
     method: 'post',
-    data: data,
+    data,
+    token,
 });
 
 /** Request object for editing a Collection. */
-export const editCollection = (id, data) => ({
+export const editCollection = (token, id, data) => ({
     url: buildUrl(`/collection/${id}/`),
     method: 'patch',
-    data: data,
+    data,
+    token,
 });
 
 /** Request object for deleting a Collection. */
-export const deleteCollection = (id) => ({
+export const deleteCollection = (token, id) => ({
     url: buildUrl(`/collection/${id}/`),
     method: 'delete',
+    token,
 });
 
 /** useCollections hook for making API calls for different types of Collection requests. */
@@ -44,7 +41,8 @@ const useCollections = () => {
     const [collections, setCollections] = useState(null);
 
     const handleCollectionRequest = useCallback(async ({ url, method, data={}, token }) => {
-        const headers = { 'content-type': 'application/json', 'x-access-token': token ? token : TOKEN };
+        const headers = { 'content-type': 'application/json', 'x-access-token': token };
+
         try {
             const response = await axios({ url, method, data, headers});
             if (method !== 'delete') {

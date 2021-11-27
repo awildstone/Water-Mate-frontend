@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -20,8 +20,10 @@ import SpeakerNotesOffRoundedIcon from '@mui/icons-material/SpeakerNotesOffRound
 import Fab from '@mui/material/Fab';
 import Alert from '@mui/material/Alert';
 import useSchedule, { waterPlant, snoozePlant } from '../schedule/useSchedule';
+import UserContext from '../context/UserContext';
 
 const PlantCard = ({ plant, waterSchedule, loadPlantsToWater }) => {
+    const { token } = useContext(UserContext);
     const [ error, message, setMessage, handleScheduleRequest ] = useSchedule();
     const [ showForm, setShowForm ] = useState(false);
     const [ notes, setNotes ] = useState(null);
@@ -34,10 +36,10 @@ const PlantCard = ({ plant, waterSchedule, loadPlantsToWater }) => {
     const updatePlantSchedule = async (action, schedule_id) => {
       setIsLoading(true);
       if (action === 'water') {
-        await handleScheduleRequest(waterPlant(schedule_id, notes));
+        await handleScheduleRequest(waterPlant(token, schedule_id, notes));
       }
       if (action === 'snooze') {
-        await handleScheduleRequest(snoozePlant(schedule_id, notes));
+        await handleScheduleRequest(snoozePlant(token, schedule_id, notes));
       }
       setIsLoading(false);
       loadPlantsToWater();

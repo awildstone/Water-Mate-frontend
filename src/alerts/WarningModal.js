@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -13,6 +13,7 @@ import { red } from '@mui/material/colors';
 import WarningIcon from '@mui/icons-material/Warning';
 import Alert from '@mui/material/Alert';
 import { useHistory } from 'react-router-dom';
+import UserContext from '../context/UserContext';
 
 const WarningModal = ({ 
     title, 
@@ -30,6 +31,7 @@ const WarningModal = ({
     const [ isChecked, setIsChecked ] = useState(false);
     const [ error, setError ] = useState(null);
     const history = useHistory();
+    const { token } = useContext(UserContext);
 
     const handleCheck = () => {
         setIsChecked(!isChecked);
@@ -61,7 +63,10 @@ const WarningModal = ({
                     <WarningIcon sx={{ color: red[500] }} /> Warning! Deleting your {type} cannot be undone and all data will be lost. Please confirm that you want to delete your {type}.
                     </DialogContentText>
                     <FormGroup>
-                        <FormControlLabel control={<Checkbox checked={isChecked} onClick={handleCheck} />} label="I understand" />
+                        <FormControlLabel 
+                            control={<Checkbox checked={isChecked} onClick={handleCheck} />} 
+                            label="I understand" 
+                        />
                     </FormGroup>
                 </DialogContent>
                 <div>
@@ -78,8 +83,8 @@ const WarningModal = ({
                     <Button
                         variant="contained"
                         onClick={async () => {
-                            let result = await handleDelete(request(id));
-                            
+                            let result = await handleDelete(request(token, id));
+
                             if (result.success) {
                                 if (redirect) history.push(redirect);
                                 handleClose(action);

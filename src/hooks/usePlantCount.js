@@ -6,7 +6,7 @@ import { BASE_URL } from '../App';
 const usePlantCount = () => {
     const [ userPlantCount, setUserPlantCount ] = useState(null);
 
-    const handleGetPlantCount = useCallback(async (userId, token) => {
+    const handleGetPlantCount = useCallback(async (token, userId) => {
         const headers = { 'content-type': 'application/json', 'x-access-token': token };
         const url = `${BASE_URL}/plant/count/${userId}/`;
         const method = 'get';

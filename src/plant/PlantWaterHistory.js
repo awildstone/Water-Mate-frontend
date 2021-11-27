@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -8,9 +8,11 @@ import Tooltip from '@mui/material/Tooltip';
 import Paginator from '../Paginator';
 import HistoryTable from './HistoryTable';
 import Loading from '../alerts/Loading';
+import UserContext from '../context/UserContext';
 import useHistory, { getHistory } from './useHistory';
 
 const PlantWaterHistory = ({close, plant}) => {
+    const { token } = useContext(UserContext);
     const [error, history, setHistory, handleHistoryRequest] = useHistory();
     const [isLoading, setIsLoading] = useState(true);
     const [itemsPerPage, setItemsPerPage] = useState(null);
@@ -23,7 +25,7 @@ const PlantWaterHistory = ({close, plant}) => {
 
     useEffect(() => {
         const getData = async () => {
-            let paginatedData = await handleHistoryRequest(getHistory(plant.id, page));
+            let paginatedData = await handleHistoryRequest(getHistory(token, plant.id, page));
             if (paginatedData) {
                 setHistory(paginatedData.data);
                 setItemsPerPage(paginatedData.data.itemsPerPage);
@@ -32,7 +34,7 @@ const PlantWaterHistory = ({close, plant}) => {
             }
         }
         getData();
-    },[page, handleHistoryRequest, plant, setHistory]);
+    },[token, page, handleHistoryRequest, plant, setHistory]);
     
     if (!isLoading && history) {
         return (

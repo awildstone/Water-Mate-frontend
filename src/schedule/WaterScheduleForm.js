@@ -1,8 +1,10 @@
+import { useContext } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { TextField, Button, FormGroup, FormControlLabel,Checkbox, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import useSchedule, { editSchedule } from './useSchedule';
+import UserContext from '../context/UserContext';
 
 const validationSchema = yup.object({
     manual_mode: yup.boolean(),
@@ -23,6 +25,7 @@ const validationSchema = yup.object({
 });
 
 const WaterScheduleForm = ({close, setEditSchedule, schedule}) => {
+    const { token } = useContext(UserContext);
     const [ error, message, setMessage, handleScheduleRequest ] = useSchedule();
 
     const formik = useFormik({
@@ -33,7 +36,7 @@ const WaterScheduleForm = ({close, setEditSchedule, schedule}) => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            let result = await handleScheduleRequest(editSchedule(schedule.id, values));
+            let result = await handleScheduleRequest(editSchedule(token, schedule.id, values));
             if (result.success) setMessage(result.message);
         },
     });

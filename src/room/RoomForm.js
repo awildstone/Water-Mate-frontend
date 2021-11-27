@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { TextField, Button, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import useRooms from './useRooms';
+import UserContext from '../context/UserContext';
 import { addRoom, editRoom } from './useRooms';
 
 const validationSchema = yup.object({
@@ -14,6 +15,7 @@ const validationSchema = yup.object({
 });
 
 const RoomForm = ({ close, setaddRoom, setEditRoom, collectionId=null, room=null }) => {
+    const { token } = useContext(UserContext);
     const [ error, rooms, setRooms, handleRoomRequest ] = useRooms();
     const [ message, setMessage ] = useState(null);
 
@@ -23,12 +25,11 @@ const RoomForm = ({ close, setaddRoom, setEditRoom, collectionId=null, room=null
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            console.log(values);
             let result;
             if (room) {
-                result = await handleRoomRequest(editRoom(room.id, values));
+                result = await handleRoomRequest(editRoom(token, room.id, values));
             } else {
-                result = await handleRoomRequest(addRoom({...values, collectionId}));
+                result = await handleRoomRequest(addRoom(token, {...values, collectionId}));
             }
             if (result.success) setMessage(result.message);
         },

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -22,10 +22,12 @@ import LoadingRoom from '../alerts/LoadingRoom';
 import Paginator from '../Paginator';
 import LightSourceItem from '../lightsource/LightSourceItem';
 import PlantItem from '../plant/PlantItem';
+import UserContext from '../context/UserContext';
 
 const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
     
     const [error, plants, setPlants, handlePlantRequest] = usePlants();
+    const { token } = useContext(UserContext);
     const [lights, setLights] = useState([]);
     const [editRoom, setEditRoom] = useState(false);
     const [addLight, setAddLight] = useState(false);
@@ -55,18 +57,18 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
 
     /** Load plant data and set the pagination data in state. */
     const loadPlantsData = useCallback(async () => {
-        const { data } = await handlePlantRequest(getPlants(page, { 'room_id': room.id }));
+        const { data } = await handlePlantRequest(getPlants(token, page, { 'room_id': room.id }));
         if (data) {
             setItemsPerPage(data.itemsPerPage);
             setCount(data.count);
         }
-    }, [page, room, handlePlantRequest]);
+    }, [token, page, room, handlePlantRequest]);
 
     /** Get plants for the room (if any) */
     useEffect(() => {
         setLights(room.lightsources);
         loadPlantsData();
-    },[page, room, loadPlantsData]);
+    },[token, page, room, loadPlantsData]);
 
     /** Handles action to open a form modal. */
     const handleOpen = (action) => {
@@ -76,7 +78,7 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
     /** Handles action to close a form modal. */
     const handleClose = (action) => {
         map[action](false);
-        handleRoomRequest(getRooms({ 'collection_id': room.collection_id }));
+        handleRoomRequest(getRooms(token, { 'collection_id': room.collection_id }));
     }
 
     /** Handles updating the plants list pagination. */

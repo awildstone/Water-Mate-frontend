@@ -2,65 +2,53 @@ import { useState, useCallback } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../App';
 
-/** Token key for localStorage. */
-const TOKEN_ID = 'watermate-user';
-
-/** Current user auth token. */
-const TOKEN = window.localStorage.getItem(TOKEN_ID) || null;
-
 /** Method to build a URL for requests. */
 const buildUrl = (path) => `${BASE_URL}${path}`;
 
-/** JSON data header type. */
-const JSON = { 'content-type': 'application/json', 'x-access-token': TOKEN };
-
-/** Multipart Form data header type */
-const FILE = { 'content-type': 'multipart/form-data', 'x-access-token': TOKEN };
-
 /** Request object for getting plant data. */
-export const getPlant = (plant_id) => ({
+export const getPlant = (token, plant_id) => ({
     url: buildUrl(`/plant/${plant_id}/`),
     method: 'get',
-    headers: JSON,
+    headers: { 'content-type': 'application/json', 'x-access-token': token },
 });
 
 /** Request object for getting paginated plant data with a query. */
-export const getPlants = (page, params) => ({
+export const getPlants = (token, page, params) => ({
     url: buildUrl(`/plant/page/${page}/`),
     method: 'get',
-    headers: JSON,
-    params: params,
+    headers: { 'content-type': 'application/json', 'x-access-token': token },
+    params,
 });
 
 /** Request object for getting all Plants to Water data paginated with query filter. */
 export const getPlantsToWater = (token, page, params) => ({
     url: buildUrl(`/plant/water-schedule/${page}/`),
     method: 'get',
-    params: params,
+    params,
     headers: { 'content-type': 'application/json', 'x-access-token': token },
 });
 
 /** Request object for adding a new Plant. */
-export const addPlant = (data) => ({
+export const addPlant = (token, data) => ({
     url: buildUrl('/plant/'),
     method: 'post',
-    data: data,
-    headers: FILE,
+    data,
+    headers: { 'content-type': 'multipart/form-data', 'x-access-token': token },
 });
 
 /** Request object for editing a Plant. */
-export const editPlant = (id, data) => ({
+export const editPlant = (token, id, data) => ({
     url: buildUrl(`/plant/${id}/`),
     method: 'patch',
-    data: data,
-    headers: FILE,
+    data,
+    headers: { 'content-type': 'multipart/form-data', 'x-access-token': token },
 });
 
 /** Request object for deleting a Plant. */
-export const deletePlant = (id) => ({
+export const deletePlant = (token, id) => ({
     url: buildUrl(`/plant/${id}/`),
     method: 'delete',
-    headers: JSON,
+    headers: { 'content-type': 'application/json', 'x-access-token': token },
 });
 
 const usePlants = () => {

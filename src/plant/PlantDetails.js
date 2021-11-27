@@ -29,12 +29,14 @@ import EditWaterSchedule from '../schedule/EditWaterSchedule';
 import PlantWaterHistory from './PlantWaterHistory';
 import WarningModal from '../alerts/WarningModal';
 import PlantContext from '../context/PlantContext';
+import UserContext from '../context/UserContext';
 import Loading from '../alerts/Loading';
 import moment from 'moment';
 import usePlants, { getPlant, deletePlant } from './usePlants';
 
 const PlantDetails = ({ collections }) => {
     const { id } = useParams();
+    const { token } = useContext(UserContext);
     const { plantTypes } = useContext(PlantContext);
     const [ isLoading, setIsLoading ] = useState(true);
     const [error, plants, setPlants, handlePlantRequest] = usePlants();
@@ -64,7 +66,7 @@ const PlantDetails = ({ collections }) => {
 
     /** Gets current plant data and uses current plant data to set light, plantType and collection state. */
     const getPlantData = useCallback(async() => {
-        let { data } = await handlePlantRequest(getPlant(id));
+        let { data } = await handlePlantRequest(getPlant(token, id));
         if (data) {
             setLight(data.plant.room.lightsources);
             const type = plantTypes.filter(type => type.id === data.plant.type_id);
@@ -73,13 +75,13 @@ const PlantDetails = ({ collections }) => {
             const collection = collections.collections.filter(collection => collection.id === collection_id);
             setCollection(collection[0]);
         }
-    }, [collections, handlePlantRequest, id, plantTypes]);
+    }, [token, collections, handlePlantRequest, id, plantTypes]);
 
     /** Get & Set plant data in state. */
     useEffect(() => {
         if (id && plantTypes && collections) getPlantData();
         setIsLoading(false); 
-    },[id, plantTypes, collections, getPlantData]);
+    },[token, id, plantTypes, collections, getPlantData]);
 
     /** Handles action to open a form modal. */
     const handleOpen = (action) => {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { TextField, Button, Stack } from '@mui/material';
@@ -6,6 +6,7 @@ import Alert from '@mui/material/Alert';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
 import useProfile, { editPassword } from './useProfile';
+import UserContext from '../context/UserContext';
 
 const validationSchema = yup.object({
     new_password: yup.string()
@@ -26,6 +27,7 @@ const validationSchema = yup.object({
 });
 
 const EditPasswordForm = ({close, setEditPassword, user}) => {
+    const { token } = useContext(UserContext);
     const [error, message, setMessage, handleProfileRequest] = useProfile();
     const [ isLoading, setIsLoading ] = useState(false);
 
@@ -37,7 +39,7 @@ const EditPasswordForm = ({close, setEditPassword, user}) => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            let result = await handleProfileRequest(editPassword(user.id, values));
+            let result = await handleProfileRequest(editPassword(token, user.id, values));
             if (result.success) setMessage(result.message);
             setIsLoading(false); 
         },
