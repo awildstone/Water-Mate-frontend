@@ -11,7 +11,7 @@
 
 [https://app.quickdatabasediagrams.com/#/d/mxfbkG](https://app.quickdatabasediagrams.com/#/d/mxfbkG)
 
-![](https://user-images.githubusercontent.com/11568530/136269527-ad96618f-b55c-4ef6-8e06-852880730954.png)
+![](https://user-images.githubusercontent.com/11568530/143668498-8e84f1b1-f65a-49e2-9cc2-423ccc572cf8.png)
 
 
 ## Capstone 2 Proposal
