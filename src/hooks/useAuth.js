@@ -8,13 +8,13 @@ const buildUrl = (path) => `${BASE_URL}${path}`;
 /** Request object for new user signup & authentication. */
 export const signupUser = (data) => ({
     url: buildUrl('/signup/'),
-    data: data,
+    data,
 });
 
 /** Request object for user authentication. */
 export const loginUser = (data) => ({
     url: buildUrl('/login/'),
-    data: data,
+    data,
 });
 
 /** useAuth hook for making API calls for authenticating a user. */

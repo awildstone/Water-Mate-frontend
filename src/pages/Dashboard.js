@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -24,14 +24,15 @@ import Collection from '../collection/Collection';
 import AddCollection from '../collection/AddCollection';
 import AddRoom from '../room/AddRoom';
 import Loading from '../alerts/Loading';
-import { getCollections, deleteCollection } from '../collection/useCollections';
+import { getCollections } from '../collection/useCollections';
 import useRooms from '../room/useRooms';
 import { getRooms } from '../room/useRooms';
-
+import UserContext from '../context/UserContext';
 
 const Dashboard = ({ collections, handleCollectionRequest }) => {
 
-    const [ error, rooms, setRooms, handleRoomRequest ] = useRooms();    
+    const [ error, rooms, setRooms, handleRoomRequest ] = useRooms(); 
+    const { token } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
     const [collection, setCollection] = useState(null);
     const [addCollection, setAddCollection] = useState(false);
@@ -57,14 +58,15 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
 
     /** Set the current collection (if any) in state. */
     useEffect(() => {
-        if (collections) {
+        if (collections && token) {
             setCollection(collections.collections[0]);
-            if (collections.collections.length) handleRoomRequest(getRooms({ 'collection_id': collections.collections[0].id }));
+            if (collections.collections.length) handleRoomRequest(getRooms(token, { 'collection_id': collections.collections[0].id }));
+            
         } else {
-            handleCollectionRequest(getCollections());
+            handleCollectionRequest(getCollections(token));
         }
         setIsLoading(false);
-    },[collections, addCollection, handleCollectionRequest, handleRoomRequest]);
+    },[token, collections, addCollection, handleCollectionRequest, handleRoomRequest]);
 
     /** Filters the collection rooms by room_id. */
     const filterByRoom = (event, data) => {
@@ -89,13 +91,13 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
     const handleCloseMenu = (event, criteria, data) => {
         if (criteria === 'collection') {
             setCollection(data);
-            handleRoomRequest(getRooms({ 'collection_id': data.id }));
+            handleRoomRequest(getRooms(token, { 'collection_id': data.id }));
             setViewCollection(null);
         } else if (criteria === 'room') {
             filterByRoom(event, data);
             setFilterRoom(null);
         } else if (criteria === 'filter') {
-            handleRoomRequest(getRooms({ 'collection_id': collection.id }));
+            handleRoomRequest(getRooms(token, { 'collection_id': collection.id }));
             setFilterRoom(null);
         }
     };
@@ -108,10 +110,10 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
     /** Handles action to close a form modal. */
     const handleClose = (action) => {
         map[action](false);
-        if (action === 'add-collection') handleCollectionRequest(getCollections());
+        if (action === 'add-collection') handleCollectionRequest(getCollections(token));
         if (action === 'add-room') {
             setCollection(collection);
-            handleRoomRequest(getRooms({ 'collection_id': collection.id }));
+            handleRoomRequest(getRooms(token, { 'collection_id': collection.id }));
         }
     }
 
@@ -133,8 +135,8 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                                         Add your Collection
                                     </Typography>
                                     <p>To get started, add the name of your Collection.</p> 
-                                    <p>Your Collection name can be anything you like - some suggestions: "Home", "Office", or "My Plant Collection".</p> 
-                                    <p>It helps if your collection name represents where it is located if you want to add multiple collections.</p>
+                                    <p>Some suggestions: "Home", "Office", or "My Plant Collection".</p> 
+                                    <p>It helps if your collection name represents where it is located if you want to manage multiple collections.</p>
                                     <Tooltip title="Add Collection">
                                         <Button
                                             variant="contained"
@@ -346,10 +348,8 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
 
                         <Collection
                             handleCollectionRequest={handleCollectionRequest}
-                            getCollections={getCollections}
-                            deleteCollection={deleteCollection}
                             collection={collection}
-                            setCollection={setCollection}
+                            // setCollection={setCollection}
                             rooms={rooms}
                             handleRoomRequest={handleRoomRequest}
                         />
@@ -359,7 +359,7 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
         );
     }
 
-    if (isLoading || !collections ) {
+    if (isLoading || !collections || !token ) {
         return <Loading />
     } else if (collections.collections.length > 0) {
         return hasCollections();

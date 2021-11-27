@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import { TextField, Button, FormControl, InputLabel, Select, MenuItem, FormHelperText, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import PlantContext from '../context/PlantContext';
+import UserContext from '../context/UserContext';
 import moment from 'moment';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
@@ -29,6 +30,7 @@ const validationSchema = yup.object({
 });
 
 const PlantForm = ({close, setAddPlant, setEditPlant, lightSources, roomId=null, plant=null}) => {
+    const { token } = useContext(UserContext);
     const [ isLoading, setIsLoading ] = useState(false);
     const { plantTypes } = useContext(PlantContext);
     const [error, plants, setPlants, handlePlantRequest] = usePlants();
@@ -44,8 +46,6 @@ const PlantForm = ({close, setAddPlant, setEditPlant, lightSources, roomId=null,
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            console.log(values);
-
             const data = new FormData();
 
             if (values.file.size) data.append('file', values.file);
@@ -56,17 +56,13 @@ const PlantForm = ({close, setAddPlant, setEditPlant, lightSources, roomId=null,
             data.append('light_source', values.light_source);
 
             setIsLoading(true);
-
             let result;
             if (plant) {
-                result = await handlePlantRequest(editPlant(plant.id, data));
-                console.log(result);
+                result = await handlePlantRequest(editPlant(token, plant.id, data));
             } else {
-                result = await handlePlantRequest(addPlant(data));
-                console.log(result);
+                result = await handlePlantRequest(addPlant(token, data));
             }
             if (result.success) setMessage(result.message);
-
             setIsLoading(false);
         },
     });

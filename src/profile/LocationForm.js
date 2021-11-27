@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { TextField, Button, Stack } from '@mui/material';
@@ -6,6 +6,7 @@ import Alert from '@mui/material/Alert';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
 import useProfile, { editLocation } from './useProfile';
+import UserContext from '../context/UserContext';
 
 const validationSchema = yup.object({
     city: yup.string()
@@ -22,6 +23,7 @@ const validationSchema = yup.object({
 });
 
 const LocationForm = ({close, setEditLocation, user}) => {
+    const { token } = useContext(UserContext);
     const [error, message, setMessage, handleProfileRequest] = useProfile();
     const [ isLoading, setIsLoading ] = useState(false);
 
@@ -33,7 +35,7 @@ const LocationForm = ({close, setEditLocation, user}) => {
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            let result = await handleProfileRequest(editLocation(user.id, values));
+            let result = await handleProfileRequest(editLocation(token, user.id, values));
             if (result.success) setMessage(result.message);
             setIsLoading(false); 
         },

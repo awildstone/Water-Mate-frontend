@@ -2,26 +2,22 @@ import { useState } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../App';
 
-/** Token key for localStorage. */
-const TOKEN_ID = 'watermate-user';
-
-/** Current user auth token. */
-const TOKEN = window.localStorage.getItem(TOKEN_ID) || null;
-
 /** Method to build a URL for requests. */
 const buildUrl = (path) => `${BASE_URL}${path}`;
 
 /** Request object for adding a new LightSource. */
-export const addLightSource = (data) => ({
+export const addLightSource = (token, data) => ({
     url: buildUrl('/light/'),
     method: 'post',
-    data: data,
+    data,
+    token,
 });
 
 /** Request object for deleting a LightSource. */
-export const deleteLightSource = (id) => ({
+export const deleteLightSource = (token, id) => ({
     url: buildUrl(`/light/${id}/`),
     method: 'delete',
+    token,
 });
 
 /** useLightSource hook for making API calls for different types of LightSource requests. */
@@ -29,8 +25,8 @@ const useLightSource = () => {
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null);
 
-    const handleLightSourceRequest = async ({ url, method, data={} }) => {
-        const headers = { 'content-type': 'application/json', 'x-access-token': TOKEN };
+    const handleLightSourceRequest = async ({ url, method, data={}, token }) => {
+        const headers = { 'content-type': 'application/json', 'x-access-token': token };
         try {
             const response = await axios({ url, method, data, headers});
             const message = response.data.msg;

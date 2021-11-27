@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { TextField, Button, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import useCollections from './useCollections';
+import UserContext from '../context/UserContext';
 import { addCollection, editCollection } from './useCollections';
 
 const validationSchema = yup.object({
@@ -13,22 +14,22 @@ const validationSchema = yup.object({
         .required('You must enter a name for your collection.'),
 });
 
-const CollectionForm = ({ close, setEditCollection, setAddCollection, collection=null }) => {
+const CollectionForm = ({ close, setEditCollection, setAddCollection, collectionData=null }) => {
+    const { token } = useContext(UserContext);
     const [ error, collections, setCollections, handleCollectionRequest ] = useCollections();
     const [ message, setMessage ] = useState(null);
 
     const formik = useFormik({
         initialValues: {
-          name: collection ? collection.name : '',
+          name: collectionData ? collectionData.name : '',
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            console.log(values);
             let result;
-            if (collection) {
-                result = await handleCollectionRequest(editCollection(collection.id, values));
+            if (collectionData) {
+                result = await handleCollectionRequest(editCollection(token, collectionData.id, values));
             } else {
-                result = await handleCollectionRequest(addCollection(values));
+                result = await handleCollectionRequest(addCollection(token, values));
             }
 
             if (result.success) setMessage(result.message);
@@ -62,7 +63,7 @@ const CollectionForm = ({ close, setEditCollection, setAddCollection, collection
                         sx={{ color: '#fff'}} 
                         variant="contained" 
                         size="large" 
-                        onClick={() => collection ? close('edit-collection', collections.collection) : close('add-collection')}
+                        onClick={() => collectionData ? close('edit-collection', collections.collection) : close('add-collection')}
                     >
                         Close
                     </Button>
@@ -78,7 +79,7 @@ const CollectionForm = ({ close, setEditCollection, setAddCollection, collection
                             Submit
                         </Button>
                         <Button 
-                            onClick={() => collection ? setEditCollection(false) : setAddCollection(false)} 
+                            onClick={() => collectionData ? setEditCollection(false) : setAddCollection(false)} 
                             color="info" sx={{  color: '#fff'}} 
                             variant="contained" 
                             size="large"

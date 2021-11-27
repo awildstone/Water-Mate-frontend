@@ -1,10 +1,13 @@
+import { useContext } from 'react';
 import { useFormik } from 'formik';
 import { Button, FormControl, FormLabel, FormGroup, FormControlLabel, Checkbox, FormHelperText, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import useLightSource from './useLightSource';
+import UserContext from '../context/UserContext';
 import { addLightSource } from './useLightSource';
 
 const LightSourceForm = ({ close, setAddLight, roomId, current }) => {
+    const { token } = useContext(UserContext);
     const [ error, message, setMessage, handleLightSourceRequest ] = useLightSource();
 
     const artificial = current.find((light) => (light.type === 'Artificial')) ? true : false;
@@ -30,7 +33,7 @@ const LightSourceForm = ({ close, setAddLight, roomId, current }) => {
             West: false,
         },
         onSubmit: async (values) => {
-            let result = await handleLightSourceRequest(addLightSource({...values, roomId}));
+            let result = await handleLightSourceRequest(addLightSource(token, {...values, roomId}));
             if (result.success) setMessage(result.message);
         },
     });
