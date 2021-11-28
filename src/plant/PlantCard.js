@@ -29,10 +29,6 @@ const PlantCard = ({ plant, waterSchedule, loadPlantsToWater }) => {
     const [ notes, setNotes ] = useState(null);
     const [ isLoading, setIsLoading ] = useState(false);
 
-    const getNotes = (notes) => {
-      setNotes(notes);
-    }
-
     const updatePlantSchedule = async (action, schedule_id) => {
       setIsLoading(true);
       if (action === 'water') {
@@ -61,7 +57,11 @@ const PlantCard = ({ plant, waterSchedule, loadPlantsToWater }) => {
               Last Water Date: {moment(waterSchedule.water_date).format('MM/DD/YYYY')}
             </Typography>
             <Box sx={{ display: showForm ? true : 'none' }}>
-                <NotesForm getNotes={getNotes} notes={notes} setShowForm={setShowForm} showForm={showForm} />
+                <NotesForm 
+                  setNotes={setNotes}
+                  notes={notes} 
+                  setShowForm={setShowForm} 
+                  showForm={showForm} />
             </Box>
             <div>
               { error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : '' }
@@ -84,7 +84,12 @@ const PlantCard = ({ plant, waterSchedule, loadPlantsToWater }) => {
                       </Tooltip>
 
                       <Tooltip title={showForm ? "Hide Notes" : "Add Notes"}>
-                        <Fab size="small" color="secondary" aria-label="Notes" onClick={() => setShowForm(!showForm)}>
+                        <Fab 
+                          size="small" 
+                          color="secondary" 
+                          aria-label="Notes" 
+                          onClick={() => setShowForm(!showForm)}
+                        >
                           {showForm ? <SpeakerNotesOffRoundedIcon /> : <CommentRoundedIcon />}
                         </Fab>
                       </Tooltip>
