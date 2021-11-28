@@ -7,30 +7,29 @@ import Tooltip from '@mui/material/Tooltip';
 const validationSchema = yup.object({
     notes: yup.string()
         .max(200, 'Notes must be less than 200 characters in length.')
+        .matches(/^(?=[a-zA-Z0-9~@#$^()_+=[\]|\\,.?:!' -]*$)(?!.*[<>"/;`%{}*])/, 'Characters not allowed: < > \" \/ \; { } ` % & *')
 });
 
-const NotesForm = ({ getNotes, notes, setShowForm, showForm }) => {
+const NotesForm = ({ setNotes, notes, setShowForm, showForm }) => {
     const formik = useFormik({
         initialValues: {
-          notes: '',
+          notes: notes ? notes : '',
         },
         validationSchema: validationSchema,
+        onSubmit: (values) => {
+            setNotes(values);
+            setShowForm(!showForm);
+        },
     });
-
-    const getFormNotes = (e, values) => {
-        e.preventDefault();
-        getNotes(values);
-        setShowForm(!showForm);
-    }
 
     const clearFormNotes = (e, setFieldValue) => {
         e.preventDefault();
         setFieldValue('notes', '');
-        getNotes(null);
+        setNotes(null);
     }
     
     return (
-        <form onSubmit={(e) => getFormNotes(e, formik.values)}>
+        <form onSubmit={formik.handleSubmit}>
             <TextField
                 variant="outlined"
                 margin="normal"
