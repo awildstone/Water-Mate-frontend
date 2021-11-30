@@ -15,7 +15,7 @@ import { getRooms, deleteRoom } from '../room/useRooms';
 import LoadingCollection from '../alerts/LoadingCollection';
 import { getCollections, deleteCollection } from './useCollections';
 import UserContext from '../context/UserContext';
-import { modalStyle } from '../utils';
+import { modalStyle, isValid } from '../utils';
 
 const Collection = ({ 
     handleCollectionRequest, 
@@ -23,7 +23,7 @@ const Collection = ({
     rooms,
     handleRoomRequest }) => {
     
-    const { token } = useContext(UserContext);
+    const { token, refreshToken, getAuthToken } = useContext(UserContext);
     const [editCollection, setEditCollection] = useState(false);
     const [deleteCollectionToggle, setDeleteCollectionToggle] = useState(false);
 
@@ -42,13 +42,23 @@ const Collection = ({
         return color;
     }
     
-    /** Handles action to open a form modal. */
+    /** Handles action to open a form modal.
+     * Confirms there is a fresh auth token in state before loading form.
+     */
     const handleOpen = (action) => {
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        }
         map[action](true);
     } 
 
-    /** Handles action to close a form modal. */
+    /** Handles action to close a form modal.
+     * Confirms there is a fresh auth token in state before loading updated resources.
+     */
     const handleClose = (action, data=null) => {
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        }
         map[action](false);
         handleCollectionRequest(getCollections(token));
         // if (action === 'edit-collection') {
@@ -58,7 +68,7 @@ const Collection = ({
         // if (action === 'delete-collection') handleCollectionRequest(getCollections(token));
     }
 
-    if (collection && rooms && token) {
+    if (collection && rooms && token && refreshToken) {
         return (
             <>
                 <Grid 
@@ -68,7 +78,7 @@ const Collection = ({
                     columnSpacing={3}
                     textAlign='center'
                 >
-                    <Grid item md={12} >
+                    <Grid item xs={12} mb={2} >
                         <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                             {collection.name}
                             <Tooltip title="Edit Collection">
@@ -138,7 +148,7 @@ const Collection = ({
                                 <Grid 
                                     key={room.id} 
                                     item 
-                                    sm={12} 
+                                    xs={12} 
                                     md={6} 
                                     sx={{ display: 'flex', alignItems:'stretch', width: '100%' }} 
                                 >

@@ -20,7 +20,7 @@ const ProtectedRoute = ({ children, ...otherProps }) => {
         )
     }
 
-    return <Redirect to='/login' />
+    return <Redirect to='/login/' />
 };
 
 export default ProtectedRoute;

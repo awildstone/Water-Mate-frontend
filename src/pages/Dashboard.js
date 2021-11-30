@@ -14,9 +14,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import CollectionsRoundedIcon from '@mui/icons-material/CollectionsRounded';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import FilterListRoundedIcon from '@mui/icons-material/FilterListRounded';
 import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded';
 import BedroomChildRoundedIcon from '@mui/icons-material/BedroomChildRounded';
 import Fab from '@mui/material/Fab';
@@ -28,12 +26,12 @@ import { getCollections } from '../collection/useCollections';
 import useRooms from '../room/useRooms';
 import { getRooms } from '../room/useRooms';
 import UserContext from '../context/UserContext';
-import { modalStyle } from '../utils';
+import { modalStyle, isValid } from '../utils';
 
 const Dashboard = ({ collections, handleCollectionRequest }) => {
 
     const [ error, rooms, setRooms, handleRoomRequest ] = useRooms(); 
-    const { token } = useContext(UserContext);
+    const { token, refreshToken, getAuthToken } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
     const [collection, setCollection] = useState(null);
     const [addCollection, setAddCollection] = useState(false);
@@ -42,6 +40,7 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
     const [viewCollection, setViewCollection] = useState(null);
     const openRoomMenu = Boolean(filterRoom);
     const openCollectionMenu = Boolean(viewCollection);
+
 
     /** Mapping of actions and state setters. */
     const map = {
@@ -55,13 +54,17 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
     useEffect(() => {
         if (collections && token) {
             setCollection(collections.collections[0]);
+            //only attempt to load rooms if a collection exists
             if (collections.collections.length) {
-                //only attempt to load rooms if a collection exists
-                handleRoomRequest(getRooms(token, { 'collection_id': collections.collections[0].id }));
+                if (!isValid(token)) {
+                    getAuthToken(refreshToken);
+                } else { 
+                    handleRoomRequest(getRooms(token, { 'collection_id': collections.collections[0].id }));
+                }
             }
         }
         setIsLoading(false);
-    },[token, collections, addCollection, handleRoomRequest]);
+    },[token, refreshToken, getAuthToken, collections, addCollection, handleRoomRequest]);
 
     /** Filters the collection rooms by room_id. */
     const filterByRoom = (event, data) => {
@@ -72,13 +75,24 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
         setRooms({ rooms: filtered });
     };
 
-    /** Handles opening filter menu selection by the user. */
+    /** Handles opening filter menu selection by the user. 
+    * Confirms there is a fresh auth token in state before opening the menu.
+    */
     const handleOpenMenu = (event, action) => {
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        }
         map[action](event.currentTarget);
     }
 
-    /** Handles closing filter menus & captures the selection by the user. */
+    /** Handles closing filter menus & captures the selection by the user.
+    * Confirms there is a fresh token in state before loading filtered resources.
+    */
     const handleCloseMenu = (event, criteria, data) => {
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        }
+
         if (criteria === 'show-collection') {
             setCollection(data);
             handleRoomRequest(getRooms(token, { 'collection_id': data.id }));
@@ -92,13 +106,25 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
         }
     };
 
-    /** Handles action to open a form modal. */
+    /** Handles action to open a form modal. 
+    * Confirms there is a fresh auth token in state before loading form.
+    */
     const handleOpen = (action) => {
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        }
+
         map[action](true);
     } 
 
-    /** Handles action to close a form modal. */
+    /** Handles action to close a form modal. 
+    * Confirms there is a fresh auth token in state before loading updated resources.
+    **/
     const handleClose = (action) => {
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        }
+
         map[action](false);
         if (action === 'add-collection') handleCollectionRequest(getCollections(token));
         if (action === 'add-room') {
@@ -169,10 +195,10 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                             container
                             mb={4}
                             direction='row'
-                            justifyContent='space-evenly'
+                            alignItems='center'
+                            justifyContent='center'
                             rowSpacing={3} 
                             columnSpacing={3}
-                            textAlign='center'
                         >
                             <Grid item>
                                 <Tooltip title="Add Collection">
@@ -183,7 +209,7 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                                         color="secondary"
                                     >
                                         <AddCircleRoundedIcon sx={{ mr: 1 }} />
-                                        Collection
+                                        <CollectionsRoundedIcon />
                                     </Fab>
                                 </Tooltip>
                             </Grid>
@@ -213,8 +239,8 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                                                 variant="extended" 
                                                 color="secondary"
                                             >
-                                                <VisibilityRoundedIcon sx={{ mr: 1 }} />
-                                                Collections
+                                                <ArrowDropDownIcon sx={{ mr: 1 }} />
+                                                <CollectionsRoundedIcon />
                                             </Fab>
                                         </Tooltip>
                                     </Grid>
@@ -261,7 +287,7 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                                                 color="secondary"
                                             >
                                                 <AddCircleRoundedIcon sx={{ mr: 1 }} />
-                                                Room
+                                                <BedroomChildRoundedIcon />
                                             </Fab>
                                         </Tooltip>
                                     </Grid>
@@ -297,7 +323,7 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                                                 color="secondary"
                                             >
                                                 <ArrowDropDownIcon sx={{ mr: 1 }} />
-                                                Room <FilterListRoundedIcon />
+                                                <BedroomChildRoundedIcon />
                                             </Fab>
                                         </Tooltip>
                             
@@ -352,7 +378,7 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
         );
     }
 
-    if (isLoading || !collections || !token ) {
+    if (isLoading || !collections || !token || !refreshToken ) {
         return <Loading />
     } else if (collections.collections.length > 0) {
         return hasCollections();

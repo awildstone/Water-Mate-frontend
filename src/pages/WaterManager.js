@@ -26,10 +26,11 @@ import Loading from '../alerts/Loading';
 import Paginator from '../Paginator';
 import PlantContext from '../context/PlantContext';
 import usePlants, { getPlantsToWater} from '../plant/usePlants';
+import { isValid } from '../utils';
 
 const WaterManager = () => {
     const [ isLoading, setIsLoading ] = useState(true);
-    const { currentUser, token, userPlantCount } = useContext(UserContext);
+    const { currentUser, token, refreshToken, getAuthToken, userPlantCount } = useContext(UserContext);
     const { plantTypes } = useContext(PlantContext);
     const [ error, plants, setPlants, handlePlantRequest ] = usePlants();
     const [ plantRooms, setPlantRooms ] = useState(null);
@@ -49,25 +50,32 @@ const WaterManager = () => {
 
     /** Gets a filtered list of all plants that are ready to water. Filters by user_id or room_id.
      * Sets the plantsToWater, pagination data, and unique list of plants(filtered by room.id) in state.
+     * Confirms there is a fresh token in state before loading plants to water.
      */
     const loadPlantsToWater = useCallback(async (room_id=null) => {
-        let plantData;
-        if (room_id) {
-            plantData = await handlePlantRequest(getPlantsToWater(token, page, {'room_id': room_id }));
-        } else {
-            plantData = await handlePlantRequest(getPlantsToWater(token, page, {'user_id': currentUser.id }));
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        } else { 
+            let plantData;
+            if (room_id) {
+                plantData = await handlePlantRequest(getPlantsToWater(token, page, {'room_id': room_id }));
+            } else {
+                plantData = await handlePlantRequest(getPlantsToWater(token, page, {'user_id': currentUser.id }));
+            }
+            if (plantData) {
+                setPlants(plantData.data.plants);
+                setItemsPerPage(plantData.data.itemsPerPage);
+                setCount(plantData.data.count);
+                filterPlantRooms(plantData.data.plants);
+            } 
         }
-        if (plantData) {
-            setPlants(plantData.data.plants);
-            setItemsPerPage(plantData.data.itemsPerPage);
-            setCount(plantData.data.count);
-            filterPlantRooms(plantData.data.plants);
-        } 
-    }, [currentUser, token, handlePlantRequest, page, setPlants]);
+    }, [currentUser, token, refreshToken, getAuthToken, handlePlantRequest, page, setPlants]);
 
     /** Gets the plants to water, gets plants any time page or currentUser changes. */
     useEffect(() => {
-        if (currentUser && token) loadPlantsToWater();
+        if (currentUser && token) {
+            loadPlantsToWater();
+        }
         setIsLoading(false);
     },[page, currentUser, token, loadPlantsToWater]);
 
@@ -183,8 +191,8 @@ const WaterManager = () => {
                     </Grid>
                 </Box>
             </Container>
-        );
-    }
+        )
+    };
 
     const hasPlants = () => {
         return (
@@ -326,8 +334,8 @@ const WaterManager = () => {
                     </Grid>
                 </Box>
             </Container>
-        );
-    }
+        )
+    };
 
     if (isLoading || !currentUser || !plants || !plantRooms || userPlantCount === null) {
         return <Loading />
@@ -338,6 +346,6 @@ const WaterManager = () => {
             return noPlants();
         }
     }
-}
+};
 
 export default WaterManager;

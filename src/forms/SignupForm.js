@@ -44,7 +44,7 @@ const validationSchema = yup.object({
         .required('You must confirm your password.'),
 });
 
-const SignupForm = ({signup, setToken}) => {
+const SignupForm = ({signup, setToken, setRefreshToken}) => {
     const history = useHistory();
     const [error, handleAuthRequest] = useAuth();
 
@@ -65,6 +65,7 @@ const SignupForm = ({signup, setToken}) => {
             let result = await handleAuthRequest(signupUser({city, state, country, name, username, email, password}));
             if (result.success) {
                 setToken(result.token);
+                setRefreshToken(result.refreshToken);
                 history.push('/get-started');
             }
         },

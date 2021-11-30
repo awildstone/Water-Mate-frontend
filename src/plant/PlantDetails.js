@@ -33,11 +33,11 @@ import UserContext from '../context/UserContext';
 import Loading from '../alerts/Loading';
 import moment from 'moment';
 import usePlants, { getPlant, deletePlant } from './usePlants';
-import { modalStyle } from '../utils';
+import { modalStyle, isValid } from '../utils';
 
 const PlantDetails = ({ collections }) => {
     const { id } = useParams();
-    const { token } = useContext(UserContext);
+    const { token, refreshToken, getAuthToken } = useContext(UserContext);
     const { plantTypes } = useContext(PlantContext);
     const [ isLoading, setIsLoading ] = useState(true);
     const [error, plants, setPlants, handlePlantRequest] = usePlants();
@@ -57,37 +57,56 @@ const PlantDetails = ({ collections }) => {
         'delete-plant': setDeletePlantToggle
     };
 
-    /** Gets current plant data and uses current plant data to set light, plantType and collection state. */
+    /** Gets current plant data and uses current plant data to set light, plantType and collection state.
+     * Confirms a fresh auth token is in state before attempting to load the plant resource data.
+     */
     const getPlantData = useCallback(async() => {
-        let { data } = await handlePlantRequest(getPlant(token, id));
-        if (data) {
-            setLight(data.plant.room.lightsources);
-            const type = plantTypes.filter(type => type.id === data.plant.type_id);
-            setPlantType(type[0]);
-            const collection_id = data.plant.room.collection_id;
-            const collection = collections.collections.filter(collection => collection.id === collection_id);
-            setCollection(collection[0]);
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        } else {
+            let { data } = await handlePlantRequest(getPlant(token, id));
+            if (data) {
+                //set plant light type
+                setLight(data.plant.room.lightsources);
+                //set plant type
+                const type = plantTypes.filter(type => type.id === data.plant.type_id);
+                setPlantType(type[0]);
+                //set plant collection
+                const collection_id = data.plant.room.collection_id;
+                const collection = collections.collections.filter(collection => collection.id === collection_id);
+                setCollection(collection[0]);
+            }
         }
-    }, [token, collections, handlePlantRequest, id, plantTypes]);
+    }, [token, refreshToken, getAuthToken, collections, handlePlantRequest, id, plantTypes]);
 
     /** Get & Set plant data in state. */
     useEffect(() => {
         if (id && plantTypes && collections) getPlantData();
         setIsLoading(false); 
-    },[token, id, plantTypes, collections, getPlantData]);
+    },[id, plantTypes, collections, getPlantData]);
 
-    /** Handles action to open a form modal. */
+    /** Handles action to open a form modal.
+     * Confirms there is a fresh auth token in state before loading form.
+     */
     const handleOpen = (action) => {
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        }
         map[action](true);
     } 
 
-    /** Handles action to close a form modal. */
+    /** Handles action to close a form modal.
+     * Confirms there is a fresh auth token in state before loading updated resources.
+     */
     const handleClose = (action) => {
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        }
         map[action](false);
         getPlantData();
     }
 
-    if (!isLoading && plants && plantType && collection) {
+    if (!isLoading && plants && plantType && collection && token && refreshToken) {
         return (
             <Container maxWidth="lg">
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', textAlign: 'center', '& > :not(style)': { m: 2, p: 2 } }}>

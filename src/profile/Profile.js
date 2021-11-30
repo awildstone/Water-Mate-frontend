@@ -26,11 +26,11 @@ import WarningModal from '../alerts/WarningModal';
 import UserContext from '../context/UserContext';
 import Loading from '../alerts/Loading';
 import useProfile, { deleteAccount } from './useProfile';
-import { modalStyle } from '../utils';
+import { modalStyle, isValid } from '../utils';
 
 
 const Profile = ({ collections }) => {
-    const { currentUser, loadUserData } = useContext(UserContext);
+    const { token, refreshToken, getAuthToken, currentUser, loadUserData } = useContext(UserContext);
     const [error, message, setMessage, handleProfileRequest] = useProfile();
     const [ editProfile, setEditProfile ] = useState(false);
     const [ editPassword, setEditPassword ] = useState(false);
@@ -45,18 +45,24 @@ const Profile = ({ collections }) => {
         'delete-account': setDeleteAccountToggle
     };
 
-    /** Handles action to open a form modal. */
+    /** Handles action to open a form modal. Confirms there is a fresh auth token in state before loading form. */
     const handleOpen = (action) => {
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        }
         map[action](true);
     } 
 
-    /** Handles action to close a form modal. */
+    /** Handles action to close a form modal. Confirms there is a fresh auth token in state before loading updated resources. */
     const handleClose = (action) => {
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        }
         map[action](false);
-        loadUserData();
+        loadUserData(token);
     }
 
-    if (currentUser && collections) {
+    if (currentUser && token && refreshToken && collections) {
         return (
             <Container maxWidth='lg'>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { mt: 2, p: 0} }}>

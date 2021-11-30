@@ -16,7 +16,7 @@ const validationSchema = yup.object({
         .required('You must enter a password.'),
 });
 
-const LoginForm = ({setToken}) => {
+const LoginForm = ({setToken, setRefreshToken}) => {
     const history = useHistory();
     const [error, handleAuthRequest] = useAuth();
 
@@ -30,6 +30,7 @@ const LoginForm = ({setToken}) => {
             let result = await handleAuthRequest(loginUser({'username': values.username, 'password': values.password}));
             if (result.success) {
                 setToken(result.token);
+                setRefreshToken(result.refreshToken);
                 history.push('/water-manager');
             }
         },
