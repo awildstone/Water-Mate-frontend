@@ -21,24 +21,33 @@ import Fab from '@mui/material/Fab';
 import Alert from '@mui/material/Alert';
 import useSchedule, { waterPlant, snoozePlant } from '../schedule/useSchedule';
 import UserContext from '../context/UserContext';
+import { isValid } from '../utils';
 
 const PlantCard = ({ plant, waterSchedule, loadPlantsToWater }) => {
-    const { token } = useContext(UserContext);
+    const { token, refreshToken, getAuthToken } = useContext(UserContext);
     const [ error, message, setMessage, handleScheduleRequest ] = useSchedule();
     const [ showForm, setShowForm ] = useState(false);
     const [ notes, setNotes ] = useState(null);
     const [ isLoading, setIsLoading ] = useState(false);
 
+    /** Updates a Plant's schedule based on the type of action (Water/Snooze).
+     * Confirms there is a fresh auth token in state before updating the schedule resource.
+     */
     const updatePlantSchedule = async (action, schedule_id) => {
       setIsLoading(true);
-      if (action === 'water') {
-        await handleScheduleRequest(waterPlant(token, schedule_id, notes));
-      }
-      if (action === 'snooze') {
-        await handleScheduleRequest(snoozePlant(token, schedule_id, notes));
+      
+      if (!isValid(token)) {
+        getAuthToken(refreshToken);
+      } else { 
+        if (action === 'water') {
+          await handleScheduleRequest(waterPlant(token, schedule_id, notes));
+        }
+        if (action === 'snooze') {
+          await handleScheduleRequest(snoozePlant(token, schedule_id, notes));
+        }
+        loadPlantsToWater();
       }
       setIsLoading(false);
-      loadPlantsToWater();
     }
 
     return (

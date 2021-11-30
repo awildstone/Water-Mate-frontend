@@ -10,9 +10,10 @@ import HistoryTable from './HistoryTable';
 import Loading from '../alerts/Loading';
 import UserContext from '../context/UserContext';
 import useHistory, { getHistory } from './useHistory';
+import { isValid } from '../utils';
 
 const PlantWaterHistory = ({close, plant}) => {
-    const { token } = useContext(UserContext);
+    const { token, refreshToken, getAuthToken } = useContext(UserContext);
     const [error, history, setHistory, handleHistoryRequest] = useHistory();
     const [isLoading, setIsLoading] = useState(true);
     const [itemsPerPage, setItemsPerPage] = useState(null);
@@ -33,10 +34,15 @@ const PlantWaterHistory = ({close, plant}) => {
                 setIsLoading(false);
             }
         }
-        getData();
-    },[token, page, handleHistoryRequest, plant, setHistory]);
+
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        } else {
+            getData();
+        }
+    },[token, refreshToken, getAuthToken, page, handleHistoryRequest, plant, setHistory]);
     
-    if (!isLoading && history) {
+    if (!isLoading && history && token && refreshToken) {
         return (
             <Container maxWidth="lg">
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', textAlign: 'center', '& > :not(style)': { m: 2, p: 2 } }}>

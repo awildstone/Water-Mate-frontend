@@ -9,17 +9,17 @@ const useCurrentUser = () => {
 
     const handleGetUserData = useCallback(async (token) => {
         const payload = jwt.decode(token);
-        const userId = payload['wm_user_id'];
+        const userId = payload['wm_auth'];
         const headers = { 'content-type': 'application/json', 'x-access-token': token };
         const url = `${BASE_URL}/user/${userId}/`;
         const method = 'get';
 
         try {
             const userData = await axios({ url, method, headers});
-            setCurrentUser(userData.data.user)
+            setCurrentUser(userData.data.user);
             return { id: userData.data.user.id }
         } catch (err) {
-            setCurrentUser(null)
+            setCurrentUser(null);
         }
     }, []);
 

@@ -23,12 +23,12 @@ import Paginator from '../Paginator';
 import LightSourceItem from '../lightsource/LightSourceItem';
 import PlantItem from '../plant/PlantItem';
 import UserContext from '../context/UserContext';
-import { modalStyle } from '../utils';
+import { modalStyle, isValid } from '../utils';
 
 const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
     
     const [error, plants, setPlants, handlePlantRequest] = usePlants();
-    const { token } = useContext(UserContext);
+    const { token, refreshToken, getAuthToken } = useContext(UserContext);
     const [lights, setLights] = useState([]);
     const [editRoom, setEditRoom] = useState(false);
     const [addLight, setAddLight] = useState(false);
@@ -48,14 +48,20 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
         'delete-light': setDeleteLight
     };
 
-    /** Load plant data and set the pagination data in state. */
+    /** Load plant data for the room and set the pagination data in state.
+     * Confirms there is a fresh auth token in state before attempting to load the room's plant data.
+     */
     const loadPlantsData = useCallback(async () => {
-        const { data } = await handlePlantRequest(getPlants(token, page, { 'room_id': room.id }));
-        if (data) {
-            setItemsPerPage(data.itemsPerPage);
-            setCount(data.count);
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        } else {
+            const { data } = await handlePlantRequest(getPlants(token, page, { 'room_id': room.id }));
+            if (data) {
+                setItemsPerPage(data.itemsPerPage);
+                setCount(data.count);
+            }
         }
-    }, [token, page, room, handlePlantRequest]);
+    }, [token, refreshToken, getAuthToken, page, room, handlePlantRequest]);
 
     /** Get plants for the room (if any) */
     useEffect(() => {
@@ -63,13 +69,23 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
         loadPlantsData();
     },[token, page, room, loadPlantsData]);
 
-    /** Handles action to open a form modal. */
+    /** Handles action to open a form modal.
+     * Confirms there is a fresh auth token in state before loading form.
+     */
     const handleOpen = (action) => {
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        }
         map[action](true);
     } 
 
-    /** Handles action to close a form modal. */
+    /** Handles action to close a form modal.
+     * Confirms there is a fresh auth token in state before loading updated resources.
+     */
     const handleClose = (action) => {
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        }
         map[action](false);
         handleRoomRequest(getRooms(token, { 'collection_id': room.collection_id }));
     }
@@ -79,7 +95,7 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
         setPage(value);
     };
 
-    if (room && plants && lights) {
+    if (room && plants && lights && token && refreshToken) {
         return (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 2 } }}>
                 <Paper elevation={3} sx={{ backgroundColor: color }}> 

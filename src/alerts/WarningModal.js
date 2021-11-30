@@ -14,7 +14,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import Alert from '@mui/material/Alert';
 import { useHistory } from 'react-router-dom';
 import UserContext from '../context/UserContext';
-import { modalStyle } from '../utils';
+import { modalStyle, isValid } from '../utils';
 
 const WarningModal = ({ 
     title, 
@@ -32,7 +32,7 @@ const WarningModal = ({
     const [ isChecked, setIsChecked ] = useState(false);
     const [ error, setError ] = useState(null);
     const history = useHistory();
-    const { token } = useContext(UserContext);
+    const { token, refreshToken, getAuthToken } = useContext(UserContext);
     
     /** Toggles checkbox state & sets confirmation state conditionally. */
     const handleCheck = () => {
@@ -42,6 +42,24 @@ const WarningModal = ({
             setIsConfirmed(true);
         } else {
             setIsConfirmed(false);
+        }
+    }
+
+    /** Handles deleting the resource when user has checked the confirmation box and clicked Delete button.
+     * Confirms there is a fresh auth token in state before attempting to delete a resource.
+     */
+    const handleDeleteResource = async () => {
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        }
+
+        let result = await handleDelete(request(token, id));
+
+        if (result.success) {
+            if (redirect) history.push(redirect);
+            handleClose(action);
+        } else {
+            setError(result.message);
         }
     }
 
@@ -85,16 +103,7 @@ const WarningModal = ({
                     </Button>
                     <Button
                         variant="contained"
-                        onClick={async () => {
-                            let result = await handleDelete(request(token, id));
-
-                            if (result.success) {
-                                if (redirect) history.push(redirect);
-                                handleClose(action);
-                            } else {
-                                setError(result.message);
-                            }
-                        }}
+                        onClick={handleDeleteResource}
                         disabled={!isConfirmed}
                         color="error"
                     >
