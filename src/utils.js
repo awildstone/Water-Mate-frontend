@@ -21,7 +21,5 @@ export const BASE_URL = process.env.APP_BASE_URL || 'http://127.0.0.1:5000';
 /** Function to decode expiration date from a token & check if the token expiration date is less than the current date. */
 export const isValid = (token) => {
     const payload = jwt.decode(token);
-    // console.log(`NOW: ${new Date()} TOKEN: ${new Date(payload['exp'] * 1000)}`)
-    // console.log(new Date() < new Date(payload['exp'] * 1000));
     return (new Date() < new Date(payload['exp'] * 1000));
 }
