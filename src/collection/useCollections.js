@@ -58,7 +58,7 @@ const useCollections = () => {
         }
     }, []);
 
-    return [ error, collections, setCollections, handleCollectionRequest ];
+    return [ error, collections, handleCollectionRequest ];
 }
 
 export default useCollections;

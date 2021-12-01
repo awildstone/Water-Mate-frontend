@@ -11,7 +11,6 @@ import UserContext from './context/UserContext';
 import PlantContext from './context/PlantContext';
 import Loading from './alerts/Loading';
 import useCollections, { getCollections } from './collection/useCollections';
-import usePlantCount from './hooks/usePlantCount';
 import useCurrentUser from './hooks/useCurrentUser';
 import usePlantTypes from './hooks/usePlantTypes';
 import useRefreshToken from './hooks/useRefreshToken';
@@ -45,25 +44,22 @@ const theme = createTheme({
 /** Offset component so content isn't covered by the Toolbar when position is "fixed". */
 const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
+/** Renders App */
 const App = () => {
   const [ token, setToken ] = useLocalStorage(TOKEN_ID);
   const [ refreshToken, setRefreshToken ] = useRefreshToken(REFRESH_TOKEN_ID);
   const [ isLoading, setIsLoading ] = useState(true);
-  const [plantTypes, setPlantTypes, handleGetPlantTypes] = usePlantTypes();
-  const [currentUser, setCurrentUser, handleGetUserData] = useCurrentUser();
-  const [ error, collections, setCollections, handleCollectionRequest ] = useCollections();
-  const [userPlantCount, setUserPlantCount, handleGetPlantCount] = usePlantCount();
+  const [ plantTypes, handleGetPlantTypes ] = usePlantTypes();
+  const [ currentUser, setCurrentUser, handleGetUserData ] = useCurrentUser();
+  const [ error, collections, handleCollectionRequest ] = useCollections();
 
-  /** Loads current user data and gets the current user plant count (if count is null) */
+  /** Loads current user data. */
   const loadUserData = useCallback(async (token) => {
-    console.log('loading user data')
-    const { id } = await handleGetUserData(token);
-    if (id && userPlantCount === null) handleGetPlantCount(token, id);
-  }, [handleGetUserData, userPlantCount, handleGetPlantCount]);
+    await handleGetUserData(token);
+  }, [handleGetUserData]);
 
   /** Loads App data using an auth token. */
   const loadAppData = useCallback((token) => {
-    console.log('loading app data')
     loadUserData(token);
     handleGetPlantTypes(token);
     handleCollectionRequest(getCollections(token));
@@ -73,45 +69,36 @@ const App = () => {
   const logout = useCallback(() => {
     setToken(null);
     setRefreshToken(null); 
-    //do I need to null these?
     setCurrentUser(null);
-    setCollections(null);
-    setPlantTypes(null);
-    setUserPlantCount(null);
-  }, [setCollections, setCurrentUser, setPlantTypes, setRefreshToken, setToken, setUserPlantCount]);
+  }, [setCurrentUser, setRefreshToken, setToken]);
 
-  /** Attempts to get a new auth token for the current user using the refresh token. If the refresh token request fails, the user will be logged out to force re-authentication. */
+  /** Attempts to get a new auth token for the current user using the refresh token. 
+  * If the refresh token request fails, the user will be logged out to force re-authentication. 
+  */
   const getAuthToken = useCallback(async (refreshToken) => {
     const headers = { 'content-type': 'application/json', 'x-refresh-token': refreshToken };
     const url = `${BASE_URL}/token/refresh/`;
     const method = 'post';
     try {
       const newToken = await axios({ url, method, headers });
-      console.log('got new tokens!', newToken);
       setToken(newToken.data.token);
       loadAppData(newToken.data.token);
     } catch (err) {
-      console.log('error getting new auth token', err);
-      console.log(err.data);
       logout();
     }
   }, [logout, setToken, loadAppData]);
 
+  /** 
+  * Loads initial app data if the auth token exists and is valid.
+  * Gets a new auth token if auth token is expired (then loads app data).
+  * If both auth & refresh tokens are invalid, logs the user out to force reauthentication.
+  */
   useEffect(() => {
     if (token && refreshToken) {
-      //load app data if the auth token exists & is valid
       if (token && isValid(token)) {
-        console.log('check token status in App useEffect');
-        console.log('auth token is valid', token);
         loadAppData(token);
-      
-      //get a new auth token if the token is expired and refresh token exists & is valid
       } else if (!isValid(token) && refreshToken && isValid(refreshToken)) {
-        console.log('check refresh token status in App useEffect');
-        console.log('refresh token is valid', refreshToken);
         getAuthToken(refreshToken);
-      
-      //if both tokens are expired, log the user out to force re-authentication
       } else {
         logout();
       }
@@ -124,7 +111,7 @@ const App = () => {
   } 
   return (
     <BrowserRouter>
-      <UserContext.Provider value={{ currentUser, token, refreshToken, getAuthToken, loadUserData, userPlantCount }}>
+      <UserContext.Provider value={{ currentUser, token, refreshToken, getAuthToken, loadUserData }}>
       <PlantContext.Provider value={{ plantTypes }}>
         <ThemeProvider theme={theme}>
           <NavBar logout={logout} />

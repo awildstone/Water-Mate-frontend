@@ -16,7 +16,7 @@ const validationSchema = yup.object({
 
 const CollectionForm = ({ close, setEditCollection, setAddCollection, collectionData=null }) => {
     const { token } = useContext(UserContext);
-    const [ error, collections, setCollections, handleCollectionRequest ] = useCollections();
+    const [ error, collections, handleCollectionRequest ] = useCollections();
     const [ message, setMessage ] = useState(null);
 
     const formik = useFormik({

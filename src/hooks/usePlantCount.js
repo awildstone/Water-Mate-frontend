@@ -19,7 +19,7 @@ const usePlantCount = () => {
         }
     }, []);
 
-    return [userPlantCount, setUserPlantCount, handleGetPlantCount];
+    return [userPlantCount, handleGetPlantCount];
 }
 
 export default usePlantCount;
