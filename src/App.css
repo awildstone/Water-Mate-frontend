@@ -54,9 +54,7 @@
 }
 
 body {
-	/* background-color: #ccfff3; */
 	background-color: #f9e6e1;
-	/* background-image: url(./images/leaves.png); */
 }
 
 .rounded {
@@ -64,9 +62,9 @@ body {
 	border-radius: 5px;
 }
 
-/* .App { */
-/* text-align: center; */
-/* } */
+.center {
+	text-align: center;
+}
 
 .App-logo {
 	height: 40vmin;
