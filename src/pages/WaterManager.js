@@ -25,13 +25,15 @@ import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import Loading from '../alerts/Loading';
 import Paginator from '../Paginator';
 import PlantContext from '../context/PlantContext';
+import usePlantCount from '../hooks/usePlantCount';
 import usePlants, { getPlantsToWater} from '../plant/usePlants';
 import { isValid } from '../utils';
 
 const WaterManager = () => {
     const [ isLoading, setIsLoading ] = useState(true);
-    const { currentUser, token, refreshToken, getAuthToken, userPlantCount } = useContext(UserContext);
+    const { currentUser, token, refreshToken, getAuthToken } = useContext(UserContext);
     const { plantTypes } = useContext(PlantContext);
+    const [userPlantCount, handleGetPlantCount] = usePlantCount();
     const [ error, plants, setPlants, handlePlantRequest ] = usePlants();
     const [ plantRooms, setPlantRooms ] = useState(null);
     const [ anchorSort, setAnchorSort ] = useState(null);
@@ -71,13 +73,23 @@ const WaterManager = () => {
         }
     }, [currentUser, token, refreshToken, getAuthToken, handlePlantRequest, page, setPlants]);
 
+    /** Gets the total number of plants a user currently has. Checks there is a fresh auth token in state before attempting to get user plant count data. */
+    const getUserPlantCount = useCallback(async (id) => {
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        } else { 
+            await handleGetPlantCount(token, id);
+        }
+    }, [token, refreshToken, getAuthToken, handleGetPlantCount]);
+
     /** Gets the plants to water, gets plants any time page or currentUser changes. */
     useEffect(() => {
         if (currentUser && token) {
+            getUserPlantCount(currentUser.id);
             loadPlantsToWater();
         }
         setIsLoading(false);
-    },[page, currentUser, token, loadPlantsToWater]);
+    },[page, currentUser, token, getUserPlantCount, loadPlantsToWater]);
 
     /** Generates a unique list of plant objects by room.id (for an array of unique rooms).
      * Assumes that only the first room.id instance should be part of the array. */

@@ -17,7 +17,6 @@ const useCurrentUser = () => {
         try {
             const userData = await axios({ url, method, headers});
             setCurrentUser(userData.data.user);
-            return { id: userData.data.user.id }
         } catch (err) {
             setCurrentUser(null);
         }

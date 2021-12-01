@@ -19,7 +19,7 @@ const usePlantTypes = () => {
         }
     }, []);
 
-    return [plantTypes, setPlantTypes, handleGetPlantTypes];
+    return [plantTypes, handleGetPlantTypes];
 }
 
 export default usePlantTypes;
