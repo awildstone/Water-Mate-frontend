@@ -16,7 +16,7 @@ export const TOKEN_ID = 'watermate-user';
 export const REFRESH_TOKEN_ID = 'wm_refresh_token';
 
 /** Base URL for API calls. */
-export const BASE_URL = process.env.APP_BASE_URL || 'http://127.0.0.1:5000';
+export const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://127.0.0.1:5000';
 
 /** Function to decode expiration date from a token & check if the token expiration date is less than the current date. */
 export const isValid = (token) => {
