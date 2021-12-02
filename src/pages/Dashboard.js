@@ -150,9 +150,17 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                                     <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                                         Add your Collection
                                     </Typography>
-                                    <p>To get started, add the name of your Collection.</p> 
-                                    <p>Some suggestions: "Home", "Office", or "My Plant Collection".</p> 
-                                    <p>It helps if your collection name represents where it is located if you want to manage multiple collections.</p>
+                                    <Typography>
+                                        <p>
+                                            To get started, add the name of your Collection.
+                                        </p> 
+                                        <p>
+                                            Some suggestions: "Home", "Office", or "My Plant Collection".
+                                        </p> 
+                                        <p>
+                                            It helps if your collection name represents where it is located if you want to manage multiple collections.
+                                        </p>
+                                    </Typography>
                                     <Tooltip title="Add Collection">
                                         <Button
                                             variant="contained"

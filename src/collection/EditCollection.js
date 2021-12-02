@@ -12,7 +12,11 @@ const EditCollection = ({ close, setEditCollection, collectionData }) => {
                     <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                         Edit Collection
                     </Typography>
-                    <p>All fields required.</p>
+                    <Typography>
+                        <p>
+                            All fields required.
+                        </p>
+                    </Typography>
                    <CollectionForm close={close} setEditCollection={setEditCollection} collectionData={collectionData} />
                 </Paper>
             </Box>

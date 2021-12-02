@@ -13,7 +13,11 @@ const AddCollection = ({ close, setAddCollection }) => {
                     <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                         Add Collection
                     </Typography>
-                    <p>All fields required.</p>
+                    <Typography>
+                        <p>
+                            All fields required.
+                        </p>
+                    </Typography>
                    <CollectionForm close={close} setAddCollection={setAddCollection} />
                 </Paper>
             </Box>

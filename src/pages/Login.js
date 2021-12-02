@@ -13,7 +13,11 @@ const Login = ({setToken, setRefreshToken}) => {
                         <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                             Login
                         </Typography>
-                        <p>Please enter your username and password. All fields are required.</p>
+                        <Typography>
+                            <p>
+                                Please enter your username and password. All fields are required.
+                            </p>
+                        </Typography>
                         <LoginForm setToken={setToken} setRefreshToken={setRefreshToken} />
                         </Box>
                     <img src="/images/profile_plants.png" width='100%' alt='Succulent Terrariums on Profile Page' />

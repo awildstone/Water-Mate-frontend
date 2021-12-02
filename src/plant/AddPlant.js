@@ -12,7 +12,11 @@ const AddPlant = ({ close, setAddPlant, roomId, lightSources }) => {
                     <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                         Add Plant
                     </Typography>
-                    <p>All fields required.</p>
+                    <Typography>
+                        <p>
+                            All fields required.
+                        </p>
+                    </Typography>
                 <PlantForm 
                     close={close} 
                     setAddPlant={setAddPlant} 

@@ -12,7 +12,11 @@ const EditPlant = ({close, setEditPlant, lightSources, plant}) => {
                     <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                         Edit Plant
                     </Typography>
-                    <p>All fields required.</p>
+                    <Typography>
+                        <p>
+                            All fields required.
+                        </p>
+                    </Typography>
                 <PlantForm 
                     close={close}
                     setEditPlant={setEditPlant} 

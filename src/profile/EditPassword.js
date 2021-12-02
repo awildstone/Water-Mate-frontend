@@ -12,7 +12,11 @@ const EditPassword = ({close, setEditPassword, user}) => {
                     <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                         Edit Password
                     </Typography>
-                    <p>All fields required.</p>
+                    <Typography>
+                        <p>
+                            All fields required.
+                        </p>
+                    </Typography>
                    <PasswordForm close={close} setEditPassword={setEditPassword} user={user} />
                 </Paper>
             </Box>

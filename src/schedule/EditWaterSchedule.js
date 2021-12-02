@@ -15,9 +15,14 @@ const EditWaterSchedule = ({close, setEditSchedule, schedule}) => {
                     <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                         Edit Water Schedule
                     </Typography>
-                    <p><WarningIcon sx={{ color: red[500] }} /> By enabling Manual Mode, the Wate Mate will only remind you to water on the interval of days you specify below and will never change the water interval until updated or manual mode disabled.</p>
-                
-                    <p>If you want the schedule to adjust automatically for seasonal changes make sure manual mode is unchecked when you update changes.</p>
+                    <Typography>
+                        <p>
+                            <WarningIcon sx={{ color: red[500] }} /> By enabling Manual Mode, the Wate Mate will only remind you to water on the interval of days you specify below and will never change the water interval until updated or manual mode disabled.
+                        </p>
+                        <p>
+                            If you want the schedule to adjust automatically for seasonal changes make sure manual mode is unchecked when you update changes.
+                        </p>
+                    </Typography>
                    <WaterScheduleForm close={close} setEditSchedule={setEditSchedule} schedule={schedule} />
                 </Paper>
             </Box>

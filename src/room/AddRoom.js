@@ -12,7 +12,11 @@ const AddRoom = ({ close, setaddRoom, collectionId }) => {
                     <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                         Add Room
                     </Typography>
-                    <p>All fields required.</p>
+                    <Typography>
+                        <p>
+                            All fields required.
+                        </p>
+                    </Typography>
                    <RoomForm close={close} setaddRoom={setaddRoom} collectionId={collectionId} />
                 </Paper>
             </Box>

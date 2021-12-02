@@ -196,7 +196,11 @@ const WaterManager = () => {
                             <Typography variant="h2" component="div">
                                 No Plants!?
                             </Typography>
-                            <p>You don't have any plants in your collection yet! Head over to the <Link underline="none" color={'#1CBC9B'} href="/dashboard">Dashboard</Link> to add your plants.</p>
+                            <Typography>
+                                <p>
+                                    You don't have any plants in your collection yet! Head over to the <Link underline="none" color={'#1CBC9B'} href="/dashboard">Dashboard</Link> to add your plants.
+                                </p>
+                            </Typography>
                             <img src='/images/houseplant_lineup_sm.png' width='100%' alt='Lineup of houseplants' />
                             </Paper> 
                         </Grid>

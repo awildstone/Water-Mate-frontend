@@ -12,7 +12,11 @@ const EditProfile = ({close, setEditProfile, user }) => {
                     <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                         Edit Profile
                     </Typography>
-                    <p>All fields required.</p>
+                    <Typography>
+                        <p>
+                            All fields required.
+                        </p>
+                    </Typography>
                    <ProfileForm  
                         close={close}
                         setEditProfile={setEditProfile}

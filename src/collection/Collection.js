@@ -169,8 +169,14 @@ const Collection = ({
                         >
                             <Box textAlign='center'>
                                 <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>No Rooms!</Typography>
-                                <p>Add a room to your Collection. You can name your room anything you like but it helps if your room describes the location.</p>
-                                <p>Examples: Kitchen, Bedroom, Bathroom, etc.</p>
+                                <Typography>
+                                    <p>
+                                        Add a room to your Collection. You can name your room anything you like but it helps if your room describes the location.
+                                    </p>
+                                    <p>
+                                        Examples: Kitchen, Bedroom, Bathroom, etc.
+                                    </p>
+                                </Typography>
                             </Box>
                         </Grid>
                     }

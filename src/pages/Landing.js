@@ -18,8 +18,14 @@ const Landing = () => {
                         <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                             Water Mate
                         </Typography>
-                        <p>Visit the <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/get-started">Getting Started</Link> page to learn how to use this app.</p>
-                        <p>Visit the <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/water-manager">Water Manager</Link> to water your plants, or your <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/dashboard">Dashboard</Link> to manage your Collection(s).</p>
+                        <Typography>
+                            <p>
+                                Visit the <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/get-started">Getting Started</Link> page to learn how to use this app.
+                            </p>
+                            <p>
+                                Visit the <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/water-manager">Water Manager</Link> to water your plants, or your <Link underline="none" color={'#1CBC9B'} component=    {NavLink} to="/dashboard">Dashboard</Link> to manage your Collection(s).
+                            </p>
+                        </Typography>
                         <img className="rounded" src='/images/water_mate.png' alt="Water Mate" width="100%" />
                     </Paper>
                 </Box>
@@ -35,8 +41,14 @@ const Landing = () => {
                         <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                             Water Mate
                         </Typography>
-                        <p>Read <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/about">about</Link> this app.</p>
-                        <p><Link underline="none" color={'#1CBC9B'} component={NavLink} to="/signup">Create</Link> an account or <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/login">Login</Link>.</p>
+                        <Typography>
+                            <p>
+                                Read <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/about">about</Link> this app.
+                            </p>
+                            <p>
+                                <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/signup">Create</Link> an account or <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/login">Login</Link>.
+                            </p>
+                        </Typography>
                         <img className="rounded" src='/images/water_mate.png' alt="Water Mate" width="100%" />
                     </Paper>
                 </Box>

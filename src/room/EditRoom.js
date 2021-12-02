@@ -12,7 +12,11 @@ const EditRoom = ({ close, setEditRoom, room }) => {
                     <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                         Edit Room
                     </Typography>
-                    <p>All fields required.</p>
+                    <Typography>
+                        <p>
+                            All fields required.
+                        </p>
+                    </Typography>
                    <RoomForm close={close} setEditRoom={setEditRoom} room={room} />
                 </Paper>
             </Box>

@@ -12,7 +12,11 @@ const AddLightSource = ({ close, setAddLight, handleAdd, roomId, current }) => {
                     <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                         Add Lightsource(s)
                     </Typography>
-                    <p>Select all light types that are applicable for your room.</p>
+                    <Typography>
+                        <p>
+                            Select all light types that are applicable for your room.
+                        </p>
+                    </Typography>
                    <LightSourceForm close={close} setAddLight={setAddLight} handleAdd={handleAdd} roomId={roomId} current={current} />
                 </Paper>
             </Box>

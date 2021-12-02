@@ -14,7 +14,12 @@ const EditLocation = ({close, setEditLocation, user}) => {
                     <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                         Edit Location
                     </Typography>
-                    <p><WarningIcon sx={{ color: red[500] }} /> WARNING! this will change how Water Mate calculates the water schedule for all of your plants.</p>
+                    <Typography>
+                        <p>
+                            <WarningIcon sx={{ color: red[500] }} /> WARNING! this will change how Water Mate calculates the water schedule for all of your plants.
+                        </p>
+                        <p>To get and accurate geoloction, city and country are required.</p>
+                    </Typography>
                    <LocationForm close={close} setEditLocation={setEditLocation} user={user} />
                 </Paper>
             </Box>
