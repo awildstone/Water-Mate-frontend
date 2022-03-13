@@ -44,6 +44,14 @@ export const editPlant = (token, id, data) => ({
     headers: { 'content-type': 'multipart/form-data', 'x-access-token': token },
 });
 
+/** Request object for editing a Plant's room & lightsource (Moving a plant). */
+export const editPlantRoom = (token, plant_id, data) => ({
+    url: buildUrl(`/plant/${plant_id}/moveroom/`),
+    method: 'patch',
+    data,
+    headers: { 'content-type': 'application/json', 'x-access-token': token },
+});
+
 /** Request object for deleting a Plant. */
 export const deletePlant = (token, id) => ({
     url: buildUrl(`/plant/${id}/`),
@@ -55,7 +63,7 @@ const usePlants = () => {
     const [error, setError] = useState(null);
     const [plants, setPlants] = useState(null);
 
-    const handlePlantRequest = useCallback(async ({ url, method, data={}, headers, params={} }) => {
+    const handlePlantRequest = useCallback(async ({ url, method, data = {}, headers, params = {} }) => {
         try {
             const response = await axios({ url, method, data, headers, params });
             if (method !== 'delete') {
@@ -71,7 +79,7 @@ const usePlants = () => {
         }
     }, []);
 
-    return [ error, plants, setPlants, handlePlantRequest ];
+    return [error, plants, setPlants, handlePlantRequest];
 }
 
 export default usePlants;
