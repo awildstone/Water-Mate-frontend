@@ -3,7 +3,7 @@ import * as yup from 'yup';
 import { Container, TextField, Button } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
-import useAuth, {loginUser} from '../hooks/useAuth';
+import useAuth, { loginUser } from '../hooks/useAuth';
 
 const validationSchema = yup.object({
     username: yup.string()
@@ -16,18 +16,18 @@ const validationSchema = yup.object({
         .required('You must enter a password.'),
 });
 
-const LoginForm = ({setToken, setRefreshToken}) => {
+const LoginForm = ({ setToken, setRefreshToken }) => {
     const history = useHistory();
     const [error, handleAuthRequest] = useAuth();
 
     const formik = useFormik({
         initialValues: {
-          username: '',
-          password: ''
+            username: '',
+            password: ''
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            let result = await handleAuthRequest(loginUser({'username': values.username, 'password': values.password}));
+            let result = await handleAuthRequest(loginUser({ 'username': values.username, 'password': values.password }));
             if (result.success) {
                 setToken(result.token);
                 setRefreshToken(result.refreshToken);
@@ -35,7 +35,7 @@ const LoginForm = ({setToken, setRefreshToken}) => {
             }
         },
     });
-    
+
     return (
         <Container>
             <form onSubmit={formik.handleSubmit} autoComplete="off">
@@ -52,6 +52,7 @@ const LoginForm = ({setToken, setRefreshToken}) => {
                         onBlur={formik.handleBlur}
                         error={formik.touched.username && Boolean(formik.errors.username)}
                         helperText={formik.touched.username && formik.errors.username}
+                        required
                     />
                 </div>
                 <div>
@@ -68,12 +69,13 @@ const LoginForm = ({setToken, setRefreshToken}) => {
                         onBlur={formik.handleBlur}
                         error={formik.touched.password && Boolean(formik.errors.password)}
                         helperText={formik.touched.password && formik.errors.password}
+                        required
                     />
                 </div>
                 <div>
-                    { error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : '' }
+                    {error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : ''}
                 </div>
-                <Button color="success" sx={{ color: '#fff'}} variant="contained" size="large" type="submit">
+                <Button color="success" sx={{ color: '#fff' }} variant="contained" size="large" type="submit">
                     Login
                 </Button>
             </form>

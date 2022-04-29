@@ -4,21 +4,18 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import SignupForm from '../forms/SignupForm';
 
-const Signup = ({setToken, setRefreshToken}) => {
-    return(
+const Signup = ({ setToken, setRefreshToken }) => {
+    return (
         <Container maxWidth="lg">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 0 } }}>
                 <Paper>
                     <Box sx={{ m: 2 }}>
-                        <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
+                        <Typography variant="h2" component="div" sx={{ marginLeft: 3 }}>
                             Signup
                         </Typography>
-                        <Typography>
+                        <Typography component="div" sx={{ marginLeft: 3 }}>
                             <p>
-                                Please enter your City, State/Territory, Country, or City, State/Territory, or City, Country to calculate an accurate geolocation.
-                            </p>
-                            <p>
-                                Name, email, username, and password are all required to create an account.
+                                Please enter your City and Country to calculate an accurate geolocation
                             </p>
                         </Typography>
                         <SignupForm setToken={setToken} setRefreshToken={setRefreshToken} />

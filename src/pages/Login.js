@@ -4,22 +4,22 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import LoginForm from '../forms/LoginForm';
 
-const Login = ({setToken, setRefreshToken}) => {
-    return(
+const Login = ({ setToken, setRefreshToken }) => {
+    return (
         <Container maxWidth="lg">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 0 } }}>
                 <Paper>
                     <Box sx={{ m: 2 }}>
-                        <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
+                        <Typography variant="h2" component="div" sx={{ marginLeft: 3 }}>
                             Login
                         </Typography>
-                        <Typography>
+                        <Typography component="div" sx={{ marginLeft: 3 }}>
                             <p>
-                                Please enter your username and password. All fields are required.
+                                Welcome back ツ
                             </p>
                         </Typography>
                         <LoginForm setToken={setToken} setRefreshToken={setRefreshToken} />
-                        </Box>
+                    </Box>
                     <img src="/images/profile_plants.png" width='100%' alt='Succulent Terrariums on Profile Page' />
                 </Paper>
             </Box>

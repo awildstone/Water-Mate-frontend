@@ -3,20 +3,20 @@ import Alert from '@mui/material/Alert';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { Container, TextField, Button } from '@mui/material';
-import useAuth, {signupUser} from '../hooks/useAuth';
+import useAuth, { signupUser } from '../hooks/useAuth';
 
 const validationSchema = yup.object({
     city: yup.string()
         .min(2, 'Too Short!')
         .max(50, 'Too Long!')
-        .required('You must enter your city for an accurate location.'),
+        .required('You must enter your city for an accurate geolocation.'),
     state: yup.string()
         .min(2, 'Too Short!')
         .max(50, 'Too Long!'),
     country: yup.string()
         .min(3, 'Too Short!')
         .max(50, 'Too Long!')
-        .required('You must enter your country for an accurate location.'),
+        .required('You must enter your country for an accurate geolocation.'),
     name: yup.string()
         .min(2, 'Too Short!')
         .max(50, 'Too Long!')
@@ -35,34 +35,34 @@ const validationSchema = yup.object({
     confirm_password: yup.string()
         .min(8)
         .when("password", {
-          is: (val) => (val && val.length > 0 ? true : false),
-          then: yup.string().oneOf(
-            [yup.ref("password")],
-            "Password must match."
-          ),
+            is: (val) => (val && val.length > 0 ? true : false),
+            then: yup.string().oneOf(
+                [yup.ref("password")],
+                "Password must match."
+            ),
         })
         .required('You must confirm your password.'),
 });
 
-const SignupForm = ({signup, setToken, setRefreshToken}) => {
+const SignupForm = ({ setToken, setRefreshToken }) => {
     const history = useHistory();
     const [error, handleAuthRequest] = useAuth();
 
     const formik = useFormik({
         initialValues: {
-          city: '',
-          state: '',
-          country: '',
-          name: '',
-          email: '',
-          username: '',
-          password: '',
-          confirm_password: ''
+            city: '',
+            state: '',
+            country: '',
+            name: '',
+            email: '',
+            username: '',
+            password: '',
+            confirm_password: ''
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             const { city, state, country, name, username, email, password } = values;
-            let result = await handleAuthRequest(signupUser({city, state, country, name, username, email, password}));
+            let result = await handleAuthRequest(signupUser({ city, state, country, name, username, email, password }));
             if (result.success) {
                 setToken(result.token);
                 setRefreshToken(result.refreshToken);
@@ -70,7 +70,7 @@ const SignupForm = ({signup, setToken, setRefreshToken}) => {
             }
         },
     });
-    
+
     return (
         <Container maxWidth="lg">
             <form onSubmit={formik.handleSubmit} autoComplete="off">
@@ -88,6 +88,7 @@ const SignupForm = ({signup, setToken, setRefreshToken}) => {
                         onBlur={formik.handleBlur}
                         error={formik.touched.city && Boolean(formik.errors.city)}
                         helperText={formik.touched.city && formik.errors.city}
+                        required
                     />
                 </div>
                 <div>
@@ -120,6 +121,7 @@ const SignupForm = ({signup, setToken, setRefreshToken}) => {
                         onBlur={formik.handleBlur}
                         error={formik.touched.country && Boolean(formik.errors.country)}
                         helperText={formik.touched.country && formik.errors.country}
+                        required
                     />
                 </div>
                 <div>
@@ -136,6 +138,7 @@ const SignupForm = ({signup, setToken, setRefreshToken}) => {
                         onBlur={formik.handleBlur}
                         error={formik.touched.name && Boolean(formik.errors.name)}
                         helperText={formik.touched.name && formik.errors.name}
+                        required
                     />
                 </div>
                 <div>
@@ -152,6 +155,7 @@ const SignupForm = ({signup, setToken, setRefreshToken}) => {
                         onBlur={formik.handleBlur}
                         error={formik.touched.email && Boolean(formik.errors.email)}
                         helperText={formik.touched.email && formik.errors.email}
+                        required
                     />
                 </div>
                 <div>
@@ -168,6 +172,7 @@ const SignupForm = ({signup, setToken, setRefreshToken}) => {
                         onBlur={formik.handleBlur}
                         error={formik.touched.username && Boolean(formik.errors.username)}
                         helperText={formik.touched.username && formik.errors.username}
+                        required
                     />
                 </div>
                 <div>
@@ -186,6 +191,7 @@ const SignupForm = ({signup, setToken, setRefreshToken}) => {
                         onBlur={formik.handleBlur}
                         error={formik.touched.password && Boolean(formik.errors.password)}
                         helperText={formik.touched.password && formik.errors.password}
+                        required
                     />
                 </div>
                 <div>
@@ -204,12 +210,13 @@ const SignupForm = ({signup, setToken, setRefreshToken}) => {
                         onBlur={formik.handleBlur}
                         error={formik.touched.confirm_password && Boolean(formik.errors.confirm_password)}
                         helperText={formik.touched.confirm_password && formik.errors.confirm_password}
+                        required
                     />
                 </div>
                 <div>
-                    { error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : '' }
+                    {error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : ''}
                 </div>
-                <Button color="success" sx={{ color: '#fff'}} variant="contained" size="large" type="submit">
+                <Button color="success" sx={{ color: '#fff' }} variant="contained" size="large" type="submit">
                     Signup
                 </Button>
             </form>

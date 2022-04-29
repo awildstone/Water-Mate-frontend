@@ -26,18 +26,18 @@ import Loading from '../alerts/Loading';
 import Paginator from '../Paginator';
 import PlantContext from '../context/PlantContext';
 import usePlantCount from '../hooks/usePlantCount';
-import usePlants, { getPlantsToWater} from '../plant/usePlants';
+import usePlants, { getPlantsToWater } from '../plant/usePlants';
 import { isValid } from '../utils';
 
 const WaterManager = () => {
-    const [ isLoading, setIsLoading ] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
     const { currentUser, token, refreshToken, getAuthToken } = useContext(UserContext);
     const { plantTypes } = useContext(PlantContext);
     const [userPlantCount, handleGetPlantCount] = usePlantCount();
-    const [ error, plants, setPlants, handlePlantRequest ] = usePlants();
-    const [ plantRooms, setPlantRooms ] = useState(null);
-    const [ anchorSort, setAnchorSort ] = useState(null);
-    const [ anchorFilter, setAnchorFilter ] = useState(null);
+    const [error, plants, setPlants, handlePlantRequest] = usePlants();
+    const [plantRooms, setPlantRooms] = useState(null);
+    const [anchorSort, setAnchorSort] = useState(null);
+    const [anchorFilter, setAnchorFilter] = useState(null);
     const openSort = Boolean(anchorSort);
     const openFilter = Boolean(anchorFilter);
 
@@ -54,22 +54,22 @@ const WaterManager = () => {
      * Sets the plantsToWater, pagination data, and unique list of plants(filtered by room.id) in state.
      * Confirms there is a fresh token in state before loading plants to water.
      */
-    const loadPlantsToWater = useCallback(async (room_id=null) => {
+    const loadPlantsToWater = useCallback(async (room_id = null) => {
         if (!isValid(token)) {
             getAuthToken(refreshToken);
-        } else { 
+        } else {
             let plantData;
             if (room_id) {
-                plantData = await handlePlantRequest(getPlantsToWater(token, page, {'room_id': room_id }));
+                plantData = await handlePlantRequest(getPlantsToWater(token, page, { 'room_id': room_id }));
             } else {
-                plantData = await handlePlantRequest(getPlantsToWater(token, page, {'user_id': currentUser.id }));
+                plantData = await handlePlantRequest(getPlantsToWater(token, page, { 'user_id': currentUser.id }));
             }
             if (plantData) {
                 setPlants(plantData.data.plants);
                 setItemsPerPage(plantData.data.itemsPerPage);
                 setCount(plantData.data.count);
                 filterPlantRooms(plantData.data.plants);
-            } 
+            }
         }
     }, [currentUser, token, refreshToken, getAuthToken, handlePlantRequest, page, setPlants]);
 
@@ -77,7 +77,7 @@ const WaterManager = () => {
     const getUserPlantCount = useCallback(async (id) => {
         if (!isValid(token)) {
             getAuthToken(refreshToken);
-        } else { 
+        } else {
             await handleGetPlantCount(token, id);
         }
     }, [token, refreshToken, getAuthToken, handleGetPlantCount]);
@@ -89,7 +89,7 @@ const WaterManager = () => {
             loadPlantsToWater();
         }
         setIsLoading(false);
-    },[page, currentUser, token, getUserPlantCount, loadPlantsToWater]);
+    }, [page, currentUser, token, getUserPlantCount, loadPlantsToWater]);
 
     /** Generates a unique list of plant objects by room.id (for an array of unique rooms).
      * Assumes that only the first room.id instance should be part of the array. */
@@ -112,17 +112,17 @@ const WaterManager = () => {
     };
 
     /** Handles the closing of sort/filter menus. Calls the appropriate sort/filter method based on the action criteria, then updates the anchor boolean to close the respective menu. */
-    const handleClose = (event, type, criteria=null) => {
+    const handleClose = (event, type, criteria = null) => {
         if (type === 'sort') {
             if (criteria === 'date') sortByDate();
             if (criteria === 'type') sortByType();
             if (criteria === 'urgency') sortByUrgency();
-            setAnchorSort(null);   
+            setAnchorSort(null);
         } else {
             //type is filter
             if (criteria === 'room') filterByRoom(event);
             setAnchorFilter(null);
-        } 
+        }
     };
 
     /** Sorts the current list of plants by the last water date. */
@@ -165,9 +165,6 @@ const WaterManager = () => {
             let timeDifferenceA = todayA - dateA;
             let timeDifferenceB = todayB - dateB;
 
-            // console.log(`${a.name} max days ago${todayA.toLocaleString()} - last water date ${dateA.toLocaleString()} = ${Math.ceil(timeDifferenceA / (1000 * 60 * 60 * 24))}`);
-            // console.log(`${b.name} max days ago ${todayB.toLocaleString()} - last water date ${dateB.toLocaleString()} = ${Math.ceil(timeDifferenceB / (1000 * 60 * 60 * 24))}`);
-
             return timeDifferenceB - timeDifferenceA
         });
         setPlants(plants);
@@ -179,7 +176,7 @@ const WaterManager = () => {
         if (action !== 'Show All') {
             const split = action.split(' ');
             const len = split.length;
-            const room_id = split[len-1].toString();
+            const room_id = split[len - 1].toString();
             loadPlantsToWater(room_id);
         } else {
             loadPlantsToWater();
@@ -193,16 +190,16 @@ const WaterManager = () => {
                     <Grid sx={{ flexGrow: 1 }} container alignItems='stretch' justifyContent='space-evenly' spacing={2}>
                         <Grid item>
                             <Paper>
-                            <Typography variant="h2" component="div">
-                                No Plants!?
-                            </Typography>
-                            <Typography>
-                                <p>
-                                    You don't have any plants in your collection yet! Head over to the <Link underline="none" color={'#1CBC9B'} href="/dashboard">Dashboard</Link> to add your plants.
-                                </p>
-                            </Typography>
-                            <img src='/images/houseplant_lineup_sm.png' width='100%' alt='Lineup of houseplants' />
-                            </Paper> 
+                                <Typography variant="h2" component="div">
+                                    No Plants!?
+                                </Typography>
+                                <Typography>
+                                    <p>
+                                        You don't have any plants in your collection yet! Head over to the <Link underline="none" color={'#1CBC9B'} href="/dashboard">Dashboard</Link> to add your plants.
+                                    </p>
+                                </Typography>
+                                <img src='/images/houseplant_lineup_sm.png' width='100%' alt='Lineup of houseplants' />
+                            </Paper>
                         </Grid>
                     </Grid>
                 </Box>
@@ -225,9 +222,9 @@ const WaterManager = () => {
                                             onClick={(e) => handleClick(e, 'sort')}
                                             aria-label="sort-button"
                                             aria-haspopup="true"
-                                            aria-expanded={openSort ? 'true' : undefined} 
-                                            sx={{ color: '#fff' }} 
-                                            size="small" 
+                                            aria-expanded={openSort ? 'true' : undefined}
+                                            sx={{ color: '#fff' }}
+                                            size="small"
                                             startIcon={<ArrowDropDownIcon />}
                                         >
                                             Sort <SortRoundedIcon />
@@ -238,39 +235,39 @@ const WaterManager = () => {
                                         id="sort-menu"
                                         anchorEl={anchorSort}
                                         open={openSort}
-                                        onClose={(e) => handleClose(e,'sort')}
+                                        onClose={(e) => handleClose(e, 'sort')}
                                     >
                                         <MenuList>
-                                          <MenuItem onClick={(e) => handleClose(e, 'sort', 'date')}>
-                                            <ListItemIcon>
-                                              <DateRangeRoundedIcon fontSize="small" />
-                                            </ListItemIcon>
-                                            <ListItemText>Last Water Date</ListItemText>
-                                          </MenuItem>
-                                          <MenuItem onClick={(e) => handleClose(e, 'sort', 'type')}>
-                                            <ListItemIcon>
-                                              <CategoryRoundedIcon fontSize="small" />
-                                            </ListItemIcon>
-                                            <ListItemText>Plant Type</ListItemText>
-                                          </MenuItem>
-                                          <MenuItem onClick={(e) => handleClose(e, 'sort', 'urgency')}>
-                                            <ListItemIcon>
-                                              <WarningAmberRoundedIcon fontSize="small" />
-                                            </ListItemIcon>
-                                            <ListItemText>Water Urgency</ListItemText>
-                                          </MenuItem>
+                                            <MenuItem onClick={(e) => handleClose(e, 'sort', 'date')}>
+                                                <ListItemIcon>
+                                                    <DateRangeRoundedIcon fontSize="small" />
+                                                </ListItemIcon>
+                                                <ListItemText>Last Water Date</ListItemText>
+                                            </MenuItem>
+                                            <MenuItem onClick={(e) => handleClose(e, 'sort', 'type')}>
+                                                <ListItemIcon>
+                                                    <CategoryRoundedIcon fontSize="small" />
+                                                </ListItemIcon>
+                                                <ListItemText>Plant Type</ListItemText>
+                                            </MenuItem>
+                                            <MenuItem onClick={(e) => handleClose(e, 'sort', 'urgency')}>
+                                                <ListItemIcon>
+                                                    <WarningAmberRoundedIcon fontSize="small" />
+                                                </ListItemIcon>
+                                                <ListItemText>Water Urgency</ListItemText>
+                                            </MenuItem>
                                         </MenuList>
                                     </Menu>
 
                                     <Tooltip title="Filter Plants by Room">
                                         <Button
-                                            onClick={(e) => handleClick(e, 'filter')} 
+                                            onClick={(e) => handleClick(e, 'filter')}
                                             aria-label="filter-button"
                                             aria-haspopup="true"
                                             aria-expanded={openFilter ? 'true' : undefined}
                                             label="Filter"
-                                            sx={{ color: '#fff' }} 
-                                            size="small" 
+                                            sx={{ color: '#fff' }}
+                                            size="small"
                                             startIcon={<ArrowDropDownIcon />}
                                         >
                                             Filter <FilterListRoundedIcon />
@@ -284,38 +281,38 @@ const WaterManager = () => {
                                         onClose={(e) => handleClose('filter')}
                                     >
                                         <MenuList>
-                                          <MenuItem onClick={(e) => handleClose(e, 'filter', 'room')}>
-                                            <ListItemIcon>
-                                              <GridViewRoundedIcon fontSize="small" />
-                                            </ListItemIcon>
-                                            <ListItemText>Show All</ListItemText>
-                                          </MenuItem>
-                                          { plantRooms.map((plant, i) =>  {
-                                            return (
-                                                <MenuItem key={i+1} onClick={(e) => handleClose(e, 'filter', 'room')}>
-                                                    <ListItemIcon>
+                                            <MenuItem onClick={(e) => handleClose(e, 'filter', 'room')}>
+                                                <ListItemIcon>
+                                                    <GridViewRoundedIcon fontSize="small" />
+                                                </ListItemIcon>
+                                                <ListItemText>Show All</ListItemText>
+                                            </MenuItem>
+                                            {plantRooms.map((plant, i) => {
+                                                return (
+                                                    <MenuItem key={i + 1} onClick={(e) => handleClose(e, 'filter', 'room')}>
+                                                        <ListItemIcon>
                                                             <BedroomChildRoundedIcon fontSize="small" />
-                                                    </ListItemIcon>
-                                                    <ListItemText>
-                                                        {plant.room.name} <span style={{color: '#fff'}}>{plant.room.id}</span>
-                                                    </ListItemText>
-                                                </MenuItem>
-                                            )
-                                            }) 
-                                          }
+                                                        </ListItemIcon>
+                                                        <ListItemText>
+                                                            {plant.room.name} <span style={{ color: '#fff' }}>{plant.room.id}</span>
+                                                        </ListItemText>
+                                                    </MenuItem>
+                                                )
+                                            })
+                                            }
                                         </MenuList>
                                     </Menu>
                                 </Box>
                             </Paper>
                         </Grid>
-                        
+
                         {/* If there are plants to water display them, otherwise let the user know there are no plants to water today. */}
-                        { plants.length ?
+                        {plants.length ?
 
                             plants.map((plant) => {
                                 return (
                                     <Grid key={plant.id} item xs={12} sm={6} md={3} sx={{ display: 'flex', alignItems: 'stretch' }}>
-                                        <PlantCard 
+                                        <PlantCard
                                             plant={plant}
                                             waterSchedule={plant.water_schedule[0]}
                                             loadPlantsToWater={loadPlantsToWater}
@@ -325,17 +322,17 @@ const WaterManager = () => {
                             })
 
                             :
-                                <Grid item>
-                                    <Typography variant="h5" component="div" sx={{ m: 3 }}>
-                                        There are no plants to water today! Take a break ツ
-                                    </Typography>
-                                    <img src='/images/succulent_terrariums.png' width='60%' alt='Lineup of houseplants' />
-                                </Grid>
+                            <Grid item>
+                                <Typography variant="h5" component="div" sx={{ m: 3 }}>
+                                    There are no plants to water today! Take a break ツ
+                                </Typography>
+                                <img src='/images/succulent_terrariums.png' width='60%' alt='Lineup of houseplants' />
+                            </Grid>
                         }
                     </Grid>
                     <Grid container sx={{ flexGrow: 1, '& > :not(style)': { m: 1 } }} justifyContent="center">
                         <Grid item>
-                            { count > itemsPerPage ?
+                            {count > itemsPerPage ?
                                 <Paginator
                                     title={'View More Plants'}
                                     itemsPerPage={itemsPerPage}
