@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect, useCallback } from 'react';
+import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -24,6 +25,7 @@ import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
 import PanToolRoundedIcon from '@mui/icons-material/PanToolRounded';
 import LocalFloristRoundedIcon from '@mui/icons-material/LocalFloristRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
+import InvertColorsIcon from '@mui/icons-material/InvertColors';
 import Tooltip from '@mui/material/Tooltip';
 import { Avatar } from '@mui/material';
 import Modal from '@mui/material/Modal';
@@ -38,6 +40,7 @@ import Loading from '../alerts/Loading';
 import moment from 'moment';
 import usePlants, { getPlant, deletePlant } from './usePlants';
 import { modalStyle, isValid } from '../utils';
+import { waterPlant } from '../schedule/useSchedule';
 
 const PlantDetails = ({ collections }) => {
     const { id } = useParams();
@@ -54,6 +57,22 @@ const PlantDetails = ({ collections }) => {
     const [editSchedule, setEditSchedule] = useState(false);
     const [viewHistory, setViewHistory] = useState(false);
     const [deletePlantToggle, setDeletePlantToggle] = useState(false);
+
+    /** Handle calling the API to water the plant now
+     * This should be refactored into a hook.
+     */
+    const handleScheduleRequest = async ({ url, method, data = {}, token }) => {
+        const headers = { 'content-type': 'application/json', 'x-access-token': token };
+        setIsLoading(true);
+        try {
+            await axios({ url, method, data, headers });
+            getPlantData();
+        } catch (err) {
+            const message = err.response.data.msg;
+        }
+        setIsLoading(false);
+    }
+
 
     /** Mapped list of actions and setters for toggling modal open/closed state. */
     let map = {
@@ -87,6 +106,15 @@ const PlantDetails = ({ collections }) => {
             }
         }
     }, [token, refreshToken, getAuthToken, collections, handlePlantRequest, id, plantTypes]);
+
+    /** Water a plant now & update the plant's schedule */
+    const waterPlantNow = async () => {
+        if (!isValid(token)) {
+            getAuthToken(refreshToken);
+        } else {
+            await handleScheduleRequest(waterPlant(token, plants.plant.water_schedule[0].id, ''));
+        }
+    }
 
     /** Get & Set plant data in state. */
     useEffect(() => {
@@ -140,6 +168,18 @@ const PlantDetails = ({ collections }) => {
                                         <ListItemIcon><LocalFloristRoundedIcon /></ListItemIcon>
                                         <ListItemText>
                                             Type: {plantType.name}
+                                            <Tooltip title="Water now">
+                                                <Fab
+                                                    onClick={() => waterPlantNow()}
+                                                    size="small"
+                                                    variant="extended"
+                                                    color="secondary"
+                                                    sx={{ ml: 2 }}
+                                                >
+                                                    <InvertColorsIcon />
+                                                    Water
+                                                </Fab>
+                                            </Tooltip>
                                         </ListItemText>
                                     </ListItem>
                                     <ListItem>
