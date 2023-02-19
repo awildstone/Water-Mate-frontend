@@ -86,3 +86,10 @@ I created this view so that there is one place a user can go each day to manage 
 [https://app.quickdatabasediagrams.com/#/d/mxfbkG](https://app.quickdatabasediagrams.com/#/d/mxfbkG)
 
 ![](https://user-images.githubusercontent.com/11568530/143668498-8e84f1b1-f65a-49e2-9cc2-423ccc572cf8.png)
+
+
+### Changelog
+
+- 2/19/2023: Add new `Water Now` feature in the plant profile that allows a user to water a plant immediately if the plant schedule is behind and not accessible to water in the `Water Manager`.
+![](/frontend/public/images/water-now-feature.png)
+
