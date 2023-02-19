@@ -1,3 +1,4 @@
+import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { TOKEN_ID } from '../utils';
 
@@ -15,7 +16,7 @@ const ProtectedRoute = ({ children, ...otherProps }) => {
     if (window.localStorage.getItem(TOKEN_ID)) {
         return (
             <Route {...otherProps}>
-                { children }
+                {children}
             </Route>
         )
     }

@@ -1,3 +1,4 @@
+import React from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -51,9 +52,9 @@ const GetStarted = () => {
                         <ListItem>
                             <ListItemText>
                                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>3. Add your Lightsource(s).</Typography>
-                                    <Typography>
-                                        Once a room is created, you can add the Lightsources that are available in that room from the Dashboard. The add Light Source form allows you to add or remove as many lights to a room as needed!
-                                    </Typography>
+                                <Typography>
+                                    Once a room is created, you can add the Lightsources that are available in that room from the Dashboard. The add Light Source form allows you to add or remove as many lights to a room as needed!
+                                </Typography>
                             </ListItemText>
                         </ListItem>
                         <ListItem>
@@ -112,11 +113,11 @@ const GetStarted = () => {
                     </p>
                     <Accordion>
                         <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography variant="h6">1. Stagger your setup.</Typography>
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography variant="h6">1. Stagger your setup.</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Typography>
@@ -136,11 +137,11 @@ const GetStarted = () => {
                     </Accordion>
                     <Accordion>
                         <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography variant="h6">2. Always check the plant's soil before you water.</Typography>
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography variant="h6">2. Always check the plant's soil before you water.</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Typography>
@@ -160,11 +161,11 @@ const GetStarted = () => {
                     </Accordion>
                     <Accordion>
                         <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography variant="h6">3. Know what type of plant you have and the general care requirements it needs to thrive.</Typography>
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography variant="h6">3. Know what type of plant you have and the general care requirements it needs to thrive.</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Typography>
@@ -184,11 +185,11 @@ const GetStarted = () => {
                     </Accordion>
                     <Accordion>
                         <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography variant="h6">4. Make sure the soil is appropriate for the type of plant you have.</Typography>
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography variant="h6">4. Make sure the soil is appropriate for the type of plant you have.</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Typography>
@@ -205,11 +206,11 @@ const GetStarted = () => {
                     </Accordion>
                     <Accordion>
                         <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography variant="h6">5. Watch for signs of poor health and make minor adjustments as needed.</Typography>
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography variant="h6">5. Watch for signs of poor health and make minor adjustments as needed.</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Typography>

@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -17,12 +17,12 @@ import { getCollections, deleteCollection } from './useCollections';
 import UserContext from '../context/UserContext';
 import { modalStyle, isValid } from '../utils';
 
-const Collection = ({ 
-    handleCollectionRequest, 
+const Collection = ({
+    handleCollectionRequest,
     collection,
     rooms,
     handleRoomRequest }) => {
-    
+
     const { token, refreshToken, getAuthToken } = useContext(UserContext);
     const [editCollection, setEditCollection] = useState(false);
     const [deleteCollectionToggle, setDeleteCollectionToggle] = useState(false);
@@ -41,7 +41,7 @@ const Collection = ({
         const color = colors.shift();
         return color;
     }
-    
+
     /** Handles action to open a form modal.
      * Confirms there is a fresh auth token in state before loading form.
      */
@@ -50,12 +50,12 @@ const Collection = ({
             getAuthToken(refreshToken);
         }
         map[action](true);
-    } 
+    }
 
     /** Handles action to close a form modal.
      * Confirms there is a fresh auth token in state before loading updated resources.
      */
-    const handleClose = (action, data=null) => {
+    const handleClose = (action, data = null) => {
         if (!isValid(token)) {
             getAuthToken(refreshToken);
         }
@@ -71,10 +71,10 @@ const Collection = ({
     if (collection && rooms && token && refreshToken) {
         return (
             <>
-                <Grid 
+                <Grid
                     container
                     direction='row'
-                    rowSpacing={3} 
+                    rowSpacing={3}
                     columnSpacing={3}
                     textAlign='center'
                 >
@@ -82,9 +82,9 @@ const Collection = ({
                         <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
                             {collection.name}
                             <Tooltip title="Edit Collection">
-                                <IconButton 
+                                <IconButton
                                     onClick={() => handleOpen('edit-collection')}
-                                    aria-label="edit" 
+                                    aria-label="edit"
                                     color="secondary"
                                 >
                                     <EditRoundedIcon />
@@ -97,16 +97,16 @@ const Collection = ({
                                 aria-describedby="modal-modal-description"
                             >
                                 <Box sx={modalStyle}>
-                                    <EditCollection 
-                                        close={handleClose} 
-                                        setEditCollection={setEditCollection} 
-                                        collectionData={collection} 
+                                    <EditCollection
+                                        close={handleClose}
+                                        setEditCollection={setEditCollection}
+                                        collectionData={collection}
                                     />
                                 </Box>
                             </Modal>
                             <Tooltip title="Delete Collection">
-                                <IconButton 
-                                    onClick={() => handleOpen('delete-collection') }
+                                <IconButton
+                                    onClick={() => handleOpen('delete-collection')}
                                     aria-label="delete"
                                     color="secondary"
                                 >
@@ -126,31 +126,31 @@ const Collection = ({
                             />
                         </Typography>
                     </Grid>
-                      
+
                 </Grid>
                 <Divider />
-                <Box 
-                    textAlign='center' 
-                    sx={{ marginTop: '2px'}}
+                <Box
+                    textAlign='center'
+                    sx={{ marginTop: '2px' }}
                 >
                     <img src="/images/hanging_terrariums.png" height='200px' alt='Hanging succulent terrariuglobes' />
                 </Box>
-                <Grid 
-                    container 
-                    direction='row' 
-                    justifyContent='space-between' 
+                <Grid
+                    container
+                    direction='row'
+                    justifyContent='space-between'
                     alignItems='stretch'
                 >
                     {/* If the collection has rooms, render them. Otherwise render a message instructing the user to add Rooms to their collection. */}
-                    { rooms.rooms.length ?
+                    {rooms.rooms.length ?
                         rooms.rooms.map((room, i) => {
                             return (
-                                <Grid 
-                                    key={room.id} 
-                                    item 
-                                    xs={12} 
-                                    md={6} 
-                                    sx={{ display: 'flex', alignItems:'stretch', width: '100%' }} 
+                                <Grid
+                                    key={room.id}
+                                    item
+                                    xs={12}
+                                    md={6}
+                                    sx={{ display: 'flex', alignItems: 'stretch', width: '100%' }}
                                 >
                                     <Room
                                         handleRoomRequest={handleRoomRequest}
@@ -160,11 +160,12 @@ const Collection = ({
                                         room={room}
                                     />
                                 </Grid>
-                            )})
+                            )
+                        })
                         :
-                        <Grid 
+                        <Grid
                             item
-                            xs={12} 
+                            xs={12}
                             alignContent='center'
                         >
                             <Box textAlign='center'>

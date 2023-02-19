@@ -1,3 +1,4 @@
+import React from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -5,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import RoomForm from './RoomForm';
 
 const EditRoom = ({ close, setEditRoom, room }) => {
-    return(
+    return (
         <Container maxWidth="md">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 2 } }}>
                 <Paper>
@@ -17,7 +18,7 @@ const EditRoom = ({ close, setEditRoom, room }) => {
                             All fields required.
                         </p>
                     </Typography>
-                   <RoomForm close={close} setEditRoom={setEditRoom} room={room} />
+                    <RoomForm close={close} setEditRoom={setEditRoom} room={room} />
                 </Paper>
             </Box>
         </Container>

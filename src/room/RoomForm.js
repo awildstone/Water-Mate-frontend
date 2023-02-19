@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { TextField, Button, Stack } from '@mui/material';
@@ -14,14 +14,14 @@ const validationSchema = yup.object({
         .required('You must enter a name for your room.'),
 });
 
-const RoomForm = ({ close, setaddRoom, setEditRoom, collectionId=null, room=null }) => {
+const RoomForm = ({ close, setaddRoom, setEditRoom, collectionId = null, room = null }) => {
     const { token } = useContext(UserContext);
-    const [ error, rooms, setRooms, handleRoomRequest ] = useRooms();
-    const [ message, setMessage ] = useState(null);
+    const [error, rooms, setRooms, handleRoomRequest] = useRooms();
+    const [message, setMessage] = useState(null);
 
     const formik = useFormik({
         initialValues: {
-          name: room ? room.name : '',
+            name: room ? room.name : '',
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
@@ -29,57 +29,57 @@ const RoomForm = ({ close, setaddRoom, setEditRoom, collectionId=null, room=null
             if (room) {
                 result = await handleRoomRequest(editRoom(token, room.id, values));
             } else {
-                result = await handleRoomRequest(addRoom(token, {...values, collectionId}));
+                result = await handleRoomRequest(addRoom(token, { ...values, collectionId }));
             }
             if (result.success) setMessage(result.message);
         },
     });
-    
+
     return (
         <form onSubmit={formik.handleSubmit} autoComplete="off">
-                <div>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        id="name"
-                        name="name"
-                        label="Room Name"
-                        value={formik.values.name}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.name && Boolean(formik.errors.name)}
-                        helperText={formik.touched.name && formik.errors.name}
-                    />
-                </div>
-                <div>
-                    { error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : '' }
-                    { message ? <Alert sx={{ mb: 1 }} severity="success">{message}</Alert> : '' }
-                </div>
-                <Stack direction="row" spacing={2} >
-                { message ? 
-                    <Button 
-                        color="success" 
-                        sx={{ color: '#fff'}} 
-                        variant="contained" 
-                        size="large" 
+            <div>
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    id="name"
+                    name="name"
+                    label="Room Name"
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.name && Boolean(formik.errors.name)}
+                    helperText={formik.touched.name && formik.errors.name}
+                />
+            </div>
+            <div>
+                {error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : ''}
+                {message ? <Alert sx={{ mb: 1 }} severity="success">{message}</Alert> : ''}
+            </div>
+            <Stack direction="row" spacing={2} >
+                {message ?
+                    <Button
+                        color="success"
+                        sx={{ color: '#fff' }}
+                        variant="contained"
+                        size="large"
                         onClick={() => room ? close('edit-room') : close('add-room')}
                     >
                         Close
                     </Button>
                     :
                     <>
-                        <Button 
-                            color="success" sx={{ color: '#fff'}} 
-                            variant="contained" 
-                            size="large" 
+                        <Button
+                            color="success" sx={{ color: '#fff' }}
+                            variant="contained"
+                            size="large"
                             type="submit"
                         >
                             Submit
                         </Button>
-                        <Button 
-                            onClick={() => room ? setEditRoom(false) : setaddRoom(false)} 
-                            color="info" 
-                            sx={{ color: '#fff'}} 
+                        <Button
+                            onClick={() => room ? setEditRoom(false) : setaddRoom(false)}
+                            color="info"
+                            sx={{ color: '#fff' }}
                             variant="contained"
                             size="large"
                         >
@@ -87,7 +87,7 @@ const RoomForm = ({ close, setaddRoom, setEditRoom, collectionId=null, room=null
                         </Button>
                     </>
                 }
-                </Stack>
+            </Stack>
         </form>
     );
 }

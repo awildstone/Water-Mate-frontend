@@ -1,3 +1,4 @@
+import React from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -6,7 +7,7 @@ import CollectionForm from './CollectionForm';
 
 const AddCollection = ({ close, setAddCollection }) => {
 
-    return(
+    return (
         <Container maxWidth="md">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 2 } }}>
                 <Paper>
@@ -18,7 +19,7 @@ const AddCollection = ({ close, setAddCollection }) => {
                             All fields required.
                         </p>
                     </Typography>
-                   <CollectionForm close={close} setAddCollection={setAddCollection} />
+                    <CollectionForm close={close} setAddCollection={setAddCollection} />
                 </Paper>
             </Box>
         </Container>

@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { TextField, Button, Stack } from '@mui/material';
@@ -16,8 +16,8 @@ const validationSchema = yup.object({
     confirm_new_password: yup.string()
         .min(8)
         .when("new_password", {
-          is: (val) => (val && val.length > 0 ? true : false),
-          then: yup.string().oneOf([yup.ref("new_password")], "Password must match."),
+            is: (val) => (val && val.length > 0 ? true : false),
+            then: yup.string().oneOf([yup.ref("new_password")], "Password must match."),
         })
         .required('You must confirm your password.'),
     old_password: yup.string()
@@ -26,25 +26,25 @@ const validationSchema = yup.object({
         .required('You must enter your old password.'),
 });
 
-const EditPasswordForm = ({close, setEditPassword, user}) => {
+const EditPasswordForm = ({ close, setEditPassword, user }) => {
     const { token } = useContext(UserContext);
     const [error, message, setMessage, handleProfileRequest] = useProfile();
-    const [ isLoading, setIsLoading ] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const formik = useFormik({
         initialValues: {
-          new_password: '',
-          confirm_new_password: '',
-          old_password: ''
+            new_password: '',
+            confirm_new_password: '',
+            old_password: ''
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             let result = await handleProfileRequest(editPassword(token, user.id, values));
             if (result.success) setMessage(result.message);
-            setIsLoading(false); 
+            setIsLoading(false);
         },
     });
-    
+
     return (
         <form onSubmit={formik.handleSubmit} autoComplete="off">
             <div>
@@ -96,24 +96,24 @@ const EditPasswordForm = ({close, setEditPassword, user}) => {
                 />
             </div>
             <div>
-                { error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : '' }
-                { message ? <Alert sx={{ mb: 1 }} severity="success">{message}</Alert> : '' }
+                {error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : ''}
+                {message ? <Alert sx={{ mb: 1 }} severity="success">{message}</Alert> : ''}
             </div>
             <Stack direction="row" spacing={2} >
-            { message ? 
-                <Button 
-                    color="success" 
-                    sx={{ color: '#fff'}} 
-                    variant="contained" 
-                    size="large" 
-                    onClick={() => close('edit-password')}
-                >
-                    Close
-                </Button>
-                :
-                <>
-                    { !isLoading ?
-                            <Button color="success" sx={{ color: '#fff'}} variant="contained" size="large" type="submit">
+                {message ?
+                    <Button
+                        color="success"
+                        sx={{ color: '#fff' }}
+                        variant="contained"
+                        size="large"
+                        onClick={() => close('edit-password')}
+                    >
+                        Close
+                    </Button>
+                    :
+                    <>
+                        {!isLoading ?
+                            <Button color="success" sx={{ color: '#fff' }} variant="contained" size="large" type="submit">
                                 Submit
                             </Button>
                             :
@@ -125,19 +125,19 @@ const EditPasswordForm = ({close, setEditPassword, user}) => {
                             >
                                 Saving
                             </LoadingButton>
-                    }
+                        }
 
-                    <Button 
-                        onClick={() => setEditPassword(false)} 
-                        color="info" 
-                        sx={{ color: '#fff'}} 
-                        variant="contained"
-                        size="large"
-                    >
-                        Cancel
-                    </Button>
-                </>
-            }
+                        <Button
+                            onClick={() => setEditPassword(false)}
+                            color="info"
+                            sx={{ color: '#fff' }}
+                            variant="contained"
+                            size="large"
+                        >
+                            Cancel
+                        </Button>
+                    </>
+                }
             </Stack>
         </form>
     );

@@ -1,3 +1,4 @@
+import React from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -6,8 +7,8 @@ import WarningIcon from '@mui/icons-material/Warning';
 import { red } from '@mui/material/colors';
 import LocationForm from './LocationForm';
 
-const EditLocation = ({close, setEditLocation, user}) => {
-    return(
+const EditLocation = ({ close, setEditLocation, user }) => {
+    return (
         <Container maxWidth="md">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 2 } }}>
                 <Paper>
@@ -20,7 +21,7 @@ const EditLocation = ({close, setEditLocation, user}) => {
                         </p>
                         <p>To get and accurate geoloction, city and country are required.</p>
                     </Typography>
-                   <LocationForm close={close} setEditLocation={setEditLocation} user={user} />
+                    <LocationForm close={close} setEditLocation={setEditLocation} user={user} />
                 </Paper>
             </Box>
         </Container>

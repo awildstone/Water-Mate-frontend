@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -12,7 +12,7 @@ import UserContext from '../context/UserContext';
 import useHistory, { getHistory } from './useHistory';
 import { isValid } from '../utils';
 
-const PlantWaterHistory = ({close, plant}) => {
+const PlantWaterHistory = ({ close, plant }) => {
     const { token, refreshToken, getAuthToken } = useContext(UserContext);
     const [error, history, setHistory, handleHistoryRequest] = useHistory();
     const [isLoading, setIsLoading] = useState(true);
@@ -40,8 +40,8 @@ const PlantWaterHistory = ({close, plant}) => {
         } else {
             getData();
         }
-    },[token, refreshToken, getAuthToken, page, handleHistoryRequest, plant, setHistory]);
-    
+    }, [token, refreshToken, getAuthToken, page, handleHistoryRequest, plant, setHistory]);
+
     if (!isLoading && history && token && refreshToken) {
         return (
             <Container maxWidth="lg">
@@ -52,23 +52,23 @@ const PlantWaterHistory = ({close, plant}) => {
                         </Typography>
                         <HistoryTable rows={history.history} />
                         <Box sx={{ textAlign: 'center', '& > :not(style)': { m: 2 } }} >
-                        { count > itemsPerPage ?
-                            <Paginator
-                                itemsPerPage={itemsPerPage}
-                                currentPage={page}
-                                pageCount={Math.ceil(count / itemsPerPage)}
-                                handlePageChange={handlePageChange}
-                            />
-                            :
-                            ''
-                        }
+                            {count > itemsPerPage ?
+                                <Paginator
+                                    itemsPerPage={itemsPerPage}
+                                    currentPage={page}
+                                    pageCount={Math.ceil(count / itemsPerPage)}
+                                    handlePageChange={handlePageChange}
+                                />
+                                :
+                                ''
+                            }
                         </Box>
                         <Box sx={{ textAlign: 'left', '& > :not(style)': { m: 2 } }}>
                             <Tooltip title="Back to Plant Details">
-                                <Button 
-                                    onClick={() => close('view-history')} 
-                                    color="info" sx={{ color: '#fff'}}
-                                    variant="contained" 
+                                <Button
+                                    onClick={() => close('view-history')}
+                                    color="info" sx={{ color: '#fff' }}
+                                    variant="contained"
                                     size="large"
                                 >
                                     Close

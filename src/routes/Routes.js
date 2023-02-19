@@ -1,3 +1,4 @@
+import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import Landing from '../pages/Landing';
 import About from '../pages/About';
@@ -48,7 +49,7 @@ const Routes = ({ collections, handleCollectionRequest, setToken, setRefreshToke
             <ProtectedRoute exact path='/profile'>
                 <Profile collections={collections} />
             </ProtectedRoute>
-            
+
             <ProtectedRoute exact path='/plant/:id'>
                 <PlantDetails
                     collections={collections}

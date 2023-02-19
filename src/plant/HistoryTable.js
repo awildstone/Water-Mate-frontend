@@ -1,3 +1,4 @@
+import React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -15,10 +16,10 @@ const HistoryTable = ({ rows }) => {
 
     const formattedRows = rows.map((row) => {
         return createData(
-            row.snooze ? 'Snooze' : 'Water', 
-            moment(row.water_date).format('MM/DD/YYYY'), 
-            row.snooze ? 3 : 'None', 
-            row.notes )
+            row.snooze ? 'Snooze' : 'Water',
+            moment(row.water_date).format('MM/DD/YYYY'),
+            row.snooze ? 3 : 'None',
+            row.notes)
     });
 
     return (

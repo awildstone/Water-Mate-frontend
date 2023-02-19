@@ -1,3 +1,4 @@
+import React from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -47,11 +48,11 @@ const About = () => {
                     </Typography>
                     <Accordion>
                         <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography variant="h6">Water Manager</Typography>
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography variant="h6">Water Manager</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Typography>
@@ -94,13 +95,13 @@ const About = () => {
                     </Accordion>
                     <Accordion>
                         <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography variant="h6">Dashboard View</Typography>
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography variant="h6">Dashboard View</Typography>
                         </AccordionSummary>
-                        <AccordionDetails> 
+                        <AccordionDetails>
                             <Typography>
                                 Users can see a bird's eye view of their Collection(s) in the Dashboard where the details can be viewed, edited, or deleted.
                                 <ul>
@@ -134,14 +135,14 @@ const About = () => {
                                 </p>
                             </Typography>
                         </AccordionDetails>
-                    </Accordion>  
+                    </Accordion>
                     <Accordion>
                         <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography variant="h6">Plant View</Typography>
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography variant="h6">Plant View</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Typography>
@@ -168,11 +169,11 @@ const About = () => {
                     </Accordion>
                     <Accordion>
                         <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography variant="h6">Water Schedule</Typography>
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography variant="h6">Water Schedule</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Typography>

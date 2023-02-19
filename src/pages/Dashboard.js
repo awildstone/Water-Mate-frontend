@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -30,7 +30,7 @@ import { modalStyle, isValid } from '../utils';
 
 const Dashboard = ({ collections, handleCollectionRequest }) => {
 
-    const [ error, rooms, setRooms, handleRoomRequest ] = useRooms(); 
+    const [error, rooms, setRooms, handleRoomRequest] = useRooms();
     const { token, refreshToken, getAuthToken } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
     const [collection, setCollection] = useState(null);
@@ -58,19 +58,19 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
             if (collections.collections.length) {
                 if (!isValid(token)) {
                     getAuthToken(refreshToken);
-                } else { 
+                } else {
                     handleRoomRequest(getRooms(token, { 'collection_id': collections.collections[0].id }));
                 }
             }
         }
         setIsLoading(false);
-    },[token, refreshToken, getAuthToken, collections, addCollection, handleRoomRequest]);
+    }, [token, refreshToken, getAuthToken, collections, addCollection, handleRoomRequest]);
 
     /** Filters the collection rooms by room_id. */
     const filterByRoom = (event, data) => {
         const split = event.target.innerText.split(' ');
         const len = split.length;
-        const id = split[len-1].toString();
+        const id = split[len - 1].toString();
         const filtered = data.rooms.filter((room) => room.id === +id);
         setRooms({ rooms: filtered });
     };
@@ -115,7 +115,7 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
         }
 
         map[action](true);
-    } 
+    }
 
     /** Handles action to close a form modal. 
     * Confirms there is a fresh auth token in state before loading updated resources.
@@ -136,60 +136,60 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
     /** Returns instructions and form for user to add their first Collection. */
     const noCollections = () => {
         return (
-            <Container maxWidth="lg"> 
-                    <Box sx={{  '& > :not(style)': { m: 2, p: 2 } }}>
-                        <Paper>
-                            <Grid 
-                                container
-                                direction='row'
-                                rowSpacing={3} 
-                                columnSpacing={3}
-                                textAlign='center'
-                            >
-                                <Grid item md={12} >
-                                    <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
-                                        Add your Collection
-                                    </Typography>
-                                    <Typography>
-                                        <p>
-                                            To get started, add the name of your Collection.
-                                        </p> 
-                                        <p>
-                                            Some suggestions: "Home", "Office", or "My Plant Collection".
-                                        </p> 
-                                        <p>
-                                            It helps if your collection name represents where it is located if you want to manage multiple collections.
-                                        </p>
-                                    </Typography>
-                                    <Tooltip title="Add Collection">
-                                        <Button
-                                            variant="contained"
-                                            size="large"
-                                            color="secondary"
-                                            onClick={() => handleOpen('add-collection')}
-                                            aria-label="add" 
-                                        >
-                                            <AddCircleRoundedIcon sx={{ color: '#fff' }} />
-                                                Collection
-                                        </Button>
-                                    </Tooltip>
+            <Container maxWidth="lg">
+                <Box sx={{ '& > :not(style)': { m: 2, p: 2 } }}>
+                    <Paper>
+                        <Grid
+                            container
+                            direction='row'
+                            rowSpacing={3}
+                            columnSpacing={3}
+                            textAlign='center'
+                        >
+                            <Grid item md={12} >
+                                <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
+                                    Add your Collection
+                                </Typography>
+                                <Typography>
+                                    <p>
+                                        To get started, add the name of your Collection.
+                                    </p>
+                                    <p>
+                                        Some suggestions: "Home", "Office", or "My Plant Collection".
+                                    </p>
+                                    <p>
+                                        It helps if your collection name represents where it is located if you want to manage multiple collections.
+                                    </p>
+                                </Typography>
+                                <Tooltip title="Add Collection">
+                                    <Button
+                                        variant="contained"
+                                        size="large"
+                                        color="secondary"
+                                        onClick={() => handleOpen('add-collection')}
+                                        aria-label="add"
+                                    >
+                                        <AddCircleRoundedIcon sx={{ color: '#fff' }} />
+                                        Collection
+                                    </Button>
+                                </Tooltip>
 
-                                    <Modal
-                                            open={addCollection}
-                                            onClose={() => handleClose('add-collection')}
-                                            aria-labelledby="modal-modal-title"
-                                            aria-describedby="modal-modal-description"
-                                        >
-                                            <Box sx={modalStyle}>
-                                                <AddCollection close={handleClose} />
-                                            </Box>
-                                        </Modal>
+                                <Modal
+                                    open={addCollection}
+                                    onClose={() => handleClose('add-collection')}
+                                    aria-labelledby="modal-modal-title"
+                                    aria-describedby="modal-modal-description"
+                                >
+                                    <Box sx={modalStyle}>
+                                        <AddCollection close={handleClose} />
+                                    </Box>
+                                </Modal>
 
-                                </Grid>
                             </Grid>
-                        </Paper>
-                    </Box>
-            </Container>  
+                        </Grid>
+                    </Paper>
+                </Box>
+            </Container>
         );
     }
 
@@ -197,7 +197,7 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
     const hasCollections = () => {
         return (
             <Container maxWidth="lg">
-                <Box sx={{  '& > :not(style)': { m: 2, p: 2 } }}>
+                <Box sx={{ '& > :not(style)': { m: 2, p: 2 } }}>
                     <Paper>
                         <Grid
                             container
@@ -205,15 +205,15 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                             direction='row'
                             alignItems='center'
                             justifyContent='center'
-                            rowSpacing={3} 
+                            rowSpacing={3}
                             columnSpacing={3}
                         >
                             <Grid item>
                                 <Tooltip title="Add Collection">
-                                    <Fab 
+                                    <Fab
                                         onClick={() => handleOpen('add-collection')}
                                         size="small"
-                                        variant="extended" 
+                                        variant="extended"
                                         color="secondary"
                                     >
                                         <AddCircleRoundedIcon sx={{ mr: 1 }} />
@@ -229,22 +229,22 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                                 aria-describedby="modal-modal-description"
                             >
                                 <Box sx={modalStyle}>
-                                    <AddCollection 
+                                    <AddCollection
                                         close={handleClose}
-                                        setAddCollection={setAddCollection} 
+                                        setAddCollection={setAddCollection}
                                     />
                                 </Box>
                             </Modal>
 
                             {/* If there is more than 1 collection display the collection toggle menu button. */}
-                            { collections.collections.length > 1 ?
+                            {collections.collections.length > 1 ?
                                 <>
                                     <Grid item>
                                         <Tooltip title="View Other Collections">
-                                            <Fab 
+                                            <Fab
                                                 onClick={(e) => handleOpenMenu(e, 'view-collection')}
                                                 size="small"
-                                                variant="extended" 
+                                                variant="extended"
                                                 color="secondary"
                                             >
                                                 <ArrowDropDownIcon sx={{ mr: 1 }} />
@@ -258,13 +258,13 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                                         anchorEl={viewCollection}
                                         open={openCollectionMenu}
                                         onClose={() => setViewCollection(null)}
-                                        MenuListProps={{'aria-labelledby': 'filter-collections-menu',}}
+                                        MenuListProps={{ 'aria-labelledby': 'filter-collections-menu', }}
                                     >
                                         <MenuList>
-                                              { collections.collections.map((collection, i) => {
+                                            {collections.collections.map((collection, i) => {
                                                 return (
-                                                    <MenuItem 
-                                                        key={i+1} 
+                                                    <MenuItem
+                                                        key={i + 1}
                                                         onClick={(e) => handleCloseMenu(e, 'show-collection', collection)}
                                                     >
                                                         <ListItemIcon>
@@ -274,7 +274,8 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                                                             {collection.name}
                                                         </ListItemText>
                                                     </MenuItem>
-                                                    )})
+                                                )
+                                            })
                                             }
                                         </MenuList>
                                     </Menu>
@@ -284,14 +285,14 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                             }
 
                             {/* If there is a collection in state, show button to add a room to the collection. */}
-                            { collection ?
+                            {collection ?
                                 <>
                                     <Grid item>
                                         <Tooltip title="Add Room">
                                             <Fab
                                                 onClick={() => handleOpen('add-room')}
                                                 size="small"
-                                                variant="extended" 
+                                                variant="extended"
                                                 color="secondary"
                                             >
                                                 <AddCircleRoundedIcon sx={{ mr: 1 }} />
@@ -307,10 +308,10 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                                         aria-describedby="modal-modal-description"
                                     >
                                         <Box sx={modalStyle}>
-                                            <AddRoom 
-                                                close={handleClose} 
-                                                setaddRoom={setaddRoom} 
-                                                collectionId={collection.id} 
+                                            <AddRoom
+                                                close={handleClose}
+                                                setaddRoom={setaddRoom}
+                                                collectionId={collection.id}
                                             />
                                         </Box>
                                     </Modal>
@@ -320,48 +321,49 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
                             }
 
                             {/* If there are rooms, show room filter menu. */}
-                            { rooms ?
+                            {rooms ?
                                 <>
                                     <Grid item>
                                         <Tooltip title="Filter by Room">
-                                            <Fab 
+                                            <Fab
                                                 onClick={(e) => handleOpenMenu(e, 'view-room')}
                                                 size="small"
-                                                variant="extended" 
+                                                variant="extended"
                                                 color="secondary"
                                             >
                                                 <ArrowDropDownIcon sx={{ mr: 1 }} />
                                                 <BedroomChildRoundedIcon />
                                             </Fab>
                                         </Tooltip>
-                            
+
                                         <Menu
                                             id="filter-room-menu"
                                             anchorEl={filterRoom}
                                             open={openRoomMenu}
                                             onClose={() => setFilterRoom(null)}
-                                            MenuListProps={{'aria-labelledby': 'filter-room-button',}}
+                                            MenuListProps={{ 'aria-labelledby': 'filter-room-button', }}
                                         >
                                             <MenuList>
-                                                  <MenuItem onClick={(e) => handleCloseMenu(e, 'show-all-rooms', rooms)}>
+                                                <MenuItem onClick={(e) => handleCloseMenu(e, 'show-all-rooms', rooms)}>
                                                     <ListItemIcon>
-                                                      <GridViewRoundedIcon fontSize="small" />
+                                                        <GridViewRoundedIcon fontSize="small" />
                                                     </ListItemIcon>
                                                     <ListItemText>Show All</ListItemText>
-                                                  </MenuItem>
-                                                  {/* Render room name & id in the room filter dropdown menu. */}
-                                                  { rooms ?
+                                                </MenuItem>
+                                                {/* Render room name & id in the room filter dropdown menu. */}
+                                                {rooms ?
                                                     rooms.rooms.map((room, i) => {
-                                                    return (
-                                                        <MenuItem key={i+1} onClick={(e) => handleCloseMenu(e, 'show-room', rooms)}>
-                                                            <ListItemIcon>
-                                                                <BedroomChildRoundedIcon fontSize="small" />
-                                                            </ListItemIcon>
-                                                            <ListItemText>
-                                                                {room.name} <span style={{color: '#fff'}}>{room.id}</span>
-                                                            </ListItemText>
-                                                        </MenuItem>
-                                                    )})
+                                                        return (
+                                                            <MenuItem key={i + 1} onClick={(e) => handleCloseMenu(e, 'show-room', rooms)}>
+                                                                <ListItemIcon>
+                                                                    <BedroomChildRoundedIcon fontSize="small" />
+                                                                </ListItemIcon>
+                                                                <ListItemText>
+                                                                    {room.name} <span style={{ color: '#fff' }}>{room.id}</span>
+                                                                </ListItemText>
+                                                            </MenuItem>
+                                                        )
+                                                    })
                                                     :
                                                     ''
                                                 }
@@ -386,7 +388,7 @@ const Dashboard = ({ collections, handleCollectionRequest }) => {
         );
     }
 
-    if (isLoading || !collections || !token || !refreshToken ) {
+    if (isLoading || !collections || !token || !refreshToken) {
         return <Loading />
     } else if (collections.collections.length > 0) {
         return hasCollections();

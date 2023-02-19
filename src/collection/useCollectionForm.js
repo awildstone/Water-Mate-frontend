@@ -33,10 +33,10 @@ const useCollectionForm = () => {
     const [collection, setCollection] = useState(null);
     const [message, setMessage] = useState(null);
 
-    const handleCollectionRequest = useCallback(async ({ url, method, data={} }) => {
+    const handleCollectionRequest = useCallback(async ({ url, method, data = {} }) => {
         const headers = { 'content-type': 'application/json', 'x-access-token': token };
         try {
-            const response = await axios({ url, method, data, headers});
+            const response = await axios({ url, method, data, headers });
             const message = response.data.msg;
             if (method !== 'delete') {
                 setError(null);
@@ -54,7 +54,7 @@ const useCollectionForm = () => {
         }
     }, [token]);
 
-    return [ error, message, collection, handleCollectionRequest ];
+    return [error, message, collection, handleCollectionRequest];
 }
 
 export default useCollectionForm;

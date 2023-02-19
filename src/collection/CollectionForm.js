@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { TextField, Button, Stack } from '@mui/material';
@@ -14,14 +14,14 @@ const validationSchema = yup.object({
         .required('You must enter a name for your collection.'),
 });
 
-const CollectionForm = ({ close, setEditCollection, setAddCollection, collectionData=null }) => {
+const CollectionForm = ({ close, setEditCollection, setAddCollection, collectionData = null }) => {
     const { token } = useContext(UserContext);
-    const [ error, collections, handleCollectionRequest ] = useCollections();
-    const [ message, setMessage ] = useState(null);
+    const [error, collections, handleCollectionRequest] = useCollections();
+    const [message, setMessage] = useState(null);
 
     const formik = useFormik({
         initialValues: {
-          name: collectionData ? collectionData.name : '',
+            name: collectionData ? collectionData.name : '',
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
@@ -35,7 +35,7 @@ const CollectionForm = ({ close, setEditCollection, setAddCollection, collection
             if (result.success) setMessage(result.message);
         },
     });
-    
+
     return (
         <form onSubmit={formik.handleSubmit} autoComplete="off">
             <div>
@@ -53,35 +53,35 @@ const CollectionForm = ({ close, setEditCollection, setAddCollection, collection
                 />
             </div>
             <div>
-                { error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : '' }
-                { message ? <Alert sx={{ mb: 1 }} severity="success">{message}</Alert> : '' }
+                {error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : ''}
+                {message ? <Alert sx={{ mb: 1 }} severity="success">{message}</Alert> : ''}
             </div>
             <Stack direction="row" spacing={2} >
-                { message ? 
-                    <Button 
-                        color="success" 
-                        sx={{ color: '#fff'}} 
-                        variant="contained" 
-                        size="large" 
+                {message ?
+                    <Button
+                        color="success"
+                        sx={{ color: '#fff' }}
+                        variant="contained"
+                        size="large"
                         onClick={() => collectionData ? close('edit-collection', collections.collection) : close('add-collection')}
                     >
                         Close
                     </Button>
                     :
                     <>
-                        <Button 
-                            color="success" 
-                            sx={{ color: '#fff'}} 
-                            variant="contained" 
-                            size="large" 
+                        <Button
+                            color="success"
+                            sx={{ color: '#fff' }}
+                            variant="contained"
+                            size="large"
                             type="submit"
                         >
                             Submit
                         </Button>
-                        <Button 
-                            onClick={() => collectionData ? setEditCollection(false) : setAddCollection(false)} 
-                            color="info" sx={{  color: '#fff'}} 
-                            variant="contained" 
+                        <Button
+                            onClick={() => collectionData ? setEditCollection(false) : setAddCollection(false)}
+                            color="info" sx={{ color: '#fff' }}
+                            variant="contained"
                             size="large"
                         >
                             Cancel
@@ -89,7 +89,7 @@ const CollectionForm = ({ close, setEditCollection, setAddCollection, collection
                     </>
                 }
             </Stack>
-    </form>
+        </form>
     );
 }
 

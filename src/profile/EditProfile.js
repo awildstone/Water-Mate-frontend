@@ -1,11 +1,12 @@
+import React from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import ProfileForm from './ProfileForm';
 
-const EditProfile = ({close, setEditProfile, user }) => {
-    return(
+const EditProfile = ({ close, setEditProfile, user }) => {
+    return (
         <Container maxWidth="md">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 2 } }}>
                 <Paper>
@@ -17,10 +18,10 @@ const EditProfile = ({close, setEditProfile, user }) => {
                             All fields required.
                         </p>
                     </Typography>
-                   <ProfileForm  
+                    <ProfileForm
                         close={close}
                         setEditProfile={setEditProfile}
-                        user={user} 
+                        user={user}
                     />
                 </Paper>
             </Box>

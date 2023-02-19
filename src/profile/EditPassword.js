@@ -1,11 +1,12 @@
+import React from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import PasswordForm from './PasswordForm';
 
-const EditPassword = ({close, setEditPassword, user}) => {
-    return(
+const EditPassword = ({ close, setEditPassword, user }) => {
+    return (
         <Container maxWidth="md">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 2 } }}>
                 <Paper>
@@ -17,7 +18,7 @@ const EditPassword = ({close, setEditPassword, user}) => {
                             All fields required.
                         </p>
                     </Typography>
-                   <PasswordForm close={close} setEditPassword={setEditPassword} user={user} />
+                    <PasswordForm close={close} setEditPassword={setEditPassword} user={user} />
                 </Paper>
             </Box>
         </Container>

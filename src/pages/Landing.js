@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -9,7 +9,7 @@ import Link from '@mui/material/Link';
 
 const Landing = () => {
     const { currentUser } = useContext(UserContext);
-    
+
     const auth = () => {
         return (
             <Container maxWidth="lg">
@@ -21,7 +21,7 @@ const Landing = () => {
                         <Typography>
                             Visit the <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/get-started">Getting Started</Link> page to learn how to use this app.
 
-                            Visit the <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/water-manager">Water Manager</Link> to water your plants, or your <Link underline="none" color={'#1CBC9B'} component=    {NavLink} to="/dashboard">Dashboard</Link> to manage your Collection(s).
+                            Visit the <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/water-manager">Water Manager</Link> to water your plants, or your <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/dashboard">Dashboard</Link> to manage your Collection(s).
                         </Typography>
                         <img className="rounded" src='/images/water_mate.png' alt="Water Mate" width="100%" />
                     </Paper>
@@ -40,7 +40,7 @@ const Landing = () => {
                         </Typography>
                         <Typography>
                             Read <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/about">about</Link> this app.
-                                <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/signup">Create</Link> an account or <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/login">Login</Link>.
+                            <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/signup">Create</Link> an account or <Link underline="none" color={'#1CBC9B'} component={NavLink} to="/login">Login</Link>.
                         </Typography>
                         <img className="rounded" src='/images/water_mate.png' alt="Water Mate" width="100%" />
                     </Paper>

@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -32,10 +32,10 @@ import { modalStyle, isValid } from '../utils';
 const Profile = ({ collections }) => {
     const { token, refreshToken, getAuthToken, currentUser, loadUserData } = useContext(UserContext);
     const [error, message, setMessage, handleProfileRequest] = useProfile();
-    const [ editProfile, setEditProfile ] = useState(false);
-    const [ editPassword, setEditPassword ] = useState(false);
-    const [ editLocation, setEditLocation ] = useState(false);
-    const [ deleteAccountToggle, setDeleteAccountToggle ] = useState(false);
+    const [editProfile, setEditProfile] = useState(false);
+    const [editPassword, setEditPassword] = useState(false);
+    const [editLocation, setEditLocation] = useState(false);
+    const [deleteAccountToggle, setDeleteAccountToggle] = useState(false);
 
     /** Mapping of actions and state setters. */
     let map = {
@@ -51,7 +51,7 @@ const Profile = ({ collections }) => {
             getAuthToken(refreshToken);
         }
         map[action](true);
-    } 
+    }
 
     /** Handles action to close a form modal. Confirms there is a fresh auth token in state before loading updated resources. */
     const handleClose = (action) => {
@@ -65,7 +65,7 @@ const Profile = ({ collections }) => {
     if (currentUser && token && refreshToken && collections) {
         return (
             <Container maxWidth='lg'>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { mt: 2, p: 0} }}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { mt: 2, p: 0 } }}>
                     <Paper>
                         <Typography variant="h2" component="div" sx={{ flexGrow: 1, textAlign: 'center', m: 2 }}>
                             {currentUser.name}
@@ -101,17 +101,17 @@ const Profile = ({ collections }) => {
                             <ListItem>
                                 <Stack direction="row" spacing={2}>
                                     <Tooltip title="Edit Profile">
-                                    <Button 
-                                        onClick={() => handleOpen('edit-profile')} 
-                                        sx={{ color: '#fff'}} 
-                                        startIcon={<EditIcon />} 
-                                        color="secondary" 
-                                        variant="contained" 
-                                        size="small">
-                                        Profile
-                                    </Button>
+                                        <Button
+                                            onClick={() => handleOpen('edit-profile')}
+                                            sx={{ color: '#fff' }}
+                                            startIcon={<EditIcon />}
+                                            color="secondary"
+                                            variant="contained"
+                                            size="small">
+                                            Profile
+                                        </Button>
                                     </Tooltip>
-        
+
                                     <Modal
                                         open={editProfile}
                                         onClose={() => setEditProfile(false)}
@@ -119,26 +119,26 @@ const Profile = ({ collections }) => {
                                         aria-describedby="modal-modal-description"
                                     >
                                         <Box sx={modalStyle}>
-                                            <EditProfile 
+                                            <EditProfile
                                                 close={handleClose}
                                                 setEditProfile={setEditProfile}
-                                                user={currentUser} 
+                                                user={currentUser}
                                             />
                                         </Box>
                                     </Modal>
-        
+
                                     <Tooltip title="Edit Password">
-                                    <Button 
-                                        onClick={() => handleOpen('edit-password')} 
-                                        sx={{ color: '#fff'}} 
-                                        startIcon={<EditIcon />} 
-                                        color="secondary" 
-                                        variant="contained" 
-                                        size="small">
-                                        Password
-                                    </Button>
+                                        <Button
+                                            onClick={() => handleOpen('edit-password')}
+                                            sx={{ color: '#fff' }}
+                                            startIcon={<EditIcon />}
+                                            color="secondary"
+                                            variant="contained"
+                                            size="small">
+                                            Password
+                                        </Button>
                                     </Tooltip>
-        
+
                                     <Modal
                                         open={editPassword}
                                         onClose={() => handleClose('edit-password')}
@@ -146,14 +146,14 @@ const Profile = ({ collections }) => {
                                         aria-describedby="modal-modal-description"
                                     >
                                         <Box sx={modalStyle}>
-                                            <EditPassword 
+                                            <EditPassword
                                                 close={handleClose}
                                                 setEditPassword={setEditPassword}
                                                 user={currentUser}
                                             />
                                         </Box>
                                     </Modal>
-        
+
                                 </Stack>
                             </ListItem>
                             <ListItem>
@@ -178,17 +178,17 @@ const Profile = ({ collections }) => {
                             </ListItem>
                             <ListItem>
                                 <Tooltip title="Edit Location">
-                                <Button 
-                                    onClick={() => handleOpen('edit-location')} 
-                                    sx={{ color: '#fff'}} 
-                                    startIcon={<EditIcon />} 
-                                    color="secondary" 
-                                    variant="contained" 
-                                    size="small">
-                                    Location
-                                </Button>
+                                    <Button
+                                        onClick={() => handleOpen('edit-location')}
+                                        sx={{ color: '#fff' }}
+                                        startIcon={<EditIcon />}
+                                        color="secondary"
+                                        variant="contained"
+                                        size="small">
+                                        Location
+                                    </Button>
                                 </Tooltip>
-        
+
                                 <Modal
                                     open={editLocation}
                                     onClose={() => handleClose('edit-location')}
@@ -196,14 +196,14 @@ const Profile = ({ collections }) => {
                                     aria-describedby="modal-modal-description"
                                 >
                                     <Box sx={modalStyle}>
-                                        <EditLocation 
+                                        <EditLocation
                                             close={handleClose}
-                                            setEditLocation={setEditLocation}  
-                                            user={currentUser} 
+                                            setEditLocation={setEditLocation}
+                                            user={currentUser}
                                         />
                                     </Box>
                                 </Modal>
-        
+
                             </ListItem>
                             <ListItem>
                                 <ListItemText>
@@ -213,30 +213,30 @@ const Profile = ({ collections }) => {
                                     </Typography>
                                 </ListItemText>
                             </ListItem>
-        
-                            { collections.collections.map((collection) => {
+
+                            {collections.collections.map((collection) => {
                                 return (
                                     <ListItem key={collection.id}>
                                         <ListItemIcon><CollectionsIcon /></ListItemIcon>
                                         <ListItemText>
-                                            {collection.name} 
+                                            {collection.name}
                                         </ListItemText>
                                     </ListItem>
                                 )
                             })}
-    
+
                             <ListItem>
                                 <Tooltip title="Delete Account">
-                                <Button
-                                    onClick={() => handleOpen('delete-account')} 
-                                    startIcon={<DeleteForeverIcon />} 
-                                    color="error" 
-                                    variant="contained" 
-                                    size="small">
-                                    Account
-                                </Button>
+                                    <Button
+                                        onClick={() => handleOpen('delete-account')}
+                                        startIcon={<DeleteForeverIcon />}
+                                        color="error"
+                                        variant="contained"
+                                        size="small">
+                                        Account
+                                    </Button>
                                 </Tooltip>
-                        
+
                                 <WarningModal
                                     title='Delete Account'
                                     type='Account'
@@ -249,9 +249,9 @@ const Profile = ({ collections }) => {
                                     id={currentUser.id}
                                     redirect={'/'}
                                 />
-    
+
                             </ListItem>
-                          </List>
+                        </List>
                     </Paper>
                 </Box>
             </Container>

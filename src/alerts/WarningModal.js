@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -16,24 +16,24 @@ import { useHistory } from 'react-router-dom';
 import UserContext from '../context/UserContext';
 import { modalStyle, isValid } from '../utils';
 
-const WarningModal = ({ 
-    title, 
-    type, 
-    action, 
+const WarningModal = ({
+    title,
+    type,
+    action,
     open,
-    close, 
+    close,
     handleClose,
-    handleDelete, 
-    request, 
-    id, 
-    redirect=null }) => {
+    handleDelete,
+    request,
+    id,
+    redirect = null }) => {
 
-    const [ isConfirmed, setIsConfirmed ] = useState(false);
-    const [ isChecked, setIsChecked ] = useState(false);
-    const [ error, setError ] = useState(null);
+    const [isConfirmed, setIsConfirmed] = useState(false);
+    const [isChecked, setIsChecked] = useState(false);
+    const [error, setError] = useState(null);
     const history = useHistory();
     const { token, refreshToken, getAuthToken } = useContext(UserContext);
-    
+
     /** Toggles checkbox state & sets confirmation state conditionally. */
     const handleCheck = () => {
         setIsChecked(!isChecked);
@@ -81,17 +81,17 @@ const WarningModal = ({
                 <DialogTitle id="confirm-dialog">{title}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                    <WarningIcon sx={{ color: red[500] }} /> Warning! Deleting your {type} cannot be undone and all data will be lost. Please confirm that you want to delete your {type}.
+                        <WarningIcon sx={{ color: red[500] }} /> Warning! Deleting your {type} cannot be undone and all data will be lost. Please confirm that you want to delete your {type}.
                     </DialogContentText>
                     <FormGroup>
-                        <FormControlLabel 
-                            control={<Checkbox checked={isChecked} onClick={handleCheck} />} 
-                            label="I understand" 
+                        <FormControlLabel
+                            control={<Checkbox checked={isChecked} onClick={handleCheck} />}
+                            label="I understand"
                         />
                     </FormGroup>
                 </DialogContent>
                 <div>
-                    { error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : '' }
+                    {error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : ''}
                 </div>
                 <DialogActions>
                     <Button

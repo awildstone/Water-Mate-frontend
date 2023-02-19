@@ -1,3 +1,4 @@
+import React from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -7,8 +8,8 @@ import { red } from '@mui/material/colors';
 import WarningIcon from '@mui/icons-material/Warning';
 
 
-const EditWaterSchedule = ({close, setEditSchedule, schedule}) => {
-    return(
+const EditWaterSchedule = ({ close, setEditSchedule, schedule }) => {
+    return (
         <Container maxWidth="md">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 2 } }}>
                 <Paper>
@@ -23,7 +24,7 @@ const EditWaterSchedule = ({close, setEditSchedule, schedule}) => {
                             If you want the schedule to adjust automatically for seasonal changes make sure manual mode is unchecked when you update changes.
                         </p>
                     </Typography>
-                   <WaterScheduleForm close={close} setEditSchedule={setEditSchedule} schedule={schedule} />
+                    <WaterScheduleForm close={close} setEditSchedule={setEditSchedule} schedule={schedule} />
                 </Paper>
             </Box>
         </Container>

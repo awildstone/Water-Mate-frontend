@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { REFRESH_TOKEN_ID, TOKEN_ID } from './utils';
@@ -46,12 +46,12 @@ const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
 /** Renders App */
 const App = () => {
-  const [ token, setToken ] = useLocalStorage(TOKEN_ID);
-  const [ refreshToken, setRefreshToken ] = useRefreshToken(REFRESH_TOKEN_ID);
-  const [ isLoading, setIsLoading ] = useState(true);
-  const [ plantTypes, handleGetPlantTypes ] = usePlantTypes();
-  const [ currentUser, setCurrentUser, handleGetUserData ] = useCurrentUser();
-  const [ error, collections, handleCollectionRequest ] = useCollections();
+  const [token, setToken] = useLocalStorage(TOKEN_ID);
+  const [refreshToken, setRefreshToken] = useRefreshToken(REFRESH_TOKEN_ID);
+  const [isLoading, setIsLoading] = useState(true);
+  const [plantTypes, handleGetPlantTypes] = usePlantTypes();
+  const [currentUser, setCurrentUser, handleGetUserData] = useCurrentUser();
+  const [error, collections, handleCollectionRequest] = useCollections();
 
   /** Loads current user data. */
   const loadUserData = useCallback(async (token) => {
@@ -68,7 +68,7 @@ const App = () => {
   /** Logs out user by resetting all app state. */
   const logout = useCallback(() => {
     setToken(null);
-    setRefreshToken(null); 
+    setRefreshToken(null);
     setCurrentUser(null);
   }, [setCurrentUser, setRefreshToken, setToken]);
 
@@ -108,21 +108,21 @@ const App = () => {
 
   if (isLoading) {
     return <Loading />
-  } 
+  }
   return (
     <BrowserRouter>
       <UserContext.Provider value={{ currentUser, token, refreshToken, getAuthToken, loadUserData }}>
-      <PlantContext.Provider value={{ plantTypes }}>
-        <ThemeProvider theme={theme}>
-          <NavBar logout={logout} />
-          <Offset />
-          <Routes
-            collections={collections}
-            handleCollectionRequest={handleCollectionRequest}
-            setToken={setToken}
-            setRefreshToken={setRefreshToken}
-          />
-        </ThemeProvider>
+        <PlantContext.Provider value={{ plantTypes }}>
+          <ThemeProvider theme={theme}>
+            <NavBar logout={logout} />
+            <Offset />
+            <Routes
+              collections={collections}
+              handleCollectionRequest={handleCollectionRequest}
+              setToken={setToken}
+              setRefreshToken={setRefreshToken}
+            />
+          </ThemeProvider>
         </PlantContext.Provider>
       </UserContext.Provider>
     </BrowserRouter>

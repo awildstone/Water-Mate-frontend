@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { TextField, Button, Stack } from '@mui/material';
@@ -26,17 +26,17 @@ const validationSchema = yup.object({
         .required('You must confirm your password.'),
 });
 
-const EditProfileForm = ({close, setEditProfile, user }) => {
+const EditProfileForm = ({ close, setEditProfile, user }) => {
     const { token } = useContext(UserContext);
     const [error, message, setMessage, handleProfileRequest] = useProfile();
     const [isLoading, setIsLoading] = useState(false);
 
     const formik = useFormik({
         initialValues: {
-          name: user.name,
-          email: user.email,
-          username: user.username,
-          confirm_password: ''
+            name: user.name,
+            email: user.email,
+            username: user.username,
+            confirm_password: ''
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
@@ -45,7 +45,7 @@ const EditProfileForm = ({close, setEditProfile, user }) => {
             setIsLoading(false);
         },
     });
-    
+
     return (
         <form onSubmit={formik.handleSubmit} autoComplete="off">
             <div>
@@ -111,24 +111,24 @@ const EditProfileForm = ({close, setEditProfile, user }) => {
                 />
             </div>
             <div>
-                { error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : '' }
-                { message ? <Alert sx={{ mb: 1 }} severity="success">{message}</Alert> : '' }
+                {error ? <Alert sx={{ mb: 1 }} severity="error">{error}</Alert> : ''}
+                {message ? <Alert sx={{ mb: 1 }} severity="success">{message}</Alert> : ''}
             </div>
             <Stack direction="row" spacing={2} >
-            { message ? 
-                <Button 
-                    color="success" 
-                    sx={{ color: '#fff'}} 
-                    variant="contained" 
-                    size="large" 
-                    onClick={() => close('edit-profile')}
-                >
-                    Close
-                </Button>
-                :
-                <>
-                    { !isLoading ?
-                            <Button color="success" sx={{ color: '#fff'}} variant="contained" size="large" type="submit">
+                {message ?
+                    <Button
+                        color="success"
+                        sx={{ color: '#fff' }}
+                        variant="contained"
+                        size="large"
+                        onClick={() => close('edit-profile')}
+                    >
+                        Close
+                    </Button>
+                    :
+                    <>
+                        {!isLoading ?
+                            <Button color="success" sx={{ color: '#fff' }} variant="contained" size="large" type="submit">
                                 Submit
                             </Button>
                             :
@@ -140,19 +140,19 @@ const EditProfileForm = ({close, setEditProfile, user }) => {
                             >
                                 Saving
                             </LoadingButton>
-                    }
+                        }
 
-                    <Button 
-                        onClick={() => setEditProfile(false)} 
-                        color="info" 
-                        sx={{ color: '#fff'}} 
-                        variant="contained"
-                        size="large"
-                    >
-                        Cancel
-                    </Button>
-                </>
-            }
+                        <Button
+                            onClick={() => setEditProfile(false)}
+                            color="info"
+                            sx={{ color: '#fff' }}
+                            variant="contained"
+                            size="large"
+                        >
+                            Cancel
+                        </Button>
+                    </>
+                }
             </Stack>
         </form>
     );

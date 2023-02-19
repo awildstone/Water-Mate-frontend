@@ -1,3 +1,4 @@
+import React from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { TextField } from '@mui/material';
@@ -13,7 +14,7 @@ const validationSchema = yup.object({
 const NotesForm = ({ setNotes, notes, setShowForm, showForm }) => {
     const formik = useFormik({
         initialValues: {
-          notes: notes ? notes : '',
+            notes: notes ? notes : '',
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -27,7 +28,7 @@ const NotesForm = ({ setNotes, notes, setShowForm, showForm }) => {
         setFieldValue('notes', '');
         setNotes(null);
     }
-    
+
     return (
         <form onSubmit={formik.handleSubmit}>
             <TextField
@@ -44,13 +45,13 @@ const NotesForm = ({ setNotes, notes, setShowForm, showForm }) => {
                 error={formik.touched.notes && Boolean(formik.errors.notes)}
                 helperText={formik.touched.notes && formik.errors.notes}
             />
-            { notes ?
+            {notes ?
                 <Tooltip title="Click to clear notes">
                     <Button variant="contained" type="reset" onClick={(e) => clearFormNotes(e, formik.setFieldValue)} size="small" color="secondary">
                         Clear
                     </Button>
                 </Tooltip>
-            :
+                :
                 <Tooltip title="Click to add notes">
                     <Button variant="contained" type="submit" size="small" color="secondary">
                         Add

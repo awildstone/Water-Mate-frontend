@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -26,7 +26,7 @@ import UserContext from '../context/UserContext';
 import { modalStyle, isValid } from '../utils';
 
 const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
-    
+
     const [error, plants, setPlants, handlePlantRequest] = usePlants();
     const { token, refreshToken, getAuthToken } = useContext(UserContext);
     const [lights, setLights] = useState([]);
@@ -67,7 +67,7 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
     useEffect(() => {
         setLights(room.lightsources);
         loadPlantsData();
-    },[token, page, room, loadPlantsData]);
+    }, [token, page, room, loadPlantsData]);
 
     /** Handles action to open a form modal.
      * Confirms there is a fresh auth token in state before loading form.
@@ -77,7 +77,7 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
             getAuthToken(refreshToken);
         }
         map[action](true);
-    } 
+    }
 
     /** Handles action to close a form modal.
      * Confirms there is a fresh auth token in state before loading updated resources.
@@ -98,13 +98,13 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
     if (room && plants && lights && token && refreshToken) {
         return (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', '& > :not(style)': { m: 2, p: 2 } }}>
-                <Paper elevation={3} sx={{ backgroundColor: color }}> 
-                    <Grid 
-                        key={room.id} 
-                        container 
-                        direction='row' 
-                        spacing={1} 
-                        alignItems="stretch" 
+                <Paper elevation={3} sx={{ backgroundColor: color }}>
+                    <Grid
+                        key={room.id}
+                        container
+                        direction='row'
+                        spacing={1}
+                        alignItems="stretch"
                         justifyContent="space-evenly"
                     >
                         <Grid item md={12} component='div'>
@@ -114,9 +114,9 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
                                         <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
                                             {room.name}
                                             <Tooltip title="Edit Room">
-                                                <IconButton 
-                                                    onClick={() => handleOpen('edit-room')} 
-                                                    aria-label="edit" 
+                                                <IconButton
+                                                    onClick={() => handleOpen('edit-room')}
+                                                    aria-label="edit"
                                                     color="secondary"
                                                 >
                                                     <EditRoundedIcon />
@@ -130,14 +130,14 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
                                                 aria-describedby="modal-modal-description"
                                             >
                                                 <Box sx={modalStyle}>
-                                                  <EditRoom close={handleClose} setEditRoom={setEditRoom} room={room} />
+                                                    <EditRoom close={handleClose} setEditRoom={setEditRoom} room={room} />
                                                 </Box>
                                             </Modal>
 
                                             <Tooltip title="Delete Room">
-                                                <IconButton 
-                                                    onClick={() => handleOpen('delete-room')} 
-                                                    aria-label="delete" 
+                                                <IconButton
+                                                    onClick={() => handleOpen('delete-room')}
+                                                    aria-label="delete"
                                                     color="secondary"
                                                 >
                                                     <DeleteForeverRoundedIcon />
@@ -159,15 +159,15 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
                                         </Typography>
                                     </ListItemText>
                                 </ListItem>
-                              
+
                                 <ListItem>
                                     <ListItemText>
                                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                                             Lightsources
                                             <Tooltip title="Add Light Sources">
-                                                <IconButton 
-                                                    onClick={() => handleOpen('add-light')} 
-                                                    aria-label="add" 
+                                                <IconButton
+                                                    onClick={() => handleOpen('add-light')}
+                                                    aria-label="add"
                                                     color="secondary"
                                                 >
                                                     <AddCircleRoundedIcon />
@@ -181,11 +181,11 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
                                                 aria-describedby="modal-modal-description"
                                             >
                                                 <Box sx={modalStyle}>
-                                                    <AddLightSource 
+                                                    <AddLightSource
                                                         close={handleClose}
                                                         setAddLight={setAddLight}
-                                                        roomId={room.id} 
-                                                        current={lights} 
+                                                        roomId={room.id}
+                                                        current={lights}
                                                     />
                                                 </Box>
                                             </Modal>
@@ -194,9 +194,9 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
                                         </Typography>
                                     </ListItemText>
                                 </ListItem>
-                               
+
                                 {/* If there are lightsources render them. */}
-                                { room.lightsources.length ?
+                                {room.lightsources.length ?
                                     room.lightsources.map((light) => {
                                         return (
                                             <LightSourceItem
@@ -207,88 +207,89 @@ const Room = ({ handleRoomRequest, deleteRoom, getRooms, color, room }) => {
                                                 setDeleteLight={setDeleteLight}
                                                 handleClose={handleClose}
                                             />
-                                        )}) 
+                                        )
+                                    })
                                     :
                                     ''
                                 }
                             </List>
                         </Grid>
 
-                      {/* If there are lightsources, check for plants and render them (or display the button to add a plant), else display a message instructing user to add lightsources. */}
-                    { room.lightsources.length ?
-                        <Grid item md={12}>
-                            <List>
-                                <ListItem>
-                                    <ListItemText>
-                                        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                                            Plants
-                                            <Tooltip title="Add Plants">
-                                                <IconButton 
-                                                    onClick={() => handleOpen('add-plant')} 
-                                                    aria-label="add" 
-                                                    color="secondary"
-                                                >
-                                                    <AddCircleRoundedIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Divider />
-                                        </Typography>
-                                    </ListItemText>
+                        {/* If there are lightsources, check for plants and render them (or display the button to add a plant), else display a message instructing user to add lightsources. */}
+                        {room.lightsources.length ?
+                            <Grid item md={12}>
+                                <List>
+                                    <ListItem>
+                                        <ListItemText>
+                                            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                                                Plants
+                                                <Tooltip title="Add Plants">
+                                                    <IconButton
+                                                        onClick={() => handleOpen('add-plant')}
+                                                        aria-label="add"
+                                                        color="secondary"
+                                                    >
+                                                        <AddCircleRoundedIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Divider />
+                                            </Typography>
+                                        </ListItemText>
 
-                                    <Modal
-                                        open={addPlant}
-                                        onClose={() => setAddPlant(false)}
-                                        aria-labelledby="modal-modal-title"
-                                        aria-describedby="modal-modal-description"
-                                    >
-                                        <Box sx={modalStyle}>
-                                            <AddPlant 
-                                                close={handleClose}
-                                                setAddPlant={setAddPlant}
-                                                roomId={room.id} 
-                                                lightSources={lights} 
-                                            />
-                                        </Box>
-                                    </Modal>
+                                        <Modal
+                                            open={addPlant}
+                                            onClose={() => setAddPlant(false)}
+                                            aria-labelledby="modal-modal-title"
+                                            aria-describedby="modal-modal-description"
+                                        >
+                                            <Box sx={modalStyle}>
+                                                <AddPlant
+                                                    close={handleClose}
+                                                    setAddPlant={setAddPlant}
+                                                    roomId={room.id}
+                                                    lightSources={lights}
+                                                />
+                                            </Box>
+                                        </Modal>
 
-                                </ListItem>
+                                    </ListItem>
                                 </List>
 
                                 <List>
-                                {/* If there are plants render them. */}
-                                { plants.plants.map((plant) => {
-                                    return (
-                                        <PlantItem key={plant.id} plant={plant} />
-                                    );
-                                }) 
-                                }
+                                    {/* If there are plants render them. */}
+                                    {plants.plants.map((plant) => {
+                                        return (
+                                            <PlantItem key={plant.id} plant={plant} />
+                                        );
+                                    })
+                                    }
 
-                                {/* If there are more than 5 plants per room, display the plant pagination buttons. */}
-                                { count > itemsPerPage ?
-                                    <ListItem>
-                                        <Paginator
-                                            title={'More Plants'}
-                                            itemsPerPage={itemsPerPage}
-                                            currentPage={page}
-                                            pageCount={Math.ceil(count / itemsPerPage)}
-                                            handlePageChange={handlePageChange}
-                                            size={"small"}
-                                        />
-                                    </ListItem>
-                                :
-                                    ''
-                                }
-                            </List>
-                        </Grid>
-                    :
-                        <ListItem>
-                            <ListItemText>
-                                <Typography component="div" sx={{ flexGrow: 1 }}>
-                                    Add lightsources to your room, then add your plants!
-                                </Typography>
-                            </ListItemText>
-                        </ListItem>
-                    }
+                                    {/* If there are more than 5 plants per room, display the plant pagination buttons. */}
+                                    {count > itemsPerPage ?
+                                        <ListItem>
+                                            <Paginator
+                                                title={'More Plants'}
+                                                itemsPerPage={itemsPerPage}
+                                                currentPage={page}
+                                                pageCount={Math.ceil(count / itemsPerPage)}
+                                                handlePageChange={handlePageChange}
+                                                size={"small"}
+                                            />
+                                        </ListItem>
+                                        :
+                                        ''
+                                    }
+                                </List>
+                            </Grid>
+                            :
+                            <ListItem>
+                                <ListItemText>
+                                    <Typography component="div" sx={{ flexGrow: 1 }}>
+                                        Add lightsources to your room, then add your plants!
+                                    </Typography>
+                                </ListItemText>
+                            </ListItem>
+                        }
                     </Grid>
                 </Paper>
             </Box>

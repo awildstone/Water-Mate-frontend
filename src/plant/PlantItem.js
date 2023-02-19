@@ -1,3 +1,4 @@
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
@@ -12,22 +13,22 @@ const PlantItem = ({ plant }) => {
         <ListItem>
             <ListItemAvatar>
                 <Tooltip title="View Plant Details">
-                    <Link 
-                        underline="none" 
-                        color="secondary" 
-                        component={NavLink} 
+                    <Link
+                        underline="none"
+                        color="secondary"
+                        component={NavLink}
                         to={`/plant/${plant.id}`}
                     >
-                        <Avatar alt={plant.name} src={plant.image}/>
+                        <Avatar alt={plant.name} src={plant.image} />
                     </Link>
                 </Tooltip>
             </ListItemAvatar>
             <ListItemText>
                 <Tooltip title="View Plant Details">
-                    <Link 
-                        underline="none" 
-                        color="secondary" 
-                        component={NavLink} 
+                    <Link
+                        underline="none"
+                        color="secondary"
+                        component={NavLink}
                         to={`/plant/${plant.id}`}
                     >
                         {plant.name}
