@@ -91,5 +91,5 @@ I created this view so that there is one place a user can go each day to manage 
 ### Changelog
 
 - 2/19/2023: Add new `Water Now` feature in the plant profile that allows a user to water a plant immediately if the plant schedule is behind and not accessible to water in the `Water Manager`.
-![](/frontend/public/images/water-now-feature.png)
+![](/public/images/water-now-feature.png)
 
